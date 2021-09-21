@@ -13,14 +13,24 @@ CREATE TABLE Users
 CREATE TABLE Subscriptions
 (
     id bigint NOT NULL PRIMARY KEY
-    , users_id bigint NOT NULL
     , package varchar(255) NOT NULL
-    , is_expired boolean
 );
 
-ALTER TABLE Subscriptions
-    ADD CONSTRAINT UsersId FOREIGN KEY(users_id) REFERENCES Users(id);
+CREATE TABLE Records
+(
+    users_id bigint NOT NULL,
+    subscriptions_id bigint NOT NULL,
+    date_start date NOT NULL,
+    date_end date NOT NULL,
+    PRIMARY KEY (users_id, subscriptions_id),
+    FOREIGN KEY (users_id) REFERENCES Users(id) ON UPDATE CASCADE,
+    FOREIGN KEY (subscriptions_id) REFERENCES Subscriptions(id) ON UPDATE CASCADE
+);
 
+ALTER TABLE Records
+    ADD CONSTRAINT Records_Users FOREIGN KEY(users_id) REFERENCES Users(id);
+ALTER TABLE Records
+    ADD CONSTRAINT Records_Subscriptions FOREIGN KEY(subscriptions_id) REFERENCES Subscriptions(id);
 
 CREATE TABLE Roles
 (
@@ -29,11 +39,11 @@ CREATE TABLE Roles
 );
 
 CREATE TABLE Users_Roles (
-                             users_id bigint NOT NULL,
-                             roles_id bigint NOT NULL,
-                             PRIMARY KEY (users_id, roles_id),
-                             FOREIGN KEY (users_id) REFERENCES users(id) ON UPDATE CASCADE,
-                             FOREIGN KEY (roles_id) REFERENCES roles(id) ON UPDATE CASCADE
+     users_id bigint NOT NULL,
+     roles_id bigint NOT NULL,
+     PRIMARY KEY (users_id, roles_id),
+     FOREIGN KEY (users_id) REFERENCES users(id) ON UPDATE CASCADE,
+     FOREIGN KEY (roles_id) REFERENCES roles(id) ON UPDATE CASCADE
 );
 
 CREATE TABLE User_Company
