@@ -43,7 +43,7 @@ public class UsersEntity {
     @Column(name = "password")
     private String passwordHash;
 
-    @ManyToMany( cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "users_id", referencedColumnName = "id"),
@@ -53,4 +53,5 @@ public class UsersEntity {
 
     @ManyToOne
     private SubscriptionsEntity subscriptions;
+
 }
