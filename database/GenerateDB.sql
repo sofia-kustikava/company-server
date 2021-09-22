@@ -36,11 +36,13 @@ CREATE TABLE Users_Roles (
 
 CREATE TABLE Companies
 (
-    id integer NOT NULL PRIMARY KEY,
-    symbol varchar(5) NOT NULL,
+    id bigint NOT NULL PRIMARY KEY,
     currency varchar(3) NOT NULL,
     description varchar(255) NOT NULL,
-    displaySymbol varchar(10) NOT NULL,
+    display_symbol varchar(10) NOT NULL,
+    figi varchar(255) NOT NULL,
+    mic varchar(10) NOT NULL,
+    symbol varchar(5) NOT NULL,
     type varchar(255) NOT NULL
 );
 
@@ -54,51 +56,43 @@ CREATE TABLE Users_Companies (
 
 CREATE TABLE Reports
 (
-    id integer NOT NULL PRIMARY KEY,
-    companies_id integer NOT NULL,
+    id bigint NOT NULL PRIMARY KEY,
+    companies_id bigint NOT NULL,
     unit varchar(3) NOT NULL,
     label varchar(255) NOT NULL,
-    value bigint,
+    value bigint NOT NULL,
     concept varchar(255) NOT NULL
 );
 
 ALTER TABLE Reports
-    ADD CONSTRAINT CompaniesId FOREIGN KEY(companies_id) REFERENCES Companies(id);
+      ADD CONSTRAINT CompaniesId FOREIGN KEY(companies_id) REFERENCES Companies(id);
 
-CREATE TABLE News
+
+CREATE TABLE Quote
 (
-    id integer NOT NULL PRIMARY KEY,
-    companies_id integer NOT NULL,
-    from_date date,
-    to_date date
+
+    id bigint NOT NULL PRIMARY KEY,
+    companies_id bigint NOT NULL,
+    current_price float NOT NULL,
+    change float NOT NULL,
+    percent_change float NOT NULL,
+    high_price float NOT NULL,
+    low_price float NOT NULL,
+    open_price float NOT NULL,
+    close_price float NOT NULL
 );
 
-ALTER TABLE News
+ALTER TABLE Quote
     ADD CONSTRAINT CompaniesId FOREIGN KEY(companies_id) REFERENCES Companies(id);
 
-CREATE TABLE Stocks
-(
-    id integer NOT NULL PRIMARY KEY,
-    companies_id integer NOT NULL,
-    country varchar(2) NOT NULL,
-    currency varchar(3) NOT NULL,
-    exchange varchar(255) NOT NULL,
-    finnhubIndustry varchar(50) NOT NULL,
-    ipo date,
-    logo varchar(255) NOT NULL,
-    name varchar(255) NOT NULL,
-    phone float NOT NULL,
-    ticker varchar(5) NOT NULL,
-    weburl varchar(255) NOT NULL
-);
 
-ALTER TABLE Stocks
-    ADD CONSTRAINT CompaniesId FOREIGN KEY(companies_id) REFERENCES Companies(id);
+
 
 CREATE TABLE Metrics
 (
-    id integer NOT NULL PRIMARY KEY,
-    companies_id integer NOT NULL,
+
+    id bigint NOT NULL PRIMARY KEY,
+    companies_id bigint NOT NULL,
     week_high float NOT NULL,
     week_high_date date,
     week_low float NOT NULL,
@@ -107,16 +101,4 @@ CREATE TABLE Metrics
 );
 
 ALTER TABLE Metrics
-    ADD CONSTRAINT CompaniesId FOREIGN KEY(companies_id) REFERENCES Companies(id);
-
-CREATE TABLE Candles
-(
-    id integer NOT NULL PRIMARY KEY,
-    companies_id integer NOT NULL,
-    from_date date,
-    to_date date,
-    resolution varchar(3) NOT NULL
-);
-
-ALTER TABLE Candles
     ADD CONSTRAINT CompaniesId FOREIGN KEY(companies_id) REFERENCES Companies(id);

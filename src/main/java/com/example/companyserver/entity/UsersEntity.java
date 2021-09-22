@@ -1,17 +1,15 @@
 package com.example.companyserver.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class UsersEntity {
@@ -41,7 +39,7 @@ public class UsersEntity {
     private Status status;
 
     @Column(name = "password")
-    private String passwordHash;
+    private String password;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
@@ -50,6 +48,14 @@ public class UsersEntity {
             inverseJoinColumns = @JoinColumn(name = "roles_id", referencedColumnName = "id")
     )
     private List<RolesEntity> roles = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "users_companies",
+            joinColumns = @JoinColumn(name = "users_id"),
+            inverseJoinColumns = @JoinColumn(name = "companies_id")
+    )
+    private Set<CompaniesEntity> companies = new HashSet<>();
 
     @ManyToOne
     private SubscriptionsEntity subscriptions;
