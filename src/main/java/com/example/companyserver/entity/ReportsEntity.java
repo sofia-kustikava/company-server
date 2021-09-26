@@ -16,9 +16,9 @@ public class ReportsEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "companies_id")
-    private CompaniesEntity company;
+    private CompaniesEntity companies;
 
     @Column(name = "unit")
     private String unit;

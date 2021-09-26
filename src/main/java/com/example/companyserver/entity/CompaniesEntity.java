@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -35,4 +36,16 @@ public class CompaniesEntity {
 
     @Column(name = "type")
     private String type;
+
+    @ManyToMany(mappedBy = "companies")
+    private List<UsersEntity> users;
+
+    @OneToMany(mappedBy = "companies")
+    private List<MetricsEntity> metrics;
+
+    @OneToMany(mappedBy = "companies")
+    private List<QuoteEntity> quotes;
+
+    @OneToMany(mappedBy = "companies")
+    private List<ReportsEntity> reports;
 }
