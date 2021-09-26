@@ -3,6 +3,7 @@ package com.example.companyserver.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -25,6 +26,6 @@ public class SubscriptionsEntity {
     @Column(name = "date_end")
     private Date dateEnd;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "users")
-    private List<UsersEntity> users;
+    @OneToOne(mappedBy = "subscriptions")
+    private UsersEntity users;
 }

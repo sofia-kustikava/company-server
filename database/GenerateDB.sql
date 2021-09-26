@@ -1,6 +1,7 @@
 CREATE TABLE Users
 (
     id bigint NOT NULL PRIMARY KEY,
+    subscriptions_id bigint NOT NULL,
     first_name varchar(70) NOT NULL,
     last_name varchar(70) NOT NULL,
     email varchar(50) NOT NULL,
@@ -15,10 +16,11 @@ CREATE TABLE Subscriptions
     id bigint NOT NULL PRIMARY KEY,
     subscription varchar(255) NOT NULL,
     date_start date NOT NULL,
-    date_end date NOT NULL,
-    users_id bigint NOT NULL,
-    CONSTRAINT fk_users FOREIGN KEY(users_id) REFERENCES Users(id)
+    date_end date NOT NULL
 );
+
+ALTER TABLE Users
+    ADD CONSTRAINT SubscriptionsId FOREIGN KEY(subscriptions_id) REFERENCES Subscriptions(id);
 
 CREATE TABLE Roles
 (

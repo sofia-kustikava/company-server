@@ -17,6 +17,10 @@ public class UsersEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "subscriptions_id", referencedColumnName = "id")
+    private SubscriptionsEntity subscriptions;
+
     @Column(name = "first_name")
     private  String firstName;
 
@@ -49,15 +53,12 @@ public class UsersEntity {
     )
     private List<RolesEntity> roles = new ArrayList<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
             name = "users_companies",
             joinColumns = @JoinColumn(name = "users_id"),
             inverseJoinColumns = @JoinColumn(name = "companies_id")
     )
     private Set<CompaniesEntity> companies = new HashSet<>();
-
-    @ManyToOne
-    private SubscriptionsEntity subscriptions;
 
 }
