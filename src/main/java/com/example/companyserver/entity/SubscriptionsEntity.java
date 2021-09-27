@@ -3,9 +3,7 @@ package com.example.companyserver.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
