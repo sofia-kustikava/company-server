@@ -1,2 +1,5 @@
-package com.example.companyserver.entity;public class Status {
+package com.example.companyserver.entity;
+
+public enum Status {
+    CREATED, ACTIVE, BANNED
 }
