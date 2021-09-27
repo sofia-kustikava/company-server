@@ -1,6 +1,5 @@
 CREATE TABLE Users
 (
-
     id bigint NOT NULL PRIMARY KEY,
     subscriptions_id bigint NOT NULL,
     first_name varchar(70) NOT NULL,
@@ -14,21 +13,17 @@ CREATE TABLE Users
 
 CREATE TABLE Subscriptions
 (
-
     id bigint NOT NULL PRIMARY KEY,
     subscription varchar(255) NOT NULL,
     date_start date NOT NULL,
-
     date_end date NOT NULL
 );
-
 
 ALTER TABLE Users
     ADD CONSTRAINT SubscriptionsId FOREIGN KEY(subscriptions_id) REFERENCES Subscriptions(id);
 
 CREATE TABLE Roles
 (
-
     id bigint NOT NULL PRIMARY KEY,
     role_name varchar(25) NOT NULL
 );
@@ -41,10 +36,8 @@ CREATE TABLE Users_Roles (
      FOREIGN KEY (roles_id) REFERENCES roles(id) ON UPDATE CASCADE
 );
 
-
 CREATE TABLE Companies
 (
-
     id bigint NOT NULL PRIMARY KEY,
     currency varchar(3) NOT NULL,
     description varchar(255) NOT NULL,
@@ -54,7 +47,6 @@ CREATE TABLE Companies
     symbol varchar(5) NOT NULL,
     type varchar(255) NOT NULL
 );
-
 
 CREATE TABLE Users_Companies (
      users_id bigint NOT NULL,
@@ -67,7 +59,6 @@ CREATE TABLE Users_Companies (
 
 CREATE TABLE Reports
 (
-
     id bigint NOT NULL PRIMARY KEY,
     companies_id bigint NOT NULL,
     unit varchar(3) NOT NULL,
@@ -77,15 +68,10 @@ CREATE TABLE Reports
 );
 
 ALTER TABLE Reports
-
-      ADD CONSTRAINT CompaniesId FOREIGN KEY(companies_id) REFERENCES Companies(id);
-
-
+    ADD CONSTRAINT CompaniesId FOREIGN KEY(companies_id) REFERENCES Companies(id);
 
 CREATE TABLE Quote
 (
-
-
     id bigint NOT NULL PRIMARY KEY,
     companies_id bigint NOT NULL,
     current_price float NOT NULL,
@@ -97,20 +83,11 @@ CREATE TABLE Quote
     close_price float NOT NULL
 );
 
-
-
 ALTER TABLE Quote
     ADD CONSTRAINT CompaniesId FOREIGN KEY(companies_id) REFERENCES Companies(id);
 
-
-
-
-
-
 CREATE TABLE Metrics
 (
-
-
     id bigint NOT NULL PRIMARY KEY,
     companies_id bigint NOT NULL,
     week_high float NOT NULL,
@@ -121,5 +98,4 @@ CREATE TABLE Metrics
 );
 
 ALTER TABLE Metrics
-
     ADD CONSTRAINT CompaniesId FOREIGN KEY(companies_id) REFERENCES Companies(id);
