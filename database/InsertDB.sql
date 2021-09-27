@@ -1,7 +1,10 @@
 
+
+
 INSERT INTO Subscriptions VALUES (1, 'Golden','2021-09-02','2021-11-16');
 INSERT INTO Subscriptions VALUES (2, 'Silver','2021-09-02','2021-11-16');
 INSERT INTO Subscriptions VALUES (3, 'Bronze','2021-09-02','2021-11-16');
+
 
 
 INSERT INTO Users VALUES (1, 1,'Admin' , 'Adminovich','admin@mail.com' , '2021-08-23', '2021-09-16', 'ACTIVE', '$2a$12$XmFno4d.H65Xo6hdwIiwqepfBjkq9e86HTKnG5LLlF4Z8RPbRIY5K');
