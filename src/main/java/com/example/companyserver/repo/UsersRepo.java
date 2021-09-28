@@ -2,15 +2,10 @@ package com.example.companyserver.repo;
 
 import com.example.companyserver.entity.UsersEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
+import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
+@Repository
 public interface UsersRepo extends JpaRepository<UsersEntity, Long> {
-
     Optional<UsersEntity> findByEmail(String email);
-
-    public UsersEntity getByEmail(String email);
-
-    public List<UsersEntity> getAll();
 }

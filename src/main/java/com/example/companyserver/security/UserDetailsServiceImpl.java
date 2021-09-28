@@ -23,13 +23,13 @@ public class UserDetailsServiceImpl implements UserDetails {
         this.userService = userService;
     }
 
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<Optional<UsersEntity>> user = Optional.ofNullable(userService.findByEmail(email));
-        if (user==null) {
-            throw new UsernameNotFoundException("User with email " + email + " is not found");
-        }
-        return null;
-    }
+//    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+//        Optional<Optional<UsersEntity>> user = Optional.ofNullable(userService.findByEmail(email));
+//        if (user==null) {
+//            throw new UsernameNotFoundException("User with email " + email + " is not found");
+//        }
+//        return null;
+//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

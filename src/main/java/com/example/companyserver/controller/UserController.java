@@ -11,12 +11,4 @@ import java.util.List;
 
 @Controller("/user")
 public class UserController {
-    @Autowired
-    private UserService userService;
-
-    @GetMapping(path = "/all")
-    public @ResponseBody
-    List<UsersEntity> getAll() {
-        return this.userService.getUsers();
-    }
 }
