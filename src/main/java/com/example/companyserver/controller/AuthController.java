@@ -1,37 +1,35 @@
 package com.example.companyserver.controller;
 
+import com.example.companyserver.dto.AuthDto;
+import com.example.companyserver.dto.TokenDto;
 import com.example.companyserver.entity.UsersEntity;
+import com.example.companyserver.security.JwtProvider;
 import com.example.companyserver.service.UserService;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
-import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Objects;
+import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthController {
+    private final UserService userService;
+    private final JwtProvider jwtProvider;
 
-    private UserService service;
-
-    public AuthController(UserService service) {
-        this.service = service;
+    @PostMapping("/register")
+    public void registerUser(@RequestBody @Valid AuthDto authDto) {
+        UsersEntity user = new UsersEntity();
+        user.setPassword(authDto.getPassword());
+        user.setEmail(authDto.getEmail());
+        userService.saveUser(user);
     }
 
-    @PostMapping(path = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody
-    UsersEntity getAuthUser() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null) {
-            return null;
-        }
-        Object principal = auth.getPrincipal();
-        UsersEntity user = (principal instanceof UsersEntity) ? (UsersEntity) principal : null;
-        return Objects.nonNull(user) ? this.service.findByEmail(user.getEmail()) : null;
+    @PostMapping("/auth")
+    public TokenDto auth(@RequestBody AuthDto authDto) {
+        UsersEntity userEntity = userService.findByEmailAndPassword(authDto.getEmail(), authDto.getPassword());
+        String token = jwtProvider.generateToken(userEntity.getEmail());
+        return new TokenDto(token);
     }
 }
