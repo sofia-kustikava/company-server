@@ -17,10 +17,11 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class FinnhubService implements FinnhubClient {
+public class FinnhubService {
 
     private final UsersRepo usersRepo;
     private final CompaniesMapper companiesMapper;
+    private  FinnhubClient finnhubClient;
 
     private UsersEntity getToken() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
@@ -29,22 +30,10 @@ public class FinnhubService implements FinnhubClient {
         return usersRepo.findByEmail(username).orElseThrow(() -> new RuntimeException("There is no user with this email"));
     }
     public List<CompaniesDto> getCompanies() {
-        UsersEntity user = getToken();
-        return companiesMapper.INSTANCE.companiesToDto(user.getCompanies());
+        return finnhubClient.getCompanies();
+//        UsersEntity user = getToken();
+//        return companiesMapper.INSTANCE.companiesToDto(user.getCompanies());
     }
 
-    @Override
-    public ReportsDto getReports(String symbol) {
-        return null;
-    }
 
-    @Override
-    public QuoteDto getQuote(String symbol) {
-        return null;
-    }
-
-    @Override
-    public MetricsDto getMetrics(String symbol) {
-        return null;
-    }
 }
