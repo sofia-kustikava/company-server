@@ -6,6 +6,7 @@ import com.example.companyserver.dto.QuoteDto;
 import com.example.companyserver.dto.ReportsDto;
 import feign.RequestLine;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,8 +15,8 @@ import java.util.List;
 
 @FeignClient(value = "finnhub", url = "https://finnhub.io")
 public interface FinnhubClient {
-//    @GetM(method = RequestMethod.GET, value = "/api/v1/stock/symbol?exchange=${exchange}&token=${token}")
-    @RequestLine("GET //api/v1/stock/symbol?exchange=${exchange}&token=${token}")
+
+    @GetMapping("/api/v1/stock/symbol?exchange=${exchange}&token=${token}")
         List<CompaniesDto> getCompanies();
 
 
