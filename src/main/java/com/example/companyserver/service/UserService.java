@@ -1,9 +1,9 @@
 package com.example.companyserver.service;
 
 import com.example.companyserver.dto.*;
-import com.example.companyserver.entity.UsersEntity;
-import com.example.companyserver.mapper.UsersMapper;
-import com.example.companyserver.repo.UsersRepo;
+import com.example.companyserver.entity.UserEntity;
+import com.example.companyserver.mapper.UserMapper;
+import com.example.companyserver.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,16 +13,16 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UsersRepo usersRepo;
-    private final UsersMapper usersMapper;
+    private final UserRepo userRepo;
+    private final UserMapper userMapper;
 
-    public UsersEntity findByEmail(String email) {
-        return usersRepo.findByEmail(email).orElseThrow(() -> new RuntimeException(""));
+    public UserEntity findByEmail(String email) {
+        return userRepo.findByEmail(email).orElseThrow(() -> new RuntimeException(""));
     }
 
-    public UsersDto findById(Long id) {
-        UsersEntity user = usersRepo.findById(id).orElseThrow(() -> new RuntimeException("There is no user with this email"));
-        return usersMapper.INSTANCE.userToDto(user);
+    public UserDto findById(Long id) {
+        UserEntity user = userRepo.findById(id).orElseThrow(() -> new RuntimeException("There is no user with this email"));
+        return userMapper.INSTANCE.userToDto(user);
     }
 
 }

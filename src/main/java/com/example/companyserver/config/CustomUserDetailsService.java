@@ -1,6 +1,6 @@
 package com.example.companyserver.config;
 
-import com.example.companyserver.entity.UsersEntity;
+import com.example.companyserver.entity.UserEntity;
 import com.example.companyserver.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +15,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UsersEntity user = userService.findByEmail(email);
+        UserEntity user = userService.findByEmail(email);
         return CustomUserDetails.fromUserEntityToCustomUserDetails(user);
     }
 }

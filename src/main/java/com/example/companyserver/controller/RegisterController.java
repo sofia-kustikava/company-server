@@ -13,6 +13,7 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 public class RegisterController {
+
     private final RegisterService registerService;
 
     @PostMapping("/register")

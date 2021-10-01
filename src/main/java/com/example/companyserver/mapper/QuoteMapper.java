@@ -13,8 +13,8 @@ public interface QuoteMapper {
     QuoteMapper INSTANCE = Mappers.getMapper(QuoteMapper.class);
 
     QuoteDto quoteToDto(QuoteEntity quote);
-
     List<QuoteDto> quotesToDto (List<QuoteEntity> quotes);
 
-    QuoteEntity dtoToQuote (QuoteDto reportsDto);
+    QuoteEntity dtoToQuote (QuoteDto quoteDto);
+    List<QuoteEntity> dtoToQuotes (List<QuoteDto> quoteDtos);
 }

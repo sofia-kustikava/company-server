@@ -3,7 +3,7 @@ package com.example.companyserver.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -12,7 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 @Table(name = "subscriptions")
-public class SubscriptionsEntity {
+public class SubscriptionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,11 +21,11 @@ public class SubscriptionsEntity {
     private String subscription;
 
     @Column(name = "date_start")
-    private Date dateStart;
+    private LocalDateTime dateStart;
 
     @Column(name = "date_end")
-    private Date dateEnd;
+    private LocalDateTime dateEnd;
 
     @OneToOne(mappedBy = "subscriptions")
-    private UsersEntity users;
+    private UserEntity users;
 }

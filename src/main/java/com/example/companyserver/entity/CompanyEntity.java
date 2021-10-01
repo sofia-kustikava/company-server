@@ -9,9 +9,10 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "companies")
-public class CompaniesEntity {
+public class CompanyEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,14 +39,14 @@ public class CompaniesEntity {
     private String type;
 
     @ManyToMany(mappedBy = "companies")
-    private List<UsersEntity> users;
+    private List<UserEntity> users;
 
     @OneToMany(mappedBy = "companies")
-    private List<MetricsEntity> metrics;
+    private List<MetricEntity> metrics;
 
     @OneToMany(mappedBy = "companies")
     private List<QuoteEntity> quotes;
 
     @OneToMany(mappedBy = "companies")
-    private List<ReportsEntity> reports;
+    private List<ReportEntity> reports;
 }

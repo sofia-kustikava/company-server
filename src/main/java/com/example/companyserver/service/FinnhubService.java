@@ -1,10 +1,12 @@
 package com.example.companyserver.service;
 
-import com.example.companyserver.dto.CompaniesDto;
-import com.example.companyserver.entity.UsersEntity;
+import com.example.companyserver.dto.CompanyDto;
+import com.example.companyserver.entity.CompanyEntity;
+import com.example.companyserver.entity.UserEntity;
 import com.example.companyserver.feign.FinnhubClient;
-import com.example.companyserver.mapper.CompaniesMapper;
-import com.example.companyserver.repo.UsersRepo;
+import com.example.companyserver.mapper.CompanyMapper;
+import com.example.companyserver.repo.CompanyRepo;
+import com.example.companyserver.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,21 +18,36 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FinnhubService {
 
-    private final UsersRepo usersRepo;
-    private final CompaniesMapper companiesMapper;
+    private final UserRepo userRepo;
+    private final CompanyRepo companyRepo;
+    private final CompanyMapper companyMapper;
     private final FinnhubClient finnhubClient;
 
-    private UsersEntity getToken() {
+    private UserEntity getToken() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
         String username = userDetails.getUsername();
-        return usersRepo.findByEmail(username).orElseThrow(() -> new RuntimeException("There is no user with this email"));
+        return userRepo.findByEmail(username).orElseThrow(() -> new RuntimeException("There is no user with this email"));
     }
 
-    public List<CompaniesDto> getCompanies() {
-        return finnhubClient.getCompanies();
+    public List<CompanyEntity> getCompanies() {
+        return companyMapper.INSTANCE.dtoToCompanies(finnhubClient.getCompanies());
 //        UsersEntity user = getToken();
 //        return companiesMapper.INSTANCE.companiesToDto(user.getCompanies());
+    }
+
+    //не работает
+    public void saveCompanies(CompanyDto companyDto) {
+        CompanyEntity company = CompanyEntity.builder()
+                .currency(companyDto.getCurrency())
+                .description(companyDto.getDescription())
+                .displaySymbol(companyDto.getDisplaySymbol())
+                .figi(companyDto.getFigi())
+                .mic(companyDto.getMic())
+                .symbol(companyDto.getSymbol())
+                .type(companyDto.getType())
+                .build();
+        companyRepo.save(company);
     }
 
 }

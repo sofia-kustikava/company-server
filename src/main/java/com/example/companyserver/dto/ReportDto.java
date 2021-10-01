@@ -8,29 +8,28 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "52WeekHigh",
-        "52WeekHighDate",
-        "52WeekLow",
-        "52WeekLowDate",
-        "52WeekPriceReturnDaily"
+        "unit",
+        "label",
+        "value",
+        "concept"
 })
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MetricsDto {
-    @JsonProperty("52WeekHigh")
-    private float weekHigh;
-    @JsonProperty("52WeekHighDate")
-    private Date weekHighDate;
-    @JsonProperty("52WeekLow")
-    private float weekLow;
-    @JsonProperty("52WeekLowDate")
-    private Date weekLowDate;
-    @JsonProperty("52WeekPriceReturnDaily")
-    private float weekPriceReturnDaily;
+public class ReportDto {
+
+    @JsonProperty("unit")
+    private String unit;
+
+    @JsonProperty("label")
+    private String label;
+
+    @JsonProperty("value")
+    private Long value;
+
+    @JsonProperty("concept")
+    private String concept;
 }

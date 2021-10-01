@@ -1,7 +1,7 @@
 package com.example.companyserver.config;
 
-import com.example.companyserver.entity.RolesEntity;
-import com.example.companyserver.entity.UsersEntity;
+import com.example.companyserver.entity.RoleEntity;
+import com.example.companyserver.entity.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,15 +15,15 @@ public class CustomUserDetails implements UserDetails {
     private String password;
     private Collection<? extends GrantedAuthority> grantedAuthorities;
 
-    public static CustomUserDetails fromUserEntityToCustomUserDetails(UsersEntity usersEntity) {
+    public static CustomUserDetails fromUserEntityToCustomUserDetails(UserEntity userEntity) {
         CustomUserDetails c = new CustomUserDetails();
-        c.email = usersEntity.getEmail();
-        c.password = usersEntity.getPassword();
-        mapToGrantedAuthorities(new ArrayList<>(usersEntity.getRoles()));
+        c.email = userEntity.getEmail();
+        c.password = userEntity.getPassword();
+        mapToGrantedAuthorities(new ArrayList<>(userEntity.getRoles()));
         return c;
     }
 
-    private static List<GrantedAuthority> mapToGrantedAuthorities(ArrayList<RolesEntity> userRoles) {
+    private static List<GrantedAuthority> mapToGrantedAuthorities(ArrayList<RoleEntity> userRoles) {
          return userRoles.stream()
                 .map(role ->
                         new SimpleGrantedAuthority(role.getRoleName())

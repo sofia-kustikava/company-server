@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "roles")
-public class RolesEntity {
+public class RoleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,5 +21,5 @@ public class RolesEntity {
     private String roleName;
 
     @ManyToMany(mappedBy = "roles")
-    private List<UsersEntity> owners = new ArrayList<>();
+    private List<UserEntity> owners = new ArrayList<>();
 }
