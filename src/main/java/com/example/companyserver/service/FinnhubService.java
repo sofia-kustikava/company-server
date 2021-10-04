@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -37,17 +38,13 @@ public class FinnhubService {
     }
 
     //не работает
-    public void saveCompanies(CompanyDto companyDto) {
-        CompanyEntity company = CompanyEntity.builder()
-                .currency(companyDto.getCurrency())
-                .description(companyDto.getDescription())
-                .displaySymbol(companyDto.getDisplaySymbol())
-                .figi(companyDto.getFigi())
-                .mic(companyDto.getMic())
-                .symbol(companyDto.getSymbol())
-                .type(companyDto.getType())
-                .build();
-        companyRepo.save(company);
+    public void saveCompanies(List<CompanyEntity> companies) {
+        for (CompanyEntity companyEntity : companies) {
+            companyRepo.findBySymbol(companyEntity.getSymbol()).orElseGet(() ->
+            {
+                return companyRepo.save(companyEntity);
+            });
+        }
     }
 
 }
