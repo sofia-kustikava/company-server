@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +34,7 @@ public class RegisterService {
                 .updated(LocalDateTime.now())
                 .build();
         RoleEntity userRole = roleRepo.findByRoleName("USER");
-        user.setRoles(new ArrayList<>(Arrays.asList(userRole)));
+        user.setRoles(new ArrayList<>(Collections.singletonList(userRole)));
 
         userRepo.save(user);
     }

@@ -1,50 +1,43 @@
 package com.example.companyserver.service;
 
-import com.example.companyserver.dto.CompanyDto;
 import com.example.companyserver.entity.CompanyEntity;
-import com.example.companyserver.entity.UserEntity;
 import com.example.companyserver.feign.FinnhubClient;
 import com.example.companyserver.mapper.CompanyMapper;
 import com.example.companyserver.repo.CompanyRepo;
-import com.example.companyserver.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class FinnhubService {
 
-    private final UserRepo userRepo;
     private final CompanyRepo companyRepo;
     private final CompanyMapper companyMapper;
     private final FinnhubClient finnhubClient;
 
-    private UserEntity getToken() {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal();
-        String username = userDetails.getUsername();
-        return userRepo.findByEmail(username).orElseThrow(() -> new RuntimeException("There is no user with this email"));
-    }
-
     public List<CompanyEntity> getCompanies() {
         return companyMapper.INSTANCE.dtoToCompanies(finnhubClient.getCompanies());
-//        UsersEntity user = getToken();
-//        return companiesMapper.INSTANCE.companiesToDto(user.getCompanies());
     }
 
-    //не работает
     public void saveCompanies(List<CompanyEntity> companies) {
-        for (CompanyEntity companyEntity : companies) {
-            companyRepo.findBySymbol(companyEntity.getSymbol()).orElseGet(() ->
-            {
-                return companyRepo.save(companyEntity);
-            });
-        }
+        companies.stream().limit(100).forEach(companyEntity -> {
+            Optional<CompanyEntity> bySymbol = companyRepo.findBySymbol(companyEntity.getSymbol());
+            bySymbol.ifPresent(entity -> companyEntity.setId(entity.getId()));
+            companyRepo.save(companyEntity);
+        });
     }
 
+    public void deleteCompany(String symbol) {
+        companyRepo.delete(companyRepo.findBySymbol(symbol).orElseThrow(() -> new RuntimeException("There is no company with this symbol")));
+        log.info("Company was deleted with this id: ", symbol);
+    }
+
+    public void deleteAllCompanies() {
+        companyRepo.deleteAll(companyMapper.INSTANCE.dtoToCompanies(finnhubClient.getCompanies()));
+    }
 }

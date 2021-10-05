@@ -17,12 +17,20 @@ public class UserService {
     private final UserMapper userMapper;
 
     public UserEntity findByEmail(String email) {
-        return userRepo.findByEmail(email).orElseThrow(() -> new RuntimeException(""));
+        return userRepo.findByEmail(email).orElseThrow(() -> new RuntimeException("There is no user with this email"));
     }
 
     public UserDto findById(Long id) {
-        UserEntity user = userRepo.findById(id).orElseThrow(() -> new RuntimeException("There is no user with this email"));
+        UserEntity user = userRepo.findById(id).orElseThrow(() -> new RuntimeException("There is no user with this id"));
         return userMapper.INSTANCE.userToDto(user);
+    }
+
+    public void delete(Long id) {
+        UserEntity user = userRepo.findById(id).orElseThrow(() -> new RuntimeException("There is no user with this id"));
+        user.setRoles(null);
+        userRepo.save(user);
+        userRepo.deleteById(id);
+        log.info("User was deleted with this id: ", id);
     }
 
 }
