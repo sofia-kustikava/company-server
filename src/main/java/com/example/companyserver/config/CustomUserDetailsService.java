@@ -1,6 +1,7 @@
 package com.example.companyserver.config;
 
 import com.example.companyserver.entity.UserEntity;
+import com.example.companyserver.mapper.UserMapper;
 import com.example.companyserver.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,10 +13,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
     private final UserService userService;
+    private final UserMapper userMapper;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserEntity user = userService.findByEmail(email);
-        return CustomUserDetails.fromUserEntityToCustomUserDetails(user);
+        return userMapper.fromUserEntityToCustomUserDetails(user);
     }
 }
