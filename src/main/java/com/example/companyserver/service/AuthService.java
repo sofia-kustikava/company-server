@@ -3,6 +3,8 @@ package com.example.companyserver.service;
 import com.example.companyserver.dto.AuthDto;
 import com.example.companyserver.dto.TokenDto;
 import com.example.companyserver.entity.UserEntity;
+import com.example.companyserver.exceptions.IncorrectPasswordException;
+import com.example.companyserver.exceptions.UserNotExistException;
 import com.example.companyserver.repo.UserRepo;
 import com.example.companyserver.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +20,11 @@ public class AuthService {
     private final JwtProvider jwtProvider;
 
     public TokenDto auth(AuthDto authDto) {
-        UserEntity user = userRepo.findByEmail(authDto.getEmail()).orElseThrow(() -> new RuntimeException("There is no user with this email"));
+        String variable = String.format("%s", authDto.getEmail());
+        UserEntity user = userRepo.findByEmail(authDto.getEmail()).orElseThrow(() -> new UserNotExistException(variable));
         if (passwordEncoder.matches(authDto.getPassword(), user.getPassword())) {
             return new TokenDto(jwtProvider.generateToken(user.getEmail()));
         }
-        throw  new RuntimeException("invalid password");
+        throw  new IncorrectPasswordException();
     }
 }

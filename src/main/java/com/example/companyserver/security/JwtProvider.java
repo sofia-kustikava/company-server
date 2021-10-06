@@ -4,9 +4,6 @@ import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
 
 @Slf4j
@@ -18,7 +15,6 @@ public class JwtProvider {
     private long tokenTime;
 
     public String generateToken(String email) {
-        Date date = Date.from(LocalDate.now().plusDays(15).atStartOfDay(ZoneId.systemDefault()).toInstant());
         Date now = new Date();
         Date timeline = new Date(now.getTime()+tokenTime);
         return Jwts.builder()

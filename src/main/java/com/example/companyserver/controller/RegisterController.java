@@ -1,6 +1,7 @@
 package com.example.companyserver.controller;
 
 import com.example.companyserver.dto.RegisterDto;
+import com.example.companyserver.exceptions.InvalidUserParameterException;
 import com.example.companyserver.service.RegisterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,7 @@ public class RegisterController {
     private final RegisterService registerService;
 
     @PostMapping("/register")
-    public HttpStatus registerUser(@RequestBody @Valid RegisterDto registerDto) {
+    public HttpStatus registerUser(@RequestBody @Valid RegisterDto registerDto) throws InvalidUserParameterException {
         registerService.registerUser(registerDto);
         return HttpStatus.OK;
     }

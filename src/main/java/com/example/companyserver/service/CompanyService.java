@@ -1,6 +1,7 @@
 package com.example.companyserver.service;
 
 import com.example.companyserver.entity.CompanyEntity;
+import com.example.companyserver.exceptions.CompanyNotFoundException;
 import com.example.companyserver.feign.FinnhubClient;
 import com.example.companyserver.mapper.CompanyMapper;
 import com.example.companyserver.repo.CompanyRepo;
@@ -14,7 +15,7 @@ import java.util.Optional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class FinnhubService {
+public class CompanyService {
 
     private final CompanyRepo companyRepo;
     private final CompanyMapper companyMapper;
@@ -33,7 +34,8 @@ public class FinnhubService {
     }
 
     public void deleteCompany(String symbol) {
-        companyRepo.delete(companyRepo.findBySymbol(symbol).orElseThrow(() -> new RuntimeException("There is no company with this symbol")));
+        String variable = String.format("%s", symbol);
+        companyRepo.delete(companyRepo.findBySymbol(symbol).orElseThrow(() -> new CompanyNotFoundException(variable)));
         log.info("Company was deleted with this id: ", symbol);
     }
 

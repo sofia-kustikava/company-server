@@ -1,7 +1,8 @@
 package com.example.companyserver.exceptions;
 
 public class UserNotFoundException extends RuntimeException{
-    public UserNotFoundException(Long id) {
-        super("Could not find user" + id);
+
+    public UserNotFoundException(String message) {
+        super("Could not find user " + message);
     }
 }
