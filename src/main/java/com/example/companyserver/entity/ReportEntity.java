@@ -10,14 +10,14 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "reports")
-public class ReportsEntity {
+public class ReportEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "companies_id")
-    private CompaniesEntity companies;
+    private CompanyEntity companies;
 
     @Column(name = "unit")
     private String unit;

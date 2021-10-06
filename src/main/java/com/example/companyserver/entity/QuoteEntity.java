@@ -17,7 +17,7 @@ public class QuoteEntity {
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "companies_id")
-    private CompaniesEntity companies;
+    private CompanyEntity companies;
 
     @Column(name = "current_price")
     private float currentPrice;

@@ -10,14 +10,14 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "metrics")
-public class MetricsEntity {
+public class MetricEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "companies_id")
-    private CompaniesEntity companies;
+    private CompanyEntity companies;
 
     @Column(name = "week_high")
     private String weekHigh;

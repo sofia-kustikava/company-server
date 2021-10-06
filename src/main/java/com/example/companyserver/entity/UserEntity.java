@@ -1,10 +1,9 @@
 package com.example.companyserver.entity;
 
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Getter
@@ -12,15 +11,16 @@ import java.util.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 @Table(name = "users")
-public class UsersEntity {
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "subscriptions_id", referencedColumnName = "id")
-    private SubscriptionsEntity subscriptions;
+    private SubscriptionEntity subscriptions;
 
     @Column(name = "first_name")
     private  String firstName;
@@ -31,13 +31,11 @@ public class UsersEntity {
     @Column(name = "email")
     private String email;
 
-    @CreatedDate
     @Column(name = "date_created")
-    private Date date_created;
+    private LocalDateTime dateCreated;
 
-    @LastModifiedDate
     @Column(name = "date_updated")
-    private Date updated;
+    private LocalDateTime updated;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
@@ -46,13 +44,13 @@ public class UsersEntity {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "users_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "roles_id", referencedColumnName = "id")
     )
-    private List<RolesEntity> roles = new ArrayList<>();
+    private List<RoleEntity> roles = new ArrayList<>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
@@ -60,6 +58,6 @@ public class UsersEntity {
             joinColumns = @JoinColumn(name = "users_id"),
             inverseJoinColumns = @JoinColumn(name = "companies_id")
     )
-    private Set<CompaniesEntity> companies = new HashSet<>();
+    private List<CompanyEntity> companies = new ArrayList<>();
 
 }

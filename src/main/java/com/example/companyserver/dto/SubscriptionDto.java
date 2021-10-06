@@ -2,22 +2,25 @@ package com.example.companyserver.dto;
 
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class RolesDto {
+public class SubscriptionDto {
     @NotNull
     @NotEmpty
-    private Long id;
+    private String subscription;
 
     @NotNull
     @NotEmpty
-    private String roleName;
+    private LocalDateTime dateStart;
+
+    @NotNull
+    @NotEmpty
+    private LocalDateTime dateEnd;
 }
