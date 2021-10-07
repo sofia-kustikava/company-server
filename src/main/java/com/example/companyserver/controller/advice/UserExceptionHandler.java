@@ -11,41 +11,33 @@ public class UserExceptionHandler {
 
     @ExceptionHandler({UserNotFoundException.class})
     public ResponseEntity<Object> userNotFound(UserNotFoundException e) {
-        HttpStatus badRequest = HttpStatus.BAD_REQUEST;
-        ExceptionParams exceptionParams = new ExceptionParams(
-                e.getMessage(),
-                badRequest
-        );
-        return new ResponseEntity<>(exceptionParams, badRequest);
+        return new ResponseEntity<>(ExceptionResponse
+                .builder()
+                .message(e.getMessage())
+                .build(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({UserNotExistException.class})
     public ResponseEntity<Object> userNotExist(UserNotExistException e) {
-        HttpStatus badRequest = HttpStatus.BAD_REQUEST;
-        ExceptionParams exceptionParams = new ExceptionParams(
-                e.getMessage(),
-                badRequest
-        );
-        return new ResponseEntity<>(exceptionParams, badRequest);
+        return new ResponseEntity<>(ExceptionResponse
+                .builder()
+                .message(e.getMessage())
+                .build(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({IncorrectPasswordException.class})
     public ResponseEntity<Object> incorrectPassword(IncorrectPasswordException e) {
-        HttpStatus badRequest = HttpStatus.BAD_REQUEST;
-        ExceptionParams exceptionParams = new ExceptionParams(
-                e.getMessage(),
-                badRequest
-        );
-        return new ResponseEntity<>(exceptionParams, badRequest);
+        return new ResponseEntity<>(ExceptionResponse
+                .builder()
+                .message(e.getMessage())
+                .build(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({InvalidUserParameterException.class})
     public ResponseEntity<Object> incorrectUserParameter(InvalidUserParameterException e) {
-        HttpStatus badRequest = HttpStatus.BAD_REQUEST;
-        ExceptionParams exceptionParams = new ExceptionParams(
-                e.getMessage(),
-                badRequest
-        );
-        return new ResponseEntity<>(exceptionParams, badRequest);
+        return new ResponseEntity<>(ExceptionResponse
+                .builder()
+                .message(e.getMessage())
+                .build(), HttpStatus.BAD_REQUEST);
     }
 }
