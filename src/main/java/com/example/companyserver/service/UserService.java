@@ -32,6 +32,7 @@ public class UserService {
         String variable = String.format("%s", id);
         UserEntity user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(variable));
         user.setRoles(null);
+        user.setSubscription(null);
         userRepo.save(user);
         userRepo.deleteById(id);
         log.info("User was deleted with this id: ", id);

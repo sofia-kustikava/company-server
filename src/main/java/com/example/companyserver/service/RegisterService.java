@@ -2,7 +2,7 @@ package com.example.companyserver.service;
 
 import com.example.companyserver.dto.RegisterDto;
 import com.example.companyserver.entity.RoleEntity;
-import com.example.companyserver.entity.Status;
+import com.example.companyserver.entity.UserStatus;
 import com.example.companyserver.entity.UserEntity;
 import com.example.companyserver.exceptions.InvalidUserParameterException;
 import com.example.companyserver.repo.RoleRepo;
@@ -29,7 +29,7 @@ public class RegisterService {
                     .lastName(registerDto.getLastName())
                     .email(registerDto.getEmail())
                     .password(passwordEncoder.encode(registerDto.getPassword()))
-                    .status(Status.ACTIVE)
+                    .status(UserStatus.ACTIVE)
                     .dateCreated(LocalDateTime.now())
                     .updated(LocalDateTime.now())
                     .build();

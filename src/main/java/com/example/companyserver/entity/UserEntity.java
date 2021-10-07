@@ -18,10 +18,6 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "subscriptions_id", referencedColumnName = "id")
-    private SubscriptionEntity subscriptions;
-
     @Column(name = "first_name")
     private  String firstName;
 
@@ -39,10 +35,13 @@ public class UserEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private Status status;
+    private UserStatus status;
 
     @Column(name = "password")
     private String password;
+
+    @OneToOne(mappedBy = "user")
+    private UserSubscriptionEntity subscription;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
