@@ -20,7 +20,7 @@ public class SubscriptionEntity {
     private Long id;
 
     @Column(name = "name")
-    private String subscription;
+    private String name;
 
     @Column(name = "description")
     private String description;
