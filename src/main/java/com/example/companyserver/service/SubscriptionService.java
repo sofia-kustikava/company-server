@@ -1,12 +1,11 @@
 package com.example.companyserver.service;
 
-import com.example.companyserver.dto.SubscriptionDto;
-import com.example.companyserver.entity.UserSubscriptionEntity;
-import com.example.companyserver.entity.SubscriptionStatus;
-import com.example.companyserver.entity.UserEntity;
+import com.example.companyserver.dto.UserSubscriptionDto;
+import com.example.companyserver.entity.*;
 import com.example.companyserver.exceptions.UserNotFoundException;
 import com.example.companyserver.repo.SubscriptionRepo;
 import com.example.companyserver.repo.UserRepo;
+import com.example.companyserver.repo.UserSubscriptionRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,19 +20,39 @@ import java.util.Date;
 public class SubscriptionService {
 
     private final UserRepo userRepo;
+    private final UserSubscriptionRepo userSubscriptionRepo;
     private final SubscriptionRepo subscriptionRepo;
 
-    public void chooseSubscription(SubscriptionDto subscriptionDto, Long id) {
+    public void chooseSubscription(Long id, UserSubscriptionDto userSubscriptionDto) {
         UserEntity user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(String.format("%s", id)));
+        String findName = userSubscriptionDto.getSubscription();
+        SubscriptionEntity subscriptionName = subscriptionRepo.findByName(findName).orElseThrow(() -> new RuntimeException(""));
 
-        Date date = Date.from(LocalDate.now().plusDays(30).atStartOfDay(ZoneId.systemDefault()).toInstant());
         UserSubscriptionEntity subscription = UserSubscriptionEntity.builder()
-                .dateStart(LocalDateTime.now())
-                .dateEnd(date)
+                .subscription(subscriptionName)
+                .user(user)
+                .dateStart(null)
+                .dateEnd(null)
                 .subscriptionStatus(SubscriptionStatus.INACTIVE)
                 .build();
-
-        subscriptionRepo.save(subscription);
+        userSubscriptionRepo.save(subscription);
         user.setSubscription(subscription);
+        userRepo.save(user);
+    }
+
+    public void paySubscription(Long id) {
+        UserEntity user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(String.format("%s", id)));
+        UserSubscriptionEntity userSubscription = userSubscriptionRepo.findByUser(user).orElseThrow(() -> new RuntimeException(""));
+        Date date = Date.from(LocalDate.now().plusDays(30).atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        //payment is missing
+
+        userSubscription.setDateStart(LocalDateTime.now());
+        userSubscription.setDateEnd(date);
+        userSubscription.setSubscriptionStatus(null);
+        userSubscription.setSubscriptionStatus(SubscriptionStatus.ACTIVE);
+
+        userSubscriptionRepo.save(userSubscription);
+        userRepo.save(user);
     }
 }

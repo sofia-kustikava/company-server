@@ -17,15 +17,19 @@ import java.util.Date;
 @Builder
 public class UserSubscriptionDto {
 
-    @NotNull
-    @NotEmpty
     private LocalDateTime dateStart;
 
-    @NotNull
-    @NotEmpty
     private Date dateEnd;
 
     @NotNull
     @NotEmpty
     private SubscriptionStatus subscriptionStatus;
+
+    @NotNull
+    @NotEmpty
+    private String subscription;
+
+    @NotNull
+    @NotEmpty
+    private Long user;
 }

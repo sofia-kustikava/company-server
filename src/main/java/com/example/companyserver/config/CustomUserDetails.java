@@ -1,10 +1,12 @@
 package com.example.companyserver.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
 
+@RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
     private String email;

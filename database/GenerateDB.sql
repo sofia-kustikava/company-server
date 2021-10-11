@@ -26,8 +26,8 @@ CREATE TABLE Users_Subscriptions
     subscriptions_id bigint NOT NULL,
     FOREIGN KEY (users_id) REFERENCES users(id) ON UPDATE CASCADE,
     FOREIGN KEY (subscriptions_id) REFERENCES subscriptions(id) ON UPDATE CASCADE,
-    date_start date NOT NULL,
-    date_end date NOT NULL,
+    date_start date,
+    date_end date,
     sub_status varchar(10) NOT NULL
 );
 

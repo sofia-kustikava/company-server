@@ -1,13 +1,13 @@
 package com.example.companyserver.mapper;
 
 import com.example.companyserver.dto.SubscriptionDto;
-import com.example.companyserver.entity.UserSubscriptionEntity;
+import com.example.companyserver.entity.SubscriptionEntity;
 import org.mapstruct.Mapper;
 
 @Mapper
 public interface SubscriptionMapper {
 
-    SubscriptionDto subscriptionToDto (UserSubscriptionEntity subscription);
+    SubscriptionDto subscriptionToDto (SubscriptionEntity subscription);
 
-    UserSubscriptionEntity dtoToSubscription (SubscriptionDto subscriptionDto);
+    SubscriptionEntity dtoToSubscription (SubscriptionDto subscriptionDto);
 }

@@ -25,6 +25,7 @@ public class UserSubscriptionEntity {
     @Column(name = "date_end")
     private Date dateEnd;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "sub_status")
     private SubscriptionStatus subscriptionStatus;
 
