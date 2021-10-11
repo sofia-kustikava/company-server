@@ -2,6 +2,7 @@ package com.example.companyserver.service;
 
 import com.example.companyserver.dto.UserSubscriptionDto;
 import com.example.companyserver.entity.*;
+import com.example.companyserver.exceptions.SubscriptionNotExistException;
 import com.example.companyserver.exceptions.UserNotFoundException;
 import com.example.companyserver.repo.SubscriptionRepo;
 import com.example.companyserver.repo.UserRepo;
@@ -26,7 +27,7 @@ public class SubscriptionService {
     public void chooseSubscription(Long id, UserSubscriptionDto userSubscriptionDto) {
         UserEntity user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(String.format("%s", id)));
         String findName = userSubscriptionDto.getSubscription();
-        SubscriptionEntity subscriptionName = subscriptionRepo.findByName(findName).orElseThrow(() -> new RuntimeException(""));
+        SubscriptionEntity subscriptionName = subscriptionRepo.findByName(findName).orElseThrow(() -> new SubscriptionNotExistException(String.format("%s", findName)));
 
         UserSubscriptionEntity subscription = UserSubscriptionEntity.builder()
                 .subscription(subscriptionName)
@@ -42,7 +43,7 @@ public class SubscriptionService {
 
     public void paySubscription(Long id) {
         UserEntity user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(String.format("%s", id)));
-        UserSubscriptionEntity userSubscription = userSubscriptionRepo.findByUser(user).orElseThrow(() -> new RuntimeException(""));
+        UserSubscriptionEntity userSubscription = userSubscriptionRepo.findByUser(user).orElseThrow(() -> new UserNotFoundException(String.format("%s", id)));
         Date date = Date.from(LocalDate.now().plusDays(30).atStartOfDay(ZoneId.systemDefault()).toInstant());
 
         //payment is missing
