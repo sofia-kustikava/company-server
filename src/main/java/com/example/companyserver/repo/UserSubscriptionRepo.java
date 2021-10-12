@@ -8,6 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface UserSubscriptionRepo extends JpaRepository<UserSubscriptionEntity, Long> {
-    Optional<UserSubscriptionEntity> findBySubscription(SubscriptionEntity name);
     Optional<UserSubscriptionEntity> findByUser (UserEntity id);
 }

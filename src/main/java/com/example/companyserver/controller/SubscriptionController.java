@@ -15,7 +15,7 @@ public class SubscriptionController {
 
     public final SubscriptionService subscriptionService;
 
-    @PostMapping("/sub/{id}")
+    @PostMapping("/subscription/{id}")
     public HttpStatus chooseSubscription(@PathVariable("id") Long id, @RequestBody UserSubscriptionDto userSubscriptionDto) {
         subscriptionService.chooseSubscription(id, userSubscriptionDto);
         return HttpStatus.OK;

@@ -50,7 +50,6 @@ public class SubscriptionService {
 
         userSubscription.setDateStart(LocalDateTime.now());
         userSubscription.setDateEnd(date);
-        userSubscription.setSubscriptionStatus(null);
         userSubscription.setSubscriptionStatus(SubscriptionStatus.ACTIVE);
 
         userSubscriptionRepo.save(userSubscription);
