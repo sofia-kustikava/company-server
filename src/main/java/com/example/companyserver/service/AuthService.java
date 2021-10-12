@@ -20,8 +20,7 @@ public class AuthService {
     private final JwtProvider jwtProvider;
 
     public TokenDto auth(AuthDto authDto) {
-        String variable = String.format("%s", authDto.getEmail());
-        UserEntity user = userRepo.findByEmail(authDto.getEmail()).orElseThrow(() -> new UserNotExistException(variable));
+        UserEntity user = userRepo.findByEmail(authDto.getEmail()).orElseThrow(() -> new UserNotExistException(String.format("%s", authDto.getEmail())));
         if (passwordEncoder.matches(authDto.getPassword(), user.getPassword())) {
             return new TokenDto(jwtProvider.generateToken(user.getEmail()));
         }

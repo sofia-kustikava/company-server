@@ -18,19 +18,16 @@ public class UserService {
     private final UserMapper userMapper;
 
     public UserEntity findByEmail(String email) {
-        String variable = String.format("%s", email);
-        return userRepo.findByEmail(email).orElseThrow(() -> new UserNotFoundException(variable));
+        return userRepo.findByEmail(email).orElseThrow(() -> new UserNotFoundException(String.format("%s", email)));
     }
 
     public UserDto findById(Long id) {
-        String variable = String.format("%s", id);
-        UserEntity user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(variable));
+        UserEntity user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(String.format("%s", id)));
         return userMapper.INSTANCE.userToDto(user);
     }
 
     public void delete(Long id) {
-        String variable = String.format("%s", id);
-        UserEntity user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(variable));
+        UserEntity user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(String.format("%s", id)));
         user.setRoles(null);
         user.setSubscription(null);
         userRepo.save(user);

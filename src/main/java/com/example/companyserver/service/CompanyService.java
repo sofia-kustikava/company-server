@@ -34,8 +34,7 @@ public class CompanyService {
     }
 
     public void deleteCompany(String symbol) {
-        String variable = String.format("%s", symbol);
-        companyRepo.delete(companyRepo.findBySymbol(symbol).orElseThrow(() -> new CompanyNotFoundException(variable)));
+        companyRepo.delete(companyRepo.findBySymbol(symbol).orElseThrow(() -> new CompanyNotFoundException(String.format("%s", symbol))));
         log.info("Company was deleted with this id: ", symbol);
     }
 

@@ -53,7 +53,7 @@ CREATE TABLE Companies
     display_symbol varchar(10) NOT NULL,
     figi varchar(255) NOT NULL,
     mic varchar(10) NOT NULL,
-    symbol varchar(5) NOT NULL,
+    symbol varchar(10) NOT NULL,
     type varchar(255) NOT NULL
 );
 
