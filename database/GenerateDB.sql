@@ -1,7 +1,6 @@
 CREATE TABLE Users
 (
     id bigint NOT NULL PRIMARY KEY,
-    subscriptions_id bigint NOT NULL,
     first_name varchar(70) NOT NULL,
     last_name varchar(70) NOT NULL,
     email varchar(50) NOT NULL,
@@ -14,13 +13,23 @@ CREATE TABLE Users
 CREATE TABLE Subscriptions
 (
     id bigint NOT NULL PRIMARY KEY,
-    subscription varchar(255) NOT NULL,
-    date_start date NOT NULL,
-    date_end date NOT NULL
+    name varchar(255) NOT NULL,
+    description varchar(255) NOT NULL,
+    price float NOT NULL
+
 );
 
-ALTER TABLE Users
-    ADD CONSTRAINT SubscriptionsId FOREIGN KEY(subscriptions_id) REFERENCES Subscriptions(id);
+CREATE TABLE Users_Subscriptions
+(
+    id bigint NOT NULL PRIMARY KEY,
+    users_id bigint NOT NULL,
+    subscriptions_id bigint NOT NULL,
+    FOREIGN KEY (users_id) REFERENCES users(id) ON UPDATE CASCADE,
+    FOREIGN KEY (subscriptions_id) REFERENCES subscriptions(id) ON UPDATE CASCADE,
+    date_start date,
+    date_end date,
+    sub_status varchar(10) NOT NULL
+);
 
 CREATE TABLE Roles
 (

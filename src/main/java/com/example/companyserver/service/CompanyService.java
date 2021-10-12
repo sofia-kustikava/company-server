@@ -2,7 +2,7 @@ package com.example.companyserver.service;
 
 import com.example.companyserver.entity.CompanyEntity;
 import com.example.companyserver.exceptions.CompanyNotFoundException;
-import com.example.companyserver.feign.FinnhubClient;
+import com.example.companyserver.client.FinnhubClient;
 import com.example.companyserver.mapper.CompanyMapper;
 import com.example.companyserver.repo.CompanyRepo;
 import lombok.RequiredArgsConstructor;

@@ -1,5 +1,5 @@
 package com.example.companyserver.entity;
 
-public enum Status {
+public enum UserStatus {
     CREATED, ACTIVE, BANNED
 }

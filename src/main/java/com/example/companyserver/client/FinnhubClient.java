@@ -1,4 +1,4 @@
-package com.example.companyserver.feign;
+package com.example.companyserver.client;
 
 import com.example.companyserver.dto.CompanyDto;
 import com.example.companyserver.dto.MetricDto;
