@@ -5,6 +5,7 @@ import com.example.companyserver.entity.RoleEntity;
 import com.example.companyserver.entity.UserStatus;
 import com.example.companyserver.entity.UserEntity;
 import com.example.companyserver.exceptions.InvalidUserParameterException;
+import com.example.companyserver.exceptions.UserAlreadyExistException;
 import com.example.companyserver.repo.RoleRepo;
 import com.example.companyserver.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,9 @@ public class RegisterService {
     private final PasswordEncoder passwordEncoder;
 
     public void registerUser(RegisterDto registerDto) throws InvalidUserParameterException {
+        if (emailExist(registerDto.getEmail())) throw new UserAlreadyExistException("There is an account with that email address: "
+                    + String.format("%s", registerDto.getEmail()));
+
         try {
             UserEntity user = UserEntity.builder()
                     .firstName(registerDto.getFirstName())
@@ -33,6 +37,7 @@ public class RegisterService {
                     .dateCreated(LocalDateTime.now())
                     .updated(LocalDateTime.now())
                     .build();
+
             RoleEntity userRole = roleRepo.findByRoleName("USER");
             user.setRoles(Arrays.asList(userRole));
 
@@ -42,4 +47,9 @@ public class RegisterService {
         }
 
     }
+
+    private boolean emailExist(String email) {
+        return userRepo.findByEmail(email).isPresent();
+    }
+
 }
