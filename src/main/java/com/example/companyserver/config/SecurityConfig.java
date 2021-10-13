@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -48,18 +47,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic().disable()
                 .csrf().disable()
 
+                    .authorizeRequests()
+                        .antMatchers("/", "/register", "/auth").permitAll()
+                        .antMatchers("/admin/**").hasAuthority("ADMIN")
+                        .antMatchers(HttpMethod.GET,"/user/**").hasAnyAuthority("ADMIN", "USER")
+                        .anyRequest().authenticated()
+                    .and()
+                        .formLogin()
+                        .permitAll()
+                    .and()
+                        .logout()
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .permitAll()
+                    .and()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-                .authorizeRequests()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE,"/user/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.GET,"/user/**").hasAnyRole("ADMIN", "USER")
-                .antMatchers("/register", "/auth").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .formLogin().permitAll()
-//                .and()
-//                .logout().permitAll()
                 .and()
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }

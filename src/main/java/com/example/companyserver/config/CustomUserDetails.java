@@ -53,6 +53,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return user.getStatus().equals(UserStatus.CREATED);
+        return user.getStatus().equals(UserStatus.CREATED) || user.getStatus().equals(UserStatus.ACTIVE);
     }
 }

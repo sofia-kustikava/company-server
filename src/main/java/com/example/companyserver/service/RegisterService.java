@@ -29,7 +29,7 @@ public class RegisterService {
                     .lastName(registerDto.getLastName())
                     .email(registerDto.getEmail())
                     .password(passwordEncoder.encode(registerDto.getPassword()))
-                    .status(UserStatus.ACTIVE)
+                    .status(UserStatus.CREATED)
                     .dateCreated(LocalDateTime.now())
                     .updated(LocalDateTime.now())
                     .build();
