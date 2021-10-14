@@ -5,15 +5,10 @@ import com.example.companyserver.dto.report.ReportDto;
 import com.example.companyserver.entity.CompanyEntity;
 import com.example.companyserver.entity.MetricEntity;
 import com.example.companyserver.entity.QuoteEntity;
-import com.example.companyserver.entity.ReportEntity;
 import com.example.companyserver.mapper.CompanyMapper;
 import com.example.companyserver.mapper.MetricMapper;
 import com.example.companyserver.mapper.QuoteMapper;
-import com.example.companyserver.mapper.ReportMapper;
 import com.example.companyserver.repo.CompanyRepo;
-import com.example.companyserver.repo.MetricRepo;
-import com.example.companyserver.repo.QuoteRepo;
-import com.example.companyserver.repo.ReportRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

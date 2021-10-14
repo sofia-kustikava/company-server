@@ -24,7 +24,6 @@ public class AdminController {
 
     private final CompanyMapper companyMapper;
     private final QuoteMapper quoteMapper;
-    private final ReportMapper reportMapper;
     private final MetricMapper metricMapper;
     private final CompanyService companyService;
     private final UserService userService;
