@@ -5,11 +5,8 @@ import com.example.companyserver.dto.metric.MetricDto;
 import com.example.companyserver.dto.QuoteDto;
 import com.example.companyserver.dto.report.ReportDto;
 import com.example.companyserver.mapper.CompanyMapper;
-import com.example.companyserver.mapper.MetricMapper;
-import com.example.companyserver.mapper.QuoteMapper;
-import com.example.companyserver.mapper.ReportMapper;
 import com.example.companyserver.service.CompanyService;
-import com.example.companyserver.service.QuoteService;
+import com.example.companyserver.service.InfoCompanyService;
 import com.example.companyserver.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,11 +20,9 @@ import java.util.List;
 public class AdminController {
 
     private final CompanyMapper companyMapper;
-    private final QuoteMapper quoteMapper;
-    private final MetricMapper metricMapper;
     private final CompanyService companyService;
     private final UserService userService;
-    private final QuoteService quoteService;
+    private final InfoCompanyService infoCompanyService;
 
     @GetMapping("/companies")
     public List<CompanyDto> getAllCompanies() {
@@ -60,17 +55,17 @@ public class AdminController {
 
     @GetMapping("/quote/{symbol}")
     public QuoteDto getQuote(@PathVariable String symbol) {
-        return quoteMapper.quoteToDto(quoteService.getQuote(symbol));
+        return infoCompanyService.getQuote(symbol);
     }
 
     @GetMapping("/report/{symbol}")
     public List<ReportDto> getReport(@PathVariable String symbol) {
-        return quoteService.getReport(symbol);
+        return infoCompanyService.getReport(symbol);
     }
 
     @GetMapping("/metric/{symbol}")
     public MetricDto getMetric(@PathVariable String symbol) {
-        return metricMapper.metricToDto(quoteService.getMetric(symbol));
+        return infoCompanyService.getMetric(symbol);
     }
 
 }
