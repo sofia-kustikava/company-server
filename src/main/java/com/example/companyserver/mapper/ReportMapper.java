@@ -1,6 +1,6 @@
 package com.example.companyserver.mapper;
 
-import com.example.companyserver.dto.ReportDto;
+import com.example.companyserver.dto.report.ReportDto;
 import com.example.companyserver.entity.ReportEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

@@ -1,4 +1,4 @@
-package com.example.companyserver.dto;
+package com.example.companyserver.dto.report;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -10,26 +10,13 @@ import lombok.NoArgsConstructor;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "unit",
-        "label",
-        "value",
-        "concept"
+        "report"
 })
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ReportDto {
-
-    @JsonProperty("unit")
-    private String unit;
-
-    @JsonProperty("label")
-    private String label;
-
-    @JsonProperty("value")
-    private Long value;
-
-    @JsonProperty("concept")
-    private String concept;
+public class ReportResponseDto {
+    @JsonProperty("report")
+    private UnitsDto report;
 }

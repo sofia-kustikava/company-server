@@ -1,9 +1,11 @@
 package com.example.companyserver.client;
 
-import com.example.companyserver.dto.CompanyDto;
-import com.example.companyserver.dto.MetricDto;
-import com.example.companyserver.dto.QuoteDto;
-import com.example.companyserver.dto.ReportDto;
+import com.example.companyserver.dto.*;
+import com.example.companyserver.dto.metric.MetricResponseDto;
+import com.example.companyserver.dto.report.DataDto;
+import com.example.companyserver.dto.report.ReportDto;
+import com.example.companyserver.dto.report.ReportResponseDto;
+import com.example.companyserver.dto.report.UnitsDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,11 +19,11 @@ public interface FinnhubClient {
         List<CompanyDto> getCompanies();
 
     @GetMapping("/api/v1/stock/financials-reported?symbol={symbol}&token=${token}")
-    ReportDto getReports(@PathVariable(name = "symbol") String symbol);
+    DataDto getReports(@PathVariable(name = "symbol") String symbol);
 
     @GetMapping("/api/v1/quote?symbol={symbol}&token=${token}")
-        QuoteDto getQuote(@PathVariable(name = "symbol") String symbol);
+    QuoteDto getQuote(@PathVariable(name = "symbol") String symbol);
 
     @GetMapping("/api/v1/stock/metric?symbol={symbol}&metric=all&token=${token}")
-    MetricDto getMetrics(@PathVariable(name = "symbol") String symbol);
+    MetricResponseDto getMetrics(@PathVariable(name = "symbol") String symbol);
 }
