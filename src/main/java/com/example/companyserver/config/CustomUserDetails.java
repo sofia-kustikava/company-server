@@ -1,7 +1,11 @@
 package com.example.companyserver.config;
 
+import com.example.companyserver.entity.RoleEntity;
+import com.example.companyserver.entity.UserEntity;
+import com.example.companyserver.entity.UserStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
@@ -9,23 +13,27 @@ import java.util.*;
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
-    private String email;
-    private String password;
-    private Collection<? extends GrantedAuthority> grantedAuthorities;
+    private final UserEntity user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return grantedAuthorities;
+        List<RoleEntity> roles = user.getRoles();
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+
+        for (RoleEntity role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
+        }
+        return authorities;
     }
 
     @Override
     public String getPassword() {
-        return password;
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return email;
+        return user.getEmail();
     }
 
     @Override
@@ -45,6 +53,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return user.getStatus().equals(UserStatus.CREATED) || user.getStatus().equals(UserStatus.ACTIVE);
     }
 }

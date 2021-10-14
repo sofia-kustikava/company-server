@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RestController("/admin")
+@RestController
+@RequestMapping("/admin")
 public class AdminController {
 
     private final CompanyMapper companyMapper;
