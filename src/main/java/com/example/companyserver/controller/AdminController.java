@@ -24,7 +24,7 @@ public class AdminController {
         return companyMapper.companiesToDto(companyService.getCompanies());
     }
 
-    @PostMapping("/save")
+    @PostMapping("/save/companies")
     public HttpStatus saveAllCompanies() {
         companyService.saveCompanies(companyService.getCompanies());
         return HttpStatus.OK;

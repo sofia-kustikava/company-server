@@ -21,17 +21,4 @@ public class SchedulerService {
         companySymbol.forEach(companyEntity -> finnhubClient.getQuote(companyEntity.getSymbol())
         );
     }
-
-    @Scheduled(cron = "0 */15 * ? * *")
-    public void getScheduleMetric() {
-        List<CompanyEntity> companySymbol = companyRepo.findAllBySymbol();
-        companySymbol.forEach(companyEntity -> finnhubClient.getMetrics(companyEntity.getSymbol())
-        );
-    }
-
-    @Scheduled(cron = "0 */15 * ? * *")
-    public void getScheduleReport() {
-        List<CompanyEntity> companySymbol = companyRepo.findAllBySymbol();
-        companySymbol.forEach(companyEntity -> finnhubClient.getReports(companyEntity.getSymbol()));
-    }
 }

@@ -4,6 +4,7 @@ import com.example.companyserver.dto.UserSubscriptionDto;
 import com.example.companyserver.entity.*;
 import com.example.companyserver.exceptions.SubscriptionNotExistException;
 import com.example.companyserver.exceptions.UserNotFoundException;
+import com.example.companyserver.mapper.UserMapper;
 import com.example.companyserver.repo.SubscriptionRepo;
 import com.example.companyserver.repo.UserRepo;
 import com.example.companyserver.repo.UserSubscriptionRepo;
@@ -23,6 +24,8 @@ public class SubscriptionService {
     private final UserRepo userRepo;
     private final UserSubscriptionRepo userSubscriptionRepo;
     private final SubscriptionRepo subscriptionRepo;
+    private final MailService mailService;
+    private final UserMapper userMapper;
 
     public void chooseSubscription(Long id, UserSubscriptionDto userSubscriptionDto) {
         UserEntity user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(String.format("%s", id)));
@@ -55,5 +58,6 @@ public class SubscriptionService {
 
         userSubscriptionRepo.save(userSubscription);
         userRepo.save(user);
+        mailService.sendEmailBeginSubscription(userMapper.userToDto(user), userSubscription.getSubscription());
     }
 }

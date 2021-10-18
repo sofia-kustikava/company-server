@@ -22,6 +22,7 @@ public class RegisterService {
     private final UserRepo userRepo;
     private final RoleRepo roleRepo;
     private final PasswordEncoder passwordEncoder;
+    private final MailService mailService;
 
     public void registerUser(RegisterDto registerDto) throws InvalidUserParameterException {
         if (emailExist(registerDto.getEmail())) throw new UserAlreadyExistException("There is an account with that email address: "
@@ -41,6 +42,7 @@ public class RegisterService {
             RoleEntity userRole = roleRepo.findByRoleName("USER");
             user.setRoles(Arrays.asList(userRole));
 
+            mailService.sendEmailRegistration(registerDto);
             userRepo.save(user);
         } catch (Exception e) {
             throw new InvalidUserParameterException(e.getMessage());

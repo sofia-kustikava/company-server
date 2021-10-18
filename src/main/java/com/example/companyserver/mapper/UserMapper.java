@@ -1,6 +1,7 @@
 package com.example.companyserver.mapper;
 
 import com.example.companyserver.config.CustomUserDetails;
+import com.example.companyserver.dto.RegisterDto;
 import com.example.companyserver.dto.UserDto;
 import com.example.companyserver.entity.UserEntity;
 import org.mapstruct.Mapper;
@@ -19,4 +20,7 @@ public interface UserMapper {
     List<UserEntity> dtoToUsers (List<UserDto> userDtos);
 
     CustomUserDetails fromUserEntityToCustomUserDetails(UserEntity user);
+
+    RegisterDto registerUserToDto (UserEntity user);
+    RegisterDto dtoToRegisterUser (RegisterDto userDto);
 }
