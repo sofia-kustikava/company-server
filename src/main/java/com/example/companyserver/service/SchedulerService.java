@@ -65,7 +65,7 @@ public class SchedulerService {
                     mailService.sendEmailSubscriptionExpired(user);
                 });
     }
-    @Scheduled(cron = "0 * * ? * *")
+    @Scheduled(cron = "0 0 0 * * ?")
     public void isSubscriptionWillExpiredIn3Days() {
         userRepo.findAllByEndDate(LocalDate.now().plusDays(3)).stream()
                 .filter(user -> user.getSubscription().getDateEnd().plusDays(3).equals(LocalDate.now()))
