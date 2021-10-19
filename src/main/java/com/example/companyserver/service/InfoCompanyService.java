@@ -5,27 +5,30 @@ import com.example.companyserver.dto.QuoteDto;
 import com.example.companyserver.dto.metric.MetricDto;
 import com.example.companyserver.dto.report.ReportDto;
 import com.example.companyserver.entity.CompanyEntity;
+import com.example.companyserver.entity.MetricEntity;
 import com.example.companyserver.entity.QuoteEntity;
 import com.example.companyserver.exceptions.CompanyNotFoundException;
+import com.example.companyserver.mapper.MetricMapper;
 import com.example.companyserver.mapper.QuoteMapper;
 import com.example.companyserver.repo.CompanyRepo;
+import com.example.companyserver.repo.MetricRepo;
 import com.example.companyserver.repo.QuoteRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
 public class InfoCompanyService {
+
     private final CompanyRepo companyRepo;
     private final QuoteRepo quoteRepo;
+    private final MetricRepo metricRepo;
     private final FinnhubClient finnhubClient;
     public final QuoteMapper quoteMapper;
+    public final MetricMapper metricMapper;
 
     public void saveQuotes() {
         List<CompanyEntity> companies = companyRepo.findAll();
@@ -37,6 +40,18 @@ public class InfoCompanyService {
                 })
                 .collect(Collectors.toList());
         quoteRepo.saveAll(collect);
+    }
+
+    public void saveMetrics() {
+        List<CompanyEntity> companies = companyRepo.findAll();
+        List<MetricEntity> collect = companies.stream()
+                .map(company -> {
+                    MetricEntity metricEntities = metricMapper.dtoToMetric(finnhubClient.getMetrics(company.getSymbol()).getMetric());
+                    metricEntities.setCompanies(company);
+                    return metricEntities;
+                })
+                .collect(Collectors.toList());
+        metricRepo.saveAll(collect);
     }
 
     public QuoteDto getQuote(String symbol) {
