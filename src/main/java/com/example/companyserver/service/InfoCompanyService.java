@@ -45,7 +45,7 @@ public class InfoCompanyService {
     public void saveMetrics() {
         List<CompanyEntity> companies = companyRepo.findAll();
         List<MetricEntity> collect = companies.stream()
-                .map(company -> {
+                .limit(10).map(company -> {
                     MetricEntity metricEntities = metricMapper.dtoToMetric(finnhubClient.getMetrics(company.getSymbol()).getMetric());
                     metricEntities.setCompanies(company);
                     return metricEntities;
@@ -56,15 +56,27 @@ public class InfoCompanyService {
 
     public QuoteDto getQuote(String symbol) {
         CompanyEntity companySymbol = companyRepo.findBySymbol(symbol).orElseThrow(() -> new CompanyNotFoundException(String.format("%s", symbol)));
-        return finnhubClient.getQuote(companySymbol.getSymbol());
+        QuoteEntity quote = quoteRepo.findByCompanies(companySymbol).orElseThrow(() -> new CompanyNotFoundException("Company not found"));
+        return quoteMapper.quoteToDto(quote);
     }
 
     public MetricDto getMetric(String symbol) {
         CompanyEntity companySymbol = companyRepo.findBySymbol(symbol).orElseThrow(() -> new CompanyNotFoundException(String.format("%s", symbol)));
+        MetricEntity quote = metricRepo.findByCompanies(companySymbol).orElseThrow(() -> new CompanyNotFoundException("Company not found"));
+        return metricMapper.metricToDto(quote);
+    }
+
+    public QuoteDto getFinnhubQuote(String symbol) {
+        CompanyEntity companySymbol = companyRepo.findBySymbol(symbol).orElseThrow(() -> new CompanyNotFoundException(String.format("%s", symbol)));
+        return finnhubClient.getQuote(companySymbol.getSymbol());
+    }
+
+    public MetricDto getFinnhubMetric(String symbol) {
+        CompanyEntity companySymbol = companyRepo.findBySymbol(symbol).orElseThrow(() -> new CompanyNotFoundException(String.format("%s", symbol)));
         return finnhubClient.getMetrics(companySymbol.getSymbol()).getMetric();
     }
 
-    public List<ReportDto> getReport(String symbol) {
+    public List<ReportDto> getFinnhubReport(String symbol) {
         CompanyEntity companySymbol = companyRepo.findBySymbol(symbol).orElseThrow(() -> new CompanyNotFoundException(String.format("%s", symbol)));
         return finnhubClient.getReports(companySymbol.getSymbol()).getData()
                 .stream()

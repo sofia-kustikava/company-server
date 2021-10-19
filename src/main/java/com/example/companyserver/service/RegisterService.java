@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Arrays;
 
 @Service
@@ -35,8 +35,8 @@ public class RegisterService {
                     .email(registerDto.getEmail())
                     .password(passwordEncoder.encode(registerDto.getPassword()))
                     .status(UserStatus.CREATED)
-                    .dateCreated(LocalDateTime.now())
-                    .updated(LocalDateTime.now())
+                    .dateCreated(LocalDate.now())
+                    .updated(LocalDate.now())
                     .build();
 
             RoleEntity userRole = roleRepo.findByRoleName("USER");

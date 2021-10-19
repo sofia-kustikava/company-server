@@ -8,8 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -17,9 +16,9 @@ import java.util.Date;
 @Builder
 public class UserSubscriptionDto {
 
-    private LocalDateTime dateStart;
+    private LocalDate dateStart;
 
-    private Date dateEnd;
+    private LocalDate dateEnd;
 
     @NotNull
     @NotEmpty

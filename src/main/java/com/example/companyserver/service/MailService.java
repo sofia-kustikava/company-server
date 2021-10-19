@@ -1,10 +1,9 @@
 package com.example.companyserver.service;
 
 import com.example.companyserver.dto.RegisterDto;
-import com.example.companyserver.dto.SubscriptionDto;
 import com.example.companyserver.dto.UserDto;
-import com.example.companyserver.dto.UserSubscriptionDto;
 import com.example.companyserver.entity.SubscriptionEntity;
+import com.example.companyserver.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -31,6 +30,35 @@ public class MailService {
         mail.setSubject("You've just started to follow by " + subscription.getName() + " completed! Enjoy ;)\n" +
                 "Description: " + subscription.getDescription());
         mail.setText("Your account is working!");
+
+        javaMailSender.send(mail);
+    }
+
+    public void sendEmailSubscriptionWillExpire(UserEntity user) throws MailException {
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setTo(user.getEmail());
+
+        mail.setSubject("Expiration date: " + user.getSubscription().getDateEnd());
+
+        mail.setText("Your " + user.getSubscription().getSubscription().getName() +
+                " subscription will be expired at " + user.getSubscription().getDateEnd() +
+                "! Hurry up and update your subscription ;)\n" +
+                user.getSubscription().getSubscription().getName() +
+                " description: " + user.getSubscription().getSubscription().getDescription());
+
+        javaMailSender.send(mail);
+    }
+
+    public void sendEmailSubscriptionExpired(UserEntity user) throws MailException {
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setTo(user.getEmail());
+
+        mail.setSubject("Expiration date: " + user.getSubscription().getDateEnd());
+
+        mail.setText("Your " + user.getSubscription().getSubscription().getName() +
+                " subscription is expired. You can update your subscription or buy a new one;)\n" +
+                user.getSubscription().getSubscription().getName() +
+                " description: " + user.getSubscription().getSubscription().getDescription());
 
         javaMailSender.send(mail);
     }

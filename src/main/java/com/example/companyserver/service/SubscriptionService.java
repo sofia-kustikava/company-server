@@ -12,9 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 
 @Slf4j
 @Service
@@ -47,11 +44,11 @@ public class SubscriptionService {
     public void paySubscription(Long id) {
         UserEntity user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(String.format("%s", id)));
         UserSubscriptionEntity userSubscription = userSubscriptionRepo.findByUser(user).orElseThrow(() -> new UserNotFoundException(String.format("%s", id)));
-        Date date = Date.from(LocalDate.now().plusDays(30).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        LocalDate date = LocalDate.from(LocalDate.now().plusDays(30));
 
         //payment is missing
 
-        userSubscription.setDateStart(LocalDateTime.now());
+        userSubscription.setDateStart(LocalDate.now());
         userSubscription.setDateEnd(date);
         userSubscription.setSubscriptionStatus(SubscriptionStatus.ACTIVE);
         user.setStatus(UserStatus.ACTIVE);

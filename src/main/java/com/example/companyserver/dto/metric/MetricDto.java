@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -27,13 +27,13 @@ public class MetricDto {
     private float weekHigh;
 
     @JsonProperty("52WeekHighDate")
-    private Date weekHighDate;
+    private LocalDate weekHighDate;
 
     @JsonProperty("52WeekLow")
     private float weekLow;
 
     @JsonProperty("52WeekLowDate")
-    private Date weekLowDate;
+    private LocalDate weekLowDate;
 
     @JsonProperty("52WeekPriceReturnDaily")
     private float weekPriceReturnDaily;

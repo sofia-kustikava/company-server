@@ -3,6 +3,7 @@ package com.example.companyserver.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -20,17 +21,17 @@ public class MetricEntity {
     private CompanyEntity companies;
 
     @Column(name = "week_high")
-    private String weekHigh;
+    private float weekHigh;
 
     @Column(name = "week_high_date")
-    private String weekHighDate;
+    private LocalDate weekHighDate;
 
     @Column(name = "week_low")
-    private String weekLow;
+    private float weekLow;
 
     @Column(name = "week_low_date")
-    private String weekLowDate;
+    private LocalDate weekLowDate;
 
     @Column(name = "week_price_daily")
-    private String weekPriceDaily;
+    private float weekPriceDaily;
 }

@@ -3,8 +3,7 @@ package com.example.companyserver.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -20,10 +19,10 @@ public class UserSubscriptionEntity {
     private Long id;
 
     @Column(name = "date_start")
-    private LocalDateTime dateStart;
+    private LocalDate dateStart;
 
     @Column(name = "date_end")
-    private Date dateEnd;
+    private LocalDate dateEnd;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "sub_status")

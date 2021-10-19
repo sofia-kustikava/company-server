@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -24,6 +26,7 @@ public class AuthService {
         if (passwordEncoder.matches(authDto.getPassword(), user.getPassword())) {
             return new TokenDto(jwtProvider.generateToken(user.getEmail()));
         }
+        user.setUpdated(LocalDate.now());
         throw  new IncorrectPasswordException();
     }
 }
