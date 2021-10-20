@@ -25,8 +25,7 @@ public class RegisterService {
     private final MailService mailService;
 
     public void registerUser(RegisterDto registerDto) throws InvalidUserParameterException {
-        if (emailExist(registerDto.getEmail())) throw new UserAlreadyExistException("There is an account with that email address: "
-                    + String.format("%s", registerDto.getEmail()));
+        if (emailExist(registerDto.getEmail())) throw new UserAlreadyExistException(String.format("%s", registerDto.getEmail()));
 
         try {
             UserEntity user = UserEntity.builder()

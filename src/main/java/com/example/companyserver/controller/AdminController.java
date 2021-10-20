@@ -48,5 +48,16 @@ public class AdminController {
         return HttpStatus.OK;
     }
 
+    @PostMapping("/block/{userId}")
+    public HttpStatus blockUser(@PathVariable Long userId) {
+        userService.blockUser(userId);
+        return HttpStatus.OK;
+    }
+
+    @PostMapping("/unblock/{userId}")
+    public HttpStatus unblockUser(@PathVariable Long userId) {
+        userService.unblockUser(userId);
+        return HttpStatus.OK;
+    }
 
 }

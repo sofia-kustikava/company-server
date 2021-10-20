@@ -56,7 +56,10 @@ public class SchedulerService {
         userRepo.findAllByEndDate(LocalDate.now()).stream()
                 .filter(user -> user.getSubscription().getDateEnd().equals(LocalDate.now()))
                 .forEach(user -> {
-                    if (user.getStatus().equals(UserStatus.ACTIVE)) user.getSubscription().setSubscriptionStatus(SubscriptionStatus.PAUSED);
+                    if (user.getStatus().equals(UserStatus.ACTIVE)) {
+                        user.getSubscription().setSubscriptionStatus(SubscriptionStatus.PAUSED);
+                        user.setStatus(UserStatus.BANNED);
+                    }
                     userRepo.save(user);
                     mailService.sendEmailSubscriptionExpired(user);
                 });
