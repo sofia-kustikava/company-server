@@ -26,8 +26,5 @@ public class SubscriptionEntity {
     private String description;
 
     @Column(name = "price")
-    private float price;
-
-    @OneToMany(mappedBy = "subscription")
-    private List<UserSubscriptionEntity> userSubscriptionEntities;
+    private Double price;
 }

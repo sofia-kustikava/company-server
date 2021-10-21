@@ -3,11 +3,13 @@ package com.example.companyserver.service;
 import com.example.companyserver.dto.*;
 import com.example.companyserver.entity.UserEntity;
 import com.example.companyserver.entity.UserStatus;
+import com.example.companyserver.entity.UserSubscriptionEntity;
 import com.example.companyserver.exceptions.UserIsBannedException;
 import com.example.companyserver.exceptions.UserIsUnbannedException;
 import com.example.companyserver.exceptions.UserNotFoundException;
 import com.example.companyserver.mapper.UserMapper;
 import com.example.companyserver.repo.UserRepo;
+import com.example.companyserver.repo.UserSubscriptionRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,10 +34,8 @@ public class UserService {
     public void delete(Long id) {
         UserEntity user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(String.format("%s", id)));
         user.setRoles(null);
-        user.setSubscription(null);
-        userRepo.save(user);
-        userRepo.deleteById(id);
-        log.info("User was deleted with this id: " + id);
+        userRepo.delete(user);
+        log.info("User was deleted with this id: {}", id);
     }
 
     public void blockUser(Long userId) {
@@ -44,7 +44,7 @@ public class UserService {
             user.setStatus(UserStatus.BANNED);
             userRepo.save(user);
         } else {
-            log.info("This user is already banned: " + user.getEmail());
+            log.info("This user is already banned: {}", user.getEmail());
             throw new UserIsBannedException(String.format("%s", user.getEmail()));
         }
     }
@@ -55,7 +55,7 @@ public class UserService {
             user.setStatus(UserStatus.CREATED);
             userRepo.save(user);
         } else {
-            log.info("This user is already unbanned: " + user.getEmail());
+            log.info("This user is already unbanned: {}", user.getEmail());
             throw new UserIsUnbannedException(String.format("%s", user.getEmail()));
         }
     }

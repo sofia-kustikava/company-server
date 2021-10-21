@@ -42,7 +42,7 @@ public class SubscriptionService {
             user.setSubscription(subscription);
             userRepo.save(user);
         } else {
-            log.info("You already have a subscription: " + user.getSubscription().getSubscription().getName());
+            log.info("You already have a subscription: {}", user.getSubscription().getSubscription().getName());
             throw new HaveSubscriptionException(String.format("%s", user.getSubscription().getSubscription().getName()));
         }
     }

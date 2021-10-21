@@ -6,6 +6,7 @@ import com.example.companyserver.dto.report.ReportDto;
 import com.example.companyserver.service.InfoCompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,15 +19,15 @@ public class AdminSubscriptionController {
     public final InfoCompanyService infoCompanyService;
 
     @PostMapping("/save/quotes")
-    public HttpStatus saveAllQuotes() {
+    public ResponseEntity<String> saveAllQuotes() {
         infoCompanyService.saveQuotes();
-        return HttpStatus.OK;
+        return new ResponseEntity<>("All quotes were successfully saved", HttpStatus.OK);
     }
 
     @PostMapping("/save/metrics")
-    public HttpStatus saveAllMetrics() {
+    public ResponseEntity<String> saveAllMetrics() {
         infoCompanyService.saveMetrics();
-        return HttpStatus.OK;
+        return new ResponseEntity<>("All metrics were successfully saved", HttpStatus.OK);
     }
 
     @GetMapping("/quote/{symbol}")

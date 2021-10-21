@@ -27,10 +27,11 @@ public class SchedulerService {
     private final MailService mailService;
     private final UserRepo userRepo;
 
-    @Scheduled(cron = "0 */15 * ? * *")
+    @Scheduled(cron = "0 0 0 * * ?")
     public void saveQuotes() {
         List<QuoteEntity> collect = companyRepo.findAll().stream()
-                .limit(10).map(company -> {
+                .limit(10)
+                .map(company -> {
                     QuoteEntity quoteEntity = quoteMapper.dtoToQuote(finnhubClient.getQuote(company.getSymbol()));
                     quoteEntity.setCompanies(company);
                     return quoteEntity;
@@ -39,9 +40,10 @@ public class SchedulerService {
         quoteRepo.saveAll(collect);
     }
 
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 0 12 ? JAN *")
     public void saveMetrics() {
         List<MetricEntity> collect = companyRepo.findAll().stream()
+                .limit(10)
                 .map(company -> {
                     MetricEntity metricEntities = metricMapper.dtoToMetric(finnhubClient.getMetrics(company.getSymbol()).getMetric());
                     metricEntities.setCompanies(company);
@@ -64,6 +66,7 @@ public class SchedulerService {
                     mailService.sendEmailSubscriptionExpired(user);
                 });
     }
+
     @Scheduled(cron = "0 0 0 * * ?")
     public void isSubscriptionWillExpiredIn3Days() {
         userRepo.findAllByEndDate(LocalDate.now().plusDays(3)).stream()

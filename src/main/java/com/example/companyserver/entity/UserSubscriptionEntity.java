@@ -28,11 +28,11 @@ public class UserSubscriptionEntity {
     @Column(name = "sub_status")
     private SubscriptionStatus subscriptionStatus;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "users_id", referencedColumnName = "id")
     private UserEntity user;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "subscriptions_id", referencedColumnName = "id")
     private SubscriptionEntity subscription;
 

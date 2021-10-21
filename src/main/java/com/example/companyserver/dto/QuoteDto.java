@@ -25,23 +25,23 @@ import lombok.NoArgsConstructor;
 public class QuoteDto {
 
     @JsonProperty("c")
-    private float currentPrice;
+    private Double currentPrice;
 
     @JsonProperty("d")
-    private float change;
+    private Double change;
 
     @JsonProperty("dp")
-    private float percentChange;
+    private Double percentChange;
 
     @JsonProperty("h")
-    private float highPrice;
+    private Double highPrice;
 
     @JsonProperty("l")
-    private float lowPrice;
+    private Double lowPrice;
 
     @JsonProperty("o")
-    private float openPrice;
+    private Double openPrice;
 
     @JsonProperty("pc")
-    private float closePrice;
+    private Double closePrice;
 }

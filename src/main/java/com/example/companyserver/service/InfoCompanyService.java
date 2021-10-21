@@ -55,14 +55,12 @@ public class InfoCompanyService {
     }
 
     public QuoteDto getQuote(String symbol) {
-        CompanyEntity companySymbol = companyRepo.findBySymbol(symbol).orElseThrow(() -> new CompanyNotFoundException(String.format("%s", symbol)));
-        QuoteEntity quote = quoteRepo.findByCompanies(companySymbol).orElseThrow(() -> new CompanyNotFoundException("Company not found"));
+        QuoteEntity quote = quoteRepo.findByCompanies(symbol).orElseThrow(() -> new CompanyNotFoundException(String.format("%s", symbol)));
         return quoteMapper.quoteToDto(quote);
     }
 
     public MetricDto getMetric(String symbol) {
-        CompanyEntity companySymbol = companyRepo.findBySymbol(symbol).orElseThrow(() -> new CompanyNotFoundException(String.format("%s", symbol)));
-        MetricEntity quote = metricRepo.findByCompanies(companySymbol).orElseThrow(() -> new CompanyNotFoundException("Company not found"));
+        MetricEntity quote = metricRepo.findByCompanies(symbol).orElseThrow(() -> new CompanyNotFoundException(String.format("%s", symbol)));
         return metricMapper.metricToDto(quote);
     }
 
