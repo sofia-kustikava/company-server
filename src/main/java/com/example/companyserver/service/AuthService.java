@@ -24,9 +24,9 @@ public class AuthService {
     public TokenDto auth(AuthDto authDto) {
         UserEntity user = userRepo.findByEmail(authDto.getEmail()).orElseThrow(() -> new UserNotExistException(String.format("%s", authDto.getEmail())));
         if (passwordEncoder.matches(authDto.getPassword(), user.getPassword())) {
+            user.setUpdated(LocalDate.now());
             return new TokenDto(jwtProvider.generateToken(user.getEmail()));
         }
-        user.setUpdated(LocalDate.now());
         throw  new IncorrectPasswordException();
     }
 }

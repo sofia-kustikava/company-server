@@ -1,11 +1,114 @@
 package com.example.companyserver.service;
 
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import com.example.companyserver.dto.UserDto;
+import com.example.companyserver.entity.UserEntity;
+import com.example.companyserver.entity.UserStatus;
+import com.example.companyserver.exceptions.UserIsBannedException;
+import com.example.companyserver.exceptions.UserIsUnbannedException;
+import com.example.companyserver.mapper.UserMapper;
+import com.example.companyserver.repo.UserRepo;
+import org.junit.Assert;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+import java.time.LocalDate;
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
+    @Mock
+    private UserRepo userRepo;
+
+    @Mock
+    private UserMapper userMapper;
+
+    @InjectMocks
+    private UserService userService;
+
+    private UserEntity user;
+    private UserDto userWithDto;
+    private UserEntity blockedUser;
+
+    @BeforeEach
+    public void beforeTest() {
+        user = UserEntity.builder()
+                .id(1L)
+                .firstName("User")
+                .lastName("Userovich")
+                .email("user1@mail.com")
+                .status(UserStatus.CREATED)
+                .updated(LocalDate.now())
+                .build();
+        userWithDto = UserDto.builder()
+                .id(1L)
+                .firstName("User")
+                .lastName("Userovich")
+                .email("user1@mail.com")
+                .build();
+        blockedUser = UserEntity.builder()
+                .id(1L)
+                .firstName("User")
+                .lastName("Userovich")
+                .email("user1@mail.com")
+                .status(UserStatus.BANNED)
+                .updated(LocalDate.now())
+                .build();
+    }
+
+    @Test
+    public void findUserByEmailTest() {
+        when(userRepo.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(userMapper.userToDto(user)).thenReturn(userWithDto);
+        UserDto userFindEmail = userService.findByEmail(user.getEmail());
+        assertEquals(userWithDto, userFindEmail);
+    }
+
+    @Test
+    public void findUserByIdTest() {
+        when(userRepo.findById(user.getId())).thenReturn(Optional.of(user));
+        when(userMapper.userToDto(user)).thenReturn(userWithDto);
+        UserDto userFindId = userService.findById(user.getId());
+        assertEquals(userWithDto, userFindId);
+    }
+
+    @Test
+    public void deleteUserTest() {
+        when(userRepo.findById(user.getId())).thenReturn(Optional.of(user));
+        userService.delete(user.getId());
+    }
+
+    @Test
+    public void blockUserTest() {
+        when(userRepo.findById(user.getId())).thenReturn(Optional.of(user));
+        userService.blockUser(user.getId());
+        Mockito.verify(userRepo).save(user);
+    }
+
+    @Test
+    public void unblockUserTest() {
+        when(userRepo.findById(blockedUser.getId())).thenReturn(Optional.of(blockedUser));
+        userService.unblockUser(blockedUser.getId());
+        Mockito.verify(userRepo).save(blockedUser);
+    }
+
+    @Test
+    public void failedBlockUserTest() {
+        when(userRepo.findById(blockedUser.getId())).thenReturn(Optional.of(blockedUser));
+        Assert.assertThrows(UserIsBannedException.class, () -> userService.blockUser(blockedUser.getId()));
+    }
+
+    @Test
+    public void failedUnblockUserTest() {
+        when(userRepo.findById(user.getId())).thenReturn(Optional.of(user));
+        Assert.assertThrows(UserIsUnbannedException.class, () -> userService.unblockUser(user.getId()));
+    }
 }

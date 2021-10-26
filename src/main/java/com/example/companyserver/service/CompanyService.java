@@ -1,5 +1,6 @@
 package com.example.companyserver.service;
 
+import com.example.companyserver.dto.CompanyDto;
 import com.example.companyserver.entity.CompanyEntity;
 import com.example.companyserver.exceptions.CompanyNotFoundException;
 import com.example.companyserver.client.FinnhubClient;
@@ -21,8 +22,8 @@ public class CompanyService {
     private final CompanyMapper companyMapper;
     private final FinnhubClient finnhubClient;
 
-    public List<CompanyEntity> getCompanies() {
-        return companyMapper.INSTANCE.dtoToCompanies(finnhubClient.getCompanies());
+    public List<CompanyDto> getCompanies() {
+        return finnhubClient.getCompanies();
     }
 
     public void saveCompanies(List<CompanyEntity> companies) {
@@ -39,6 +40,6 @@ public class CompanyService {
     }
 
     public void deleteAllCompanies() {
-        companyRepo.deleteAll(companyMapper.INSTANCE.dtoToCompanies(finnhubClient.getCompanies()));
+        companyRepo.deleteAll(companyMapper.dtoToCompanies(finnhubClient.getCompanies()));
     }
 }

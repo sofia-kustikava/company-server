@@ -22,12 +22,12 @@ public class AdminController {
 
     @GetMapping("/companies")
     public List<CompanyDto> getAllCompanies() {
-        return companyMapper.companiesToDto(companyService.getCompanies());
+        return companyService.getCompanies();
     }
 
     @PostMapping("/save/companies")
     public ResponseEntity<String> saveAllCompanies() {
-        companyService.saveCompanies(companyService.getCompanies());
+        companyService.saveCompanies(companyMapper.dtoToCompanies(companyService.getCompanies()));
         return new ResponseEntity<>("All companies were successfully saved", HttpStatus.OK);
     }
 

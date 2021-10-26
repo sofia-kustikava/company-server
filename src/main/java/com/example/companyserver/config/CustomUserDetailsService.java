@@ -1,6 +1,6 @@
 package com.example.companyserver.config;
 
-import com.example.companyserver.entity.UserEntity;
+import com.example.companyserver.dto.UserDto;
 import com.example.companyserver.mapper.UserMapper;
 import com.example.companyserver.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserEntity user = userService.findByEmail(email);
-        return userMapper.fromUserEntityToCustomUserDetails(user);
+        UserDto user = userService.findByEmail(email);
+        return userMapper.fromUserDtoToCustomUserDetails(user);
     }
 }
