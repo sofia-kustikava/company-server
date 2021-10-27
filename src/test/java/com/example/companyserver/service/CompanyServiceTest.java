@@ -5,13 +5,11 @@ import com.example.companyserver.dto.CompanyDto;
 import com.example.companyserver.entity.CompanyEntity;
 import com.example.companyserver.mapper.CompanyMapper;
 import com.example.companyserver.repo.CompanyRepo;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
@@ -38,6 +36,7 @@ public class CompanyServiceTest {
 
     private List<CompanyEntity> companiesEntity = new ArrayList<>();
     private List<CompanyDto> companiesDto = new ArrayList<>();
+    private List<CompanyEntity> companies = new ArrayList<>();
     private CompanyEntity companyEntity;
 
     @BeforeEach
@@ -78,6 +77,15 @@ public class CompanyServiceTest {
     public void getCompaniesTest() {
         finnhubClient.getCompanies();
         verify(finnhubClient).getCompanies();
+    }
+
+    @Test
+    public void saveCompaniesTest() {
+        for (int i = 0; i < companies.size(); i++) {
+            when(companyRepo.findBySymbol(companyEntity.getSymbol())).thenReturn(Optional.of(companyEntity));
+            companies.add(companyEntity);
+            verify(companyRepo).save(companyEntity);
+        }
     }
 
     @Test

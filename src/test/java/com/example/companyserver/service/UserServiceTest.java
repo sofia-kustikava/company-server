@@ -8,6 +8,7 @@ import com.example.companyserver.exceptions.UserIsUnbannedException;
 import com.example.companyserver.mapper.UserMapper;
 import com.example.companyserver.repo.UserRepo;
 import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +20,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -103,12 +105,12 @@ public class UserServiceTest {
     @Test
     public void failedBlockUserTest() {
         when(userRepo.findById(blockedUser.getId())).thenReturn(Optional.of(blockedUser));
-        Assert.assertThrows(UserIsBannedException.class, () -> userService.blockUser(blockedUser.getId()));
+        assertThrows(UserIsBannedException.class, () -> userService.blockUser(blockedUser.getId()));
     }
 
     @Test
     public void failedUnblockUserTest() {
         when(userRepo.findById(user.getId())).thenReturn(Optional.of(user));
-        Assert.assertThrows(UserIsUnbannedException.class, () -> userService.unblockUser(user.getId()));
+        assertThrows(UserIsUnbannedException.class, () -> userService.unblockUser(user.getId()));
     }
 }

@@ -4,6 +4,7 @@ import com.example.companyserver.dto.RegisterDto;
 import com.example.companyserver.entity.RoleEntity;
 import com.example.companyserver.entity.UserEntity;
 import com.example.companyserver.entity.UserStatus;
+import com.example.companyserver.exceptions.InvalidUserParameterException;
 import com.example.companyserver.exceptions.UserAlreadyExistException;
 import com.example.companyserver.repo.RoleRepo;
 import com.example.companyserver.repo.UserRepo;
@@ -18,9 +19,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Optional;
-
+import java.util.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.refEq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,8 +44,7 @@ public class RegisterServiceTest {
     private RegisterService registerService;
 
     private UserEntity user;
-    private RegisterDto registerExistUser;
-    private RoleEntity role;
+    private RegisterDto registerUser;
 
     @BeforeEach
     public void beforeTest() {
@@ -51,34 +52,36 @@ public class RegisterServiceTest {
                 .firstName("User")
                 .lastName("Userovich")
                 .email("user1@mail.com")
-                .password(passwordEncoder.encode("user"))
+                .password("user")
                 .status(UserStatus.CREATED)
                 .dateCreated(LocalDate.now())
                 .updated(LocalDate.now())
+                .roles(Arrays.asList(new RoleEntity(null, "USER", Collections.emptyList())))
                 .build();
-        role = roleRepo.findByRoleName("USER");
-        user.setRoles(Arrays.asList(role));
 
-        registerExistUser = RegisterDto.builder()
+        registerUser = RegisterDto.builder()
                 .firstName("User")
                 .lastName("Userovich")
                 .email("user1@mail.com")
-                .password(passwordEncoder.encode("user"))
+                .password("user")
                 .build();
     }
 
     @Test
-    public void registerUserTest() {
-        when(userRepo.findByEmail(registerExistUser.getEmail())).thenReturn(Optional.of(user));
-        when(roleRepo.findByRoleName("USER")).thenReturn(role);
-        Mockito.verify(mailService).sendEmailRegistration(registerExistUser);
-        Mockito.verify(userRepo).save(user);
+    public void registerUserTest() throws InvalidUserParameterException {
+        when(userRepo.findByEmail(registerUser.getEmail())).thenReturn(Optional.empty());
+        when(passwordEncoder.encode(registerUser.getPassword())).thenReturn(registerUser.getPassword());
+        when(roleRepo.findByRoleName("USER")).thenReturn(user.getRoles().get(0));
+
+        registerService.registerUser(registerUser);
+
+        verify(mailService).sendEmailRegistration(registerUser);
+        verify(userRepo).save(refEq(user));
     }
 
     @Test
     public void registerFailedUserTest() {
-        when(userRepo.findByEmail(registerExistUser.getEmail())).thenReturn(Optional.of(user));
-        when(userRepo.findByEmail(registerExistUser.getEmail()).isPresent()).thenReturn(true);
-        Assert.assertThrows(UserAlreadyExistException.class, () -> registerService.registerUser(registerExistUser));
+        when(userRepo.findByEmail(registerUser.getEmail())).thenReturn(Optional.of(UserEntity.builder().email("user@mail.com").build()));
+        Assert.assertThrows(UserAlreadyExistException.class, () -> registerService.registerUser(registerUser));
     }
 }
