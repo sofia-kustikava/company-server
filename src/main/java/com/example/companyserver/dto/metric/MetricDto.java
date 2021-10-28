@@ -26,17 +26,17 @@ import java.time.LocalDate;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MetricDto {
     @JsonProperty("52WeekHigh")
-    private Long weekHigh;
+    private Double weekHigh;
 
     @JsonProperty("52WeekHighDate")
     private LocalDate weekHighDate;
 
     @JsonProperty("52WeekLow")
-    private Long weekLow;
+    private Double weekLow;
 
     @JsonProperty("52WeekLowDate")
     private LocalDate weekLowDate;
 
     @JsonProperty("52WeekPriceReturnDaily")
-    private Long weekPriceReturnDaily;
+    private Double weekPriceReturnDaily;
 }

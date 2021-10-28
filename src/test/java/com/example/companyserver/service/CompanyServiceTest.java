@@ -34,24 +34,12 @@ public class CompanyServiceTest {
     @InjectMocks
     private CompanyService companyService;
 
-    private List<CompanyEntity> companiesEntity = new ArrayList<>();
     private List<CompanyDto> companiesDto = new ArrayList<>();
     private List<CompanyEntity> companies = new ArrayList<>();
     private CompanyEntity companyEntity;
 
     @BeforeEach
     public void beforeTest() {
-        companiesEntity.add(CompanyEntity.builder()
-                .currency("USD")
-                .description("ONE 4 ART LTD")
-                .displaySymbol("ONFA")
-                .figi("BBG002Q0F4D7")
-                .mic("OOTC")
-                .symbol("ONFA")
-                .type("Common Stock")
-                .build()
-        );
-
         companiesDto.add(CompanyDto.builder()
                 .currency("USD")
                 .description("ONE 4 ART LTD")
@@ -71,6 +59,7 @@ public class CompanyServiceTest {
                 .symbol("ONFA")
                 .type("Common Stock")
                 .build();
+        companies.add(companyEntity);
     }
 
     @Test
@@ -81,11 +70,9 @@ public class CompanyServiceTest {
 
     @Test
     public void saveCompaniesTest() {
-        for (int i = 0; i < companies.size(); i++) {
-            when(companyRepo.findBySymbol(companyEntity.getSymbol())).thenReturn(Optional.of(companyEntity));
-            companies.add(companyEntity);
-            verify(companyRepo).save(companyEntity);
-        }
+        when(companyRepo.findBySymbol(companyEntity.getSymbol())).thenReturn(Optional.of(companyEntity));
+        companyService.saveCompanies(companies);
+        companies.forEach(companyEntity->verify(companyRepo).save(companyEntity));
     }
 
     @Test

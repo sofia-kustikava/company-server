@@ -31,7 +31,7 @@ public class SubscriptionService {
                 .orElseThrow(() -> new UserNotFoundException(String.format("%s", userId)));
         if (user.getSubscription() == null) {
             UserSubscriptionEntity subscription = UserSubscriptionEntity.builder()
-                    .subscription(subscriptionRepo.findByName(userSubscriptionDto.getSubscription())
+                    .subscription(subscriptionRepo.findByName(userSubscriptionDto.getSubscription().getName())
                             .orElseThrow(() -> new SubscriptionNotExistException(String.format("%s", userSubscriptionDto.getSubscription()))))
                     .user(user)
                     .dateStart(null)
@@ -66,7 +66,7 @@ public class SubscriptionService {
         UserEntity user = userRepo.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(String.format("%s", userId)));
 
-        user.getSubscription().setSubscription(subscriptionRepo.findByName(userSubscriptionDto.getSubscription())
+        user.getSubscription().setSubscription(subscriptionRepo.findByName(userSubscriptionDto.getSubscription().getName())
                 .orElseThrow(() -> new SubscriptionNotExistException(String.format("%s", userSubscriptionDto.getSubscription()))));
         user.getSubscription().setDateStart(LocalDate.now());
         user.getSubscription().setDateEnd(LocalDate.from(LocalDate.now().plusDays(30)));

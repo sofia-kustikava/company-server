@@ -5,19 +5,13 @@ import com.example.companyserver.dto.CompanyDto;
 import com.example.companyserver.dto.QuoteDto;
 import com.example.companyserver.dto.metric.MetricDto;
 import com.example.companyserver.dto.metric.MetricResponseDto;
-import com.example.companyserver.dto.report.DataDto;
-import com.example.companyserver.dto.report.ReportDto;
-import com.example.companyserver.dto.report.ReportResponseDto;
-import com.example.companyserver.dto.report.UnitsDto;
-import com.example.companyserver.entity.CompanyEntity;
-import com.example.companyserver.entity.MetricEntity;
-import com.example.companyserver.entity.QuoteEntity;
-import com.example.companyserver.entity.ReportEntity;
+import com.example.companyserver.entity.*;
 import com.example.companyserver.mapper.MetricMapper;
 import com.example.companyserver.mapper.QuoteMapper;
 import com.example.companyserver.repo.CompanyRepo;
 import com.example.companyserver.repo.MetricRepo;
 import com.example.companyserver.repo.QuoteRepo;
+import com.example.companyserver.repo.UserRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,38 +19,42 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class InfoCompanyServiceTest {
+class SchedulerServiceTest {
 
     @Mock
     private CompanyRepo companyRepo;
 
     @Mock
+    private FinnhubClient finnhubClient;
+
+    @Mock
+    private QuoteMapper quoteMapper;
+
+    @Mock
     private QuoteRepo quoteRepo;
+
+    @Mock
+    private MetricMapper metricMapper;
 
     @Mock
     private MetricRepo metricRepo;
 
     @Mock
-    private FinnhubClient finnhubClient;
+    private MailService mailService;
 
     @Mock
-    public QuoteMapper quoteMapper;
-
-    @Mock
-    public MetricMapper metricMapper;
+    private UserRepo userRepo;
 
     @InjectMocks
-    private InfoCompanyService infoCompanyService;
+    private SchedulerService schedulerService;
 
     private List<CompanyEntity> companiesEntity = new ArrayList<>();
     private List<CompanyDto> companiesDto = new ArrayList<>();
@@ -67,27 +65,26 @@ public class InfoCompanyServiceTest {
 
     private QuoteEntity quote;
     private QuoteDto quoteDto;
-    private List<QuoteEntity> quotes = new ArrayList<>();
 
     private MetricEntity metric;
-    private MetricResponseDto metricResponseDto;
     private MetricDto metricDto;
+    private MetricResponseDto metricResponseDto;
 
     private MetricEntity metric2;
     private MetricDto metricDto2;
     private MetricResponseDto metricResponseDto2;
 
-    private List<MetricEntity> metrics = new ArrayList<>();
-
-    private ReportDto reportDto;
-    private ReportEntity report;
-    private DataDto dataDto;
-    private UnitsDto unitsDto;
-    private ReportResponseDto responseReportDto;
-    private List<ReportResponseDto> reportResponseDtos = new ArrayList<>();
-
     private QuoteDto quoteDto2;
     private QuoteEntity quote2;
+
+    private UserEntity user;
+    private UserSubscriptionEntity userSubscription;
+
+    private UserEntity user2;
+    private UserSubscriptionEntity userSubscription2;
+
+    private List<UserEntity> users = new ArrayList<>();
+    private SubscriptionEntity subscription;
 
     @BeforeEach
     public void beforeTest() {
@@ -198,18 +195,49 @@ public class InfoCompanyServiceTest {
                 .build();
 
         companies.addAll(Arrays.asList(companyEntity, companyEntity2));
-        reportDto = ReportDto.builder().build();
-        report = ReportEntity.builder()
-                .companies(companyEntity)
+
+        subscription = SubscriptionEntity.builder()
+                .name("Golden")
+                .description("Description sample")
+                .price(90D)
                 .build();
-        dataDto = DataDto.builder()
-                .data(reportResponseDtos)
+
+        userSubscription = UserSubscriptionEntity.builder()
+                .subscription(subscription)
+                .dateEnd(LocalDate.now())
+                .dateStart(LocalDate.now())
+                .subscriptionStatus(SubscriptionStatus.ACTIVE)
                 .build();
+        user = UserEntity.builder()
+                .firstName("User")
+                .lastName("Userovich")
+                .email("user@mail.com")
+                .status(UserStatus.ACTIVE)
+                .subscription(userSubscription)
+                .build();
+
+        userSubscription2 = UserSubscriptionEntity.builder()
+                .subscription(subscription)
+                .dateEnd(LocalDate.now().minusDays(3))
+                .dateStart(LocalDate.now())
+                .subscriptionStatus(SubscriptionStatus.ACTIVE)
+                .build();
+        user2 = UserEntity.builder()
+                .firstName("User2")
+                .lastName("Userovich2")
+                .email("user2@mail.com")
+                .status(UserStatus.ACTIVE)
+                .subscription(userSubscription2)
+                .build();
+
+        userSubscription2.setUser(user2);
+        userSubscription.setUser(user);
+
+        users.addAll(Arrays.asList(user, user2));
     }
 
     @Test
-    public void saveQuotesTest() {
-
+    void saveQuotesByScheduleTest() {
         when(companyRepo.findAll()).thenReturn(companies);
         when(finnhubClient.getQuote(companyEntity.getSymbol())).thenReturn(quoteDto);
         when(finnhubClient.getQuote(companyEntity2.getSymbol())).thenReturn(quoteDto2);
@@ -217,12 +245,12 @@ public class InfoCompanyServiceTest {
         when(quoteMapper.dtoToQuote(quoteDto)).thenReturn(quote);
         when(quoteMapper.dtoToQuote(quoteDto2)).thenReturn(quote2);
 
-        infoCompanyService.saveQuotes();
+        schedulerService.saveQuotes();
         verify(quoteRepo).saveAll(Arrays.asList(quote, quote2));
     }
 
     @Test
-    public void saveMetricsTest() {
+    void saveMetricsByScheduleTest() {
         when(companyRepo.findAll()).thenReturn(companies);
         when(finnhubClient.getMetrics(companies.get(0).getSymbol())).thenReturn(metricResponseDto);
         when(finnhubClient.getMetrics(companies.get(1).getSymbol())).thenReturn(metricResponseDto2);
@@ -230,52 +258,25 @@ public class InfoCompanyServiceTest {
         when(metricMapper.dtoToMetric(metricDto)).thenReturn(metric);
         when(metricMapper.dtoToMetric(metricDto2)).thenReturn(metric2);
 
-        infoCompanyService.saveMetrics();
+        schedulerService.saveMetrics();
         verify(metricRepo).saveAll(Arrays.asList(metric, metric2));
     }
 
     @Test
-    public void getQuoteTest() {
-        when(quoteRepo.findByCompanies(companyEntity.getSymbol())).thenReturn(Optional.of(quote));
-        when(quoteMapper.quoteToDto(quote)).thenReturn(quoteDto);
-        QuoteDto quoteFindDto = infoCompanyService.getQuote(companyEntity.getSymbol());
-        assertEquals(quoteDto, quoteFindDto);
+    void isSubscriptionExpiredTest() {
+        when(userRepo.findAllByEndDate(LocalDate.now())).thenReturn(users);
+
+        schedulerService.isSubscriptionExpired();
+        verify(userRepo).save(user);
+        verify(mailService).sendEmailSubscriptionExpired(user);
+
     }
 
     @Test
-    public void getMetricTest() {
-        when(metricRepo.findByCompanies(companyEntity.getSymbol())).thenReturn(Optional.of(metric));
-        when(metricMapper.metricToDto(metric)).thenReturn(metricDto);
-        MetricDto metricFindDto = infoCompanyService.getMetric(companyEntity.getSymbol());
-        assertEquals(metricDto, metricFindDto);
-    }
+    void isSubscriptionWillExpiredIn3DaysTest() {
+        when(userRepo.findAllByEndDate(LocalDate.now().plusDays(3))).thenReturn(users);
 
-    @Test
-    public void getFinnhubQuoteTest() {
-        when(quoteRepo.findByCompanies(companyEntity.getSymbol())).thenReturn(Optional.of(quote));
-        when(finnhubClient.getQuote(companyEntity.getSymbol())).thenReturn(quoteDto);
-
-        QuoteDto actual = infoCompanyService.getFinnhubQuote(companyEntity.getSymbol());
-        assertEquals(quoteDto, actual);
-    }
-
-    @Test
-    public void getFinnhubMetricTest() {
-        when(metricRepo.findByCompanies(companyEntity.getSymbol())).thenReturn(Optional.of(metric));
-
-        when(finnhubClient.getMetrics(companies.get(0).getSymbol())).thenReturn(metricResponseDto);
-
-        MetricDto actual = infoCompanyService.getFinnhubMetric(companyEntity.getSymbol());
-        assertEquals(metricDto, actual);
-    }
-
-    @Test
-    public void getFinnhubReportTest() {
-        when(companyRepo.findBySymbol(companyEntity.getSymbol())).thenReturn(Optional.of(companyEntity));
-
-        when(finnhubClient.getReports(companyEntity.getSymbol()).getData()).thenReturn(dataDto.getData());
-
-        List<ReportDto> actual = infoCompanyService.getFinnhubReport(companyEntity.getSymbol());
-        assertEquals(reportResponseDtos, actual);
+        schedulerService.isSubscriptionWillExpiredIn3Days();
+        verify(mailService).sendEmailSubscriptionWillExpire(user2);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.companyserver.dto;
 
+import com.example.companyserver.entity.SubscriptionEntity;
 import com.example.companyserver.entity.SubscriptionStatus;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
@@ -26,7 +27,7 @@ public class UserSubscriptionDto {
 
     @NotNull
     @NotEmpty
-    private String subscription;
+    private SubscriptionEntity subscription;
 
     @NotNull
     @NotEmpty
