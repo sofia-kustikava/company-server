@@ -237,7 +237,7 @@ class SchedulerServiceTest {
     }
 
     @Test
-    void saveQuotesByScheduleTest() {
+    public void saveQuotesByScheduleTest() {
         when(companyRepo.findAll()).thenReturn(companies);
         when(finnhubClient.getQuote(companyEntity.getSymbol())).thenReturn(quoteDto);
         when(finnhubClient.getQuote(companyEntity2.getSymbol())).thenReturn(quoteDto2);
@@ -250,7 +250,7 @@ class SchedulerServiceTest {
     }
 
     @Test
-    void saveMetricsByScheduleTest() {
+    public void saveMetricsByScheduleTest() {
         when(companyRepo.findAll()).thenReturn(companies);
         when(finnhubClient.getMetrics(companies.get(0).getSymbol())).thenReturn(metricResponseDto);
         when(finnhubClient.getMetrics(companies.get(1).getSymbol())).thenReturn(metricResponseDto2);
@@ -263,7 +263,7 @@ class SchedulerServiceTest {
     }
 
     @Test
-    void isSubscriptionExpiredTest() {
+    public void isSubscriptionExpiredTest() {
         when(userRepo.findAllByEndDate(LocalDate.now())).thenReturn(users);
 
         schedulerService.isSubscriptionExpired();
@@ -273,7 +273,7 @@ class SchedulerServiceTest {
     }
 
     @Test
-    void isSubscriptionWillExpiredIn3DaysTest() {
+    public void isSubscriptionWillExpiredIn3DaysTest() {
         when(userRepo.findAllByEndDate(LocalDate.now().plusDays(3))).thenReturn(users);
 
         schedulerService.isSubscriptionWillExpiredIn3Days();

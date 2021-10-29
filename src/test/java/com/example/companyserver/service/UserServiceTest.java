@@ -7,8 +7,6 @@ import com.example.companyserver.exceptions.UserIsBannedException;
 import com.example.companyserver.exceptions.UserIsUnbannedException;
 import com.example.companyserver.mapper.UserMapper;
 import com.example.companyserver.repo.UserRepo;
-import org.junit.Assert;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -80,6 +78,13 @@ public class UserServiceTest {
         when(userMapper.userToDto(user)).thenReturn(userWithDto);
         UserDto userFindId = userService.findById(user.getId());
         assertEquals(userWithDto, userFindId);
+    }
+
+    @Test
+    public void findUserByEntityEmailTest() {
+        when(userRepo.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        UserEntity actual = userService.findEntityByEmail(user.getEmail());
+        assertEquals(user, actual);
     }
 
     @Test

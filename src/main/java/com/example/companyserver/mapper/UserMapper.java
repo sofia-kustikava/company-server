@@ -20,7 +20,7 @@ public interface UserMapper {
     UserEntity dtoToUser (UserDto userDto);
     List<UserEntity> dtoToUsers (List<UserDto> userDtos);
 
-    CustomUserDetails fromUserDtoToCustomUserDetails(UserDto user);
+    CustomUserDetails fromUserEntityToCustomUserDetails(UserEntity user);
 
     RegisterDto registerUserToDto (UserEntity user);
     RegisterDto dtoToRegisterUser (RegisterDto userDto);

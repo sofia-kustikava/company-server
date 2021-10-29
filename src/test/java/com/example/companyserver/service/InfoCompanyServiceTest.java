@@ -12,7 +12,6 @@ import com.example.companyserver.dto.report.UnitsDto;
 import com.example.companyserver.entity.CompanyEntity;
 import com.example.companyserver.entity.MetricEntity;
 import com.example.companyserver.entity.QuoteEntity;
-import com.example.companyserver.entity.ReportEntity;
 import com.example.companyserver.mapper.MetricMapper;
 import com.example.companyserver.mapper.QuoteMapper;
 import com.example.companyserver.repo.CompanyRepo;
@@ -67,7 +66,8 @@ public class InfoCompanyServiceTest {
 
     private QuoteEntity quote;
     private QuoteDto quoteDto;
-    private List<QuoteEntity> quotes = new ArrayList<>();
+    private QuoteDto quoteDto2;
+    private QuoteEntity quote2;
 
     private MetricEntity metric;
     private MetricResponseDto metricResponseDto;
@@ -77,17 +77,22 @@ public class InfoCompanyServiceTest {
     private MetricDto metricDto2;
     private MetricResponseDto metricResponseDto2;
 
-    private List<MetricEntity> metrics = new ArrayList<>();
-
     private ReportDto reportDto;
-    private ReportEntity report;
+    private ReportDto reportDto2;
+    private ReportDto reportDto3;
     private DataDto dataDto;
     private UnitsDto unitsDto;
+    private UnitsDto unitsDto2;
+    private UnitsDto unitsDto3;
     private ReportResponseDto responseReportDto;
-    private List<ReportResponseDto> reportResponseDtos = new ArrayList<>();
+    private ReportResponseDto responseReportDto2;
+    private ReportResponseDto responseReportDto3;
 
-    private QuoteDto quoteDto2;
-    private QuoteEntity quote2;
+    private List<ReportResponseDto> reportResponseDtos = new ArrayList<>();
+    private List<ReportDto> reports = new ArrayList<>();
+    private List<ReportDto> reports2 = new ArrayList<>();
+    private List<ReportDto> reports3 = new ArrayList<>();
+
 
     @BeforeEach
     public void beforeTest() {
@@ -150,7 +155,6 @@ public class InfoCompanyServiceTest {
                 .closePrice(1D)
                 .companies(companyEntity)
                 .build();
-
         quoteDto2 = QuoteDto.builder()
                 .currentPrice(1D)
                 .change(2D)
@@ -183,7 +187,6 @@ public class InfoCompanyServiceTest {
         metricResponseDto = MetricResponseDto.builder()
                 .metric(metricDto)
                 .build();
-
         metric2 = MetricEntity.builder()
                 .weekHigh(1D)
                 .weekLow(1D)
@@ -198,13 +201,44 @@ public class InfoCompanyServiceTest {
                 .build();
 
         companies.addAll(Arrays.asList(companyEntity, companyEntity2));
+
         reportDto = ReportDto.builder().build();
-        report = ReportEntity.builder()
-                .companies(companyEntity)
+        reportDto2 = ReportDto.builder().build();
+        reportDto3 = ReportDto.builder().build();
+        reports.addAll(Arrays.asList(reportDto,reportDto2, reportDto3));
+        reports2.addAll(Arrays.asList(reportDto,reportDto2, reportDto3));
+        reports3.addAll(Arrays.asList(reportDto,reportDto2, reportDto3));
+        unitsDto = UnitsDto.builder()
+                .bs(reports)
+                .cf(reports2)
+                .ic(reports3)
                 .build();
+        unitsDto2 = UnitsDto.builder()
+                .bs(reports)
+                .cf(reports2)
+                .ic(reports3)
+                .build();
+        unitsDto3 = UnitsDto.builder()
+                .bs(reports)
+                .cf(reports2)
+                .ic(reports3).build();
+        responseReportDto = ReportResponseDto.builder()
+                .report(unitsDto)
+                .build();
+        responseReportDto2 = ReportResponseDto.builder()
+                .report(unitsDto2)
+                .build();
+        responseReportDto3 = ReportResponseDto.builder()
+                .report(unitsDto3)
+                .build();
+
+        reportResponseDtos.addAll(Arrays.asList(responseReportDto, responseReportDto2, responseReportDto3));
+
         dataDto = DataDto.builder()
                 .data(reportResponseDtos)
                 .build();
+
+
     }
 
     @Test
@@ -252,7 +286,7 @@ public class InfoCompanyServiceTest {
 
     @Test
     public void getFinnhubQuoteTest() {
-        when(quoteRepo.findByCompanies(companyEntity.getSymbol())).thenReturn(Optional.of(quote));
+        when(companyRepo.findBySymbol(companyEntity.getSymbol())).thenReturn(Optional.of(companyEntity));
         when(finnhubClient.getQuote(companyEntity.getSymbol())).thenReturn(quoteDto);
 
         QuoteDto actual = infoCompanyService.getFinnhubQuote(companyEntity.getSymbol());
@@ -261,9 +295,9 @@ public class InfoCompanyServiceTest {
 
     @Test
     public void getFinnhubMetricTest() {
-        when(metricRepo.findByCompanies(companyEntity.getSymbol())).thenReturn(Optional.of(metric));
+        when(companyRepo.findBySymbol(companyEntity.getSymbol())).thenReturn(Optional.of(companyEntity));
 
-        when(finnhubClient.getMetrics(companies.get(0).getSymbol())).thenReturn(metricResponseDto);
+        when(finnhubClient.getMetrics(companyEntity.getSymbol())).thenReturn(metricResponseDto);
 
         MetricDto actual = infoCompanyService.getFinnhubMetric(companyEntity.getSymbol());
         assertEquals(metricDto, actual);
@@ -273,9 +307,9 @@ public class InfoCompanyServiceTest {
     public void getFinnhubReportTest() {
         when(companyRepo.findBySymbol(companyEntity.getSymbol())).thenReturn(Optional.of(companyEntity));
 
-        when(finnhubClient.getReports(companyEntity.getSymbol()).getData()).thenReturn(dataDto.getData());
+        when(finnhubClient.getReports(companyEntity.getSymbol())).thenReturn(dataDto);
 
         List<ReportDto> actual = infoCompanyService.getFinnhubReport(companyEntity.getSymbol());
-        assertEquals(reportResponseDtos, actual);
+        assertEquals(10, actual.size());
     }
 }
