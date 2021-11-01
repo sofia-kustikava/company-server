@@ -2,11 +2,11 @@ package com.example.companyserver.service;
 
 import com.example.companyserver.dto.UserDto;
 import com.example.companyserver.entity.UserEntity;
-import com.example.companyserver.entity.UserStatus;
 import com.example.companyserver.exceptions.UserIsBannedException;
 import com.example.companyserver.exceptions.UserIsUnbannedException;
 import com.example.companyserver.mapper.UserMapper;
 import com.example.companyserver.repo.UserRepo;
+import com.example.companyserver.utils.UserData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,10 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.LocalDate;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
@@ -40,28 +37,9 @@ public class UserServiceTest {
 
     @BeforeEach
     public void beforeTest() {
-        user = UserEntity.builder()
-                .id(1L)
-                .firstName("User")
-                .lastName("Userovich")
-                .email("user1@mail.com")
-                .status(UserStatus.CREATED)
-                .updated(LocalDate.now())
-                .build();
-        userWithDto = UserDto.builder()
-                .id(1L)
-                .firstName("User")
-                .lastName("Userovich")
-                .email("user1@mail.com")
-                .build();
-        blockedUser = UserEntity.builder()
-                .id(1L)
-                .firstName("User")
-                .lastName("Userovich")
-                .email("user1@mail.com")
-                .status(UserStatus.BANNED)
-                .updated(LocalDate.now())
-                .build();
+        user = UserData.getCreatedUser();
+        userWithDto = UserData.getDtoUser();
+        blockedUser = UserData.getBlockedUser();
     }
 
     @Test

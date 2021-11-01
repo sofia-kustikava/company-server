@@ -3,10 +3,10 @@ package com.example.companyserver.service;
 import com.example.companyserver.dto.AuthDto;
 import com.example.companyserver.dto.TokenDto;
 import com.example.companyserver.entity.UserEntity;
-import com.example.companyserver.entity.UserStatus;
 import com.example.companyserver.exceptions.IncorrectPasswordException;
 import com.example.companyserver.repo.UserRepo;
 import com.example.companyserver.security.JwtProvider;
+import com.example.companyserver.utils.UserData;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,8 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
@@ -45,23 +43,12 @@ public class AuthServiceTest {
     @BeforeEach
     public void beforeTest() {
         token = new TokenDto("token");
-        user = UserEntity.builder()
-                .id(1L)
-                .firstName("User")
-                .lastName("Userovich")
-                .email("user1@mail.com")
-                .password(passwordEncoder.encode("user"))
-                .status(UserStatus.CREATED)
-                .updated(LocalDate.now())
-                .build();
-        authUserWithDto = AuthDto.builder()
-                .email("user1@mail.com")
-                .password(passwordEncoder.encode("user"))
-                .build();
-        wrongAuthUserWithDto = AuthDto.builder()
-                .email("user1@mail.com")
-                .password(passwordEncoder.encode("admin"))
-                .build();
+        user = UserData.getCreatedUser();
+        user.setPassword(passwordEncoder.encode("user"));
+        authUserWithDto = UserData.getAuthUser();
+        authUserWithDto.setPassword(passwordEncoder.encode("user"));
+        wrongAuthUserWithDto = UserData.getAuthUser();
+        wrongAuthUserWithDto.setPassword(passwordEncoder.encode("admin"));
     }
 
     @Test

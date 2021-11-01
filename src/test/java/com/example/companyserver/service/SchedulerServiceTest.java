@@ -12,13 +12,14 @@ import com.example.companyserver.repo.CompanyRepo;
 import com.example.companyserver.repo.MetricRepo;
 import com.example.companyserver.repo.QuoteRepo;
 import com.example.companyserver.repo.UserRepo;
+import com.example.companyserver.utils.CompanyData;
+import com.example.companyserver.utils.SubscriptionData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -88,147 +89,45 @@ class SchedulerServiceTest {
 
     @BeforeEach
     public void beforeTest() {
-        companiesEntity.add(CompanyEntity.builder()
-                .currency("USD")
-                .description("ONE 4 ART LTD")
-                .displaySymbol("ONFA")
-                .figi("BBG002Q0F4D7")
-                .mic("OOTC")
-                .symbol("ONFA")
-                .type("Common Stock")
-                .build()
-        );
+        companiesEntity.add(CompanyData.getCompany("ONFA1"));
 
-        companiesDto.add(CompanyDto.builder()
-                .currency("USD")
-                .description("ONE 4 ART LTD")
-                .displaySymbol("ONFA")
-                .figi("BBG002Q0F4D7")
-                .mic("OOTC")
-                .symbol("ONFA")
-                .type("Common Stock")
-                .build()
-        );
-        companyEntity = CompanyEntity.builder()
-                .currency("USD")
-                .description("ONE 4 ART LTD")
-                .displaySymbol("ONFA")
-                .figi("BBG002Q0F4D7")
-                .mic("OOTC")
-                .symbol("ONFA")
-                .type("Common Stock")
-                .build();
-        companyEntity2 = CompanyEntity.builder()
-                .currency("USD")
-                .description("ONE 4 ART LTD")
-                .displaySymbol("ONFA")
-                .figi("BBG002Q0F4D7")
-                .mic("OOTC")
-                .symbol("ONF2A")
-                .type("Common Stock")
-                .build();
+        companiesDto.add(CompanyData.getCompanyDto("ONFA1"));
+        companyEntity = CompanyData.getCompany("ONFA1");
+        companyEntity2 = CompanyData.getCompany("ONFA2");
 
-        quoteDto = QuoteDto.builder()
-                .currentPrice(1D)
-                .change(1D)
-                .percentChange(1D)
-                .highPrice(1D)
-                .lowPrice(1D)
-                .openPrice(1D)
-                .closePrice(1D)
-                .build();
-        quote = QuoteEntity.builder()
-                .currentPrice(1D)
-                .change(1D)
-                .percentChange(1D)
-                .highPrice(1D)
-                .lowPrice(1D)
-                .openPrice(1D)
-                .closePrice(1D)
-                .companies(companyEntity)
-                .build();
+        quoteDto = CompanyData.getQuoteDto(1D);
+        quote = CompanyData.getQuote(1D);
+        quote.setCompanies(companyEntity);
 
-        quoteDto2 = QuoteDto.builder()
-                .currentPrice(1D)
-                .change(2D)
-                .percentChange(1D)
-                .highPrice(2D)
-                .lowPrice(1D)
-                .openPrice(21D)
-                .closePrice(1D)
-                .build();
-        quote2 = QuoteEntity.builder()
-                .currentPrice(1D)
-                .change(2D)
-                .percentChange(1D)
-                .highPrice(2D)
-                .lowPrice(1D)
-                .openPrice(21D)
-                .closePrice(1D)
-                .companies(companyEntity2)
-                .build();
+        quoteDto2 = CompanyData.getQuoteDto(2D);
+        quote2 = CompanyData.getQuote(2D);
+        quote2.setCompanies(companyEntity2);
 
-        metric = MetricEntity.builder()
-                .weekHigh(1D)
-                .weekLow(1D)
-                .companies(companyEntity)
-                .build();
-        metricDto = MetricDto.builder()
-                .weekHigh(1D)
-                .weekLow(2D)
-                .build();
-        metricResponseDto = MetricResponseDto.builder()
-                .metric(metricDto)
-                .build();
+        metricDto = CompanyData.getMetricDto(1D);
+        metric = CompanyData.getMetric(1D);
+        metric.setCompanies(companyEntity);
+        metricResponseDto = MetricResponseDto.builder().build();
+        metricResponseDto.setMetric(metricDto);
 
-        metric2 = MetricEntity.builder()
-                .weekHigh(1D)
-                .weekLow(1D)
-                .companies(companyEntity2)
-                .build();
-        metricDto2 = MetricDto.builder()
-                .weekHigh(1D)
-                .weekLow(1D)
-                .build();
-        metricResponseDto2 = MetricResponseDto.builder()
-                .metric(metricDto2)
-                .build();
+        metricDto2 = CompanyData.getMetricDto(2D);
+        metric2 = CompanyData.getMetric(2D);
+        metric2.setCompanies(companyEntity2);
+        metricResponseDto2 = MetricResponseDto.builder().build();
+        metricResponseDto2.setMetric(metricDto2);
 
         companies.addAll(Arrays.asList(companyEntity, companyEntity2));
 
-        subscription = SubscriptionEntity.builder()
-                .name("Golden")
-                .description("Description sample")
-                .price(90D)
-                .build();
+        subscription = SubscriptionData.getSubscription();
 
-        userSubscription = UserSubscriptionEntity.builder()
-                .subscription(subscription)
-                .dateEnd(LocalDate.now())
-                .dateStart(LocalDate.now())
-                .subscriptionStatus(SubscriptionStatus.ACTIVE)
-                .build();
-        user = UserEntity.builder()
-                .firstName("User")
-                .lastName("Userovich")
-                .email("user@mail.com")
-                .status(UserStatus.ACTIVE)
-                .subscription(userSubscription)
-                .build();
+        userSubscription = SubscriptionData.getUserSubscription(LocalDate.now());
+        userSubscription.setSubscription(subscription);
+        user = SubscriptionData.getUser(1L);
+        user.setSubscription(userSubscription);
 
-        userSubscription2 = UserSubscriptionEntity.builder()
-                .subscription(subscription)
-                .dateEnd(LocalDate.now().minusDays(3))
-                .dateStart(LocalDate.now())
-                .subscriptionStatus(SubscriptionStatus.ACTIVE)
-                .build();
-        user2 = UserEntity.builder()
-                .firstName("User2")
-                .lastName("Userovich2")
-                .email("user2@mail.com")
-                .status(UserStatus.ACTIVE)
-                .subscription(userSubscription2)
-                .build();
+        userSubscription2 = SubscriptionData.getUserSubscription(LocalDate.now().minusDays(3));
+        userSubscription2.setSubscription(subscription);
+        user2 = SubscriptionData.getUser(2L);
+        user2.setSubscription(userSubscription2);
 
         userSubscription2.setUser(user2);
         userSubscription.setUser(user);
@@ -241,10 +140,8 @@ class SchedulerServiceTest {
         when(companyRepo.findAll()).thenReturn(companies);
         when(finnhubClient.getQuote(companyEntity.getSymbol())).thenReturn(quoteDto);
         when(finnhubClient.getQuote(companyEntity2.getSymbol())).thenReturn(quoteDto2);
-
         when(quoteMapper.dtoToQuote(quoteDto)).thenReturn(quote);
         when(quoteMapper.dtoToQuote(quoteDto2)).thenReturn(quote2);
-
         schedulerService.saveQuotes();
         verify(quoteRepo).saveAll(Arrays.asList(quote, quote2));
     }
@@ -254,10 +151,8 @@ class SchedulerServiceTest {
         when(companyRepo.findAll()).thenReturn(companies);
         when(finnhubClient.getMetrics(companies.get(0).getSymbol())).thenReturn(metricResponseDto);
         when(finnhubClient.getMetrics(companies.get(1).getSymbol())).thenReturn(metricResponseDto2);
-
         when(metricMapper.dtoToMetric(metricDto)).thenReturn(metric);
         when(metricMapper.dtoToMetric(metricDto2)).thenReturn(metric2);
-
         schedulerService.saveMetrics();
         verify(metricRepo).saveAll(Arrays.asList(metric, metric2));
     }
@@ -265,7 +160,6 @@ class SchedulerServiceTest {
     @Test
     public void isSubscriptionExpiredTest() {
         when(userRepo.findAllByEndDate(LocalDate.now())).thenReturn(users);
-
         schedulerService.isSubscriptionExpired();
         verify(userRepo).save(user);
         verify(mailService).sendEmailSubscriptionExpired(user);
@@ -275,7 +169,6 @@ class SchedulerServiceTest {
     @Test
     public void isSubscriptionWillExpiredIn3DaysTest() {
         when(userRepo.findAllByEndDate(LocalDate.now().plusDays(3))).thenReturn(users);
-
         schedulerService.isSubscriptionWillExpiredIn3Days();
         verify(mailService).sendEmailSubscriptionWillExpire(user2);
     }

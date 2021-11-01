@@ -5,6 +5,7 @@ import com.example.companyserver.dto.CompanyDto;
 import com.example.companyserver.entity.CompanyEntity;
 import com.example.companyserver.mapper.CompanyMapper;
 import com.example.companyserver.repo.CompanyRepo;
+import com.example.companyserver.utils.CompanyData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,25 +41,8 @@ public class CompanyServiceTest {
 
     @BeforeEach
     public void beforeTest() {
-        companiesDto.add(CompanyDto.builder()
-                .currency("USD")
-                .description("ONE 4 ART LTD")
-                .displaySymbol("ONFA")
-                .figi("BBG002Q0F4D7")
-                .mic("OOTC")
-                .symbol("ONFA")
-                .type("Common Stock")
-                .build()
-        );
-        companyEntity = CompanyEntity.builder()
-                .currency("USD")
-                .description("ONE 4 ART LTD")
-                .displaySymbol("ONFA")
-                .figi("BBG002Q0F4D7")
-                .mic("OOTC")
-                .symbol("ONFA")
-                .type("Common Stock")
-                .build();
+        companiesDto.add(CompanyData.getCompanyDto("ONFA1"));
+        companyEntity = CompanyData.getCompany("ONFA1");
         companies.add(companyEntity);
     }
 

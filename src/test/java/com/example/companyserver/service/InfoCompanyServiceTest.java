@@ -17,6 +17,7 @@ import com.example.companyserver.mapper.QuoteMapper;
 import com.example.companyserver.repo.CompanyRepo;
 import com.example.companyserver.repo.MetricRepo;
 import com.example.companyserver.repo.QuoteRepo;
+import com.example.companyserver.utils.CompanyData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -96,132 +97,45 @@ public class InfoCompanyServiceTest {
 
     @BeforeEach
     public void beforeTest() {
-        companiesEntity.add(CompanyEntity.builder()
-                .currency("USD")
-                .description("ONE 4 ART LTD")
-                .displaySymbol("ONFA")
-                .figi("BBG002Q0F4D7")
-                .mic("OOTC")
-                .symbol("ONFA")
-                .type("Common Stock")
-                .build()
-        );
+        companiesEntity.add(CompanyData.getCompany("ONFA1"));
 
-        companiesDto.add(CompanyDto.builder()
-                .currency("USD")
-                .description("ONE 4 ART LTD")
-                .displaySymbol("ONFA")
-                .figi("BBG002Q0F4D7")
-                .mic("OOTC")
-                .symbol("ONFA")
-                .type("Common Stock")
-                .build()
-        );
-        companyEntity = CompanyEntity.builder()
-                .currency("USD")
-                .description("ONE 4 ART LTD")
-                .displaySymbol("ONFA")
-                .figi("BBG002Q0F4D7")
-                .mic("OOTC")
-                .symbol("ONFA")
-                .type("Common Stock")
-                .build();
-        companyEntity2 = CompanyEntity.builder()
-                .currency("USD")
-                .description("ONE 4 ART LTD")
-                .displaySymbol("ONFA")
-                .figi("BBG002Q0F4D7")
-                .mic("OOTC")
-                .symbol("ONF2A")
-                .type("Common Stock")
-                .build();
+        companiesDto.add(CompanyData.getCompanyDto("ONFA1"));
+        companyEntity = CompanyData.getCompany("ONFA1");
+        companyEntity2 = CompanyData.getCompany("ONFA2");
 
-        quoteDto = QuoteDto.builder()
-                .currentPrice(1D)
-                .change(1D)
-                .percentChange(1D)
-                .highPrice(1D)
-                .lowPrice(1D)
-                .openPrice(1D)
-                .closePrice(1D)
-                .build();
-        quote = QuoteEntity.builder()
-                .currentPrice(1D)
-                .change(1D)
-                .percentChange(1D)
-                .highPrice(1D)
-                .lowPrice(1D)
-                .openPrice(1D)
-                .closePrice(1D)
-                .companies(companyEntity)
-                .build();
-        quoteDto2 = QuoteDto.builder()
-                .currentPrice(1D)
-                .change(2D)
-                .percentChange(1D)
-                .highPrice(2D)
-                .lowPrice(1D)
-                .openPrice(21D)
-                .closePrice(1D)
-                .build();
-        quote2 = QuoteEntity.builder()
-                .currentPrice(1D)
-                .change(2D)
-                .percentChange(1D)
-                .highPrice(2D)
-                .lowPrice(1D)
-                .openPrice(21D)
-                .closePrice(1D)
-                .companies(companyEntity2)
-                .build();
+        quoteDto = CompanyData.getQuoteDto(1D);
+        quote = CompanyData.getQuote(1D);
+        quote.setCompanies(companyEntity);
 
-        metric = MetricEntity.builder()
-                .weekHigh(1D)
-                .weekLow(1D)
-                .companies(companyEntity)
-                .build();
-        metricDto = MetricDto.builder()
-                .weekHigh(1D)
-                .weekLow(2D)
-                .build();
-        metricResponseDto = MetricResponseDto.builder()
-                .metric(metricDto)
-                .build();
-        metric2 = MetricEntity.builder()
-                .weekHigh(1D)
-                .weekLow(1D)
-                .companies(companyEntity2)
-                .build();
-        metricDto2 = MetricDto.builder()
-                .weekHigh(1D)
-                .weekLow(1D)
-                .build();
-        metricResponseDto2 = MetricResponseDto.builder()
-                .metric(metricDto2)
-                .build();
+        quoteDto2 = CompanyData.getQuoteDto(2D);
+        quote2 = CompanyData.getQuote(1D);
+        quote2.setCompanies(companyEntity2);
+
+        metric = CompanyData.getMetric(1D);
+        metric.setCompanies(companyEntity);
+        metricDto = CompanyData.getMetricDto(1D);
+        metricResponseDto = MetricResponseDto.builder().build();
+        metricResponseDto.setMetric(metricDto);
+
+        metric2 = CompanyData.getMetric(2D);
+        metricDto2 = CompanyData.getMetricDto(2D);
+        metricResponseDto2 = MetricResponseDto.builder().build();
+        metricResponseDto2.setMetric(metricDto2);
 
         companies.addAll(Arrays.asList(companyEntity, companyEntity2));
 
-        reportDto = ReportDto.builder().build();
-        reportDto2 = ReportDto.builder().build();
-        reportDto3 = ReportDto.builder().build();
-        reports.addAll(Arrays.asList(reportDto,reportDto2, reportDto3));
-        reports2.addAll(Arrays.asList(reportDto,reportDto2, reportDto3));
-        reports3.addAll(Arrays.asList(reportDto,reportDto2, reportDto3));
-        unitsDto = UnitsDto.builder()
-                .bs(reports)
-                .cf(reports2)
-                .ic(reports3)
-                .build();
-        unitsDto2 = UnitsDto.builder()
-                .bs(reports)
-                .cf(reports2)
-                .ic(reports3)
-                .build();
-        unitsDto3 = UnitsDto.builder()
-                .bs(reports)
-                .cf(reports2)
-                .ic(reports3).build();
+        reportDto = CompanyData.getReport();
+        reportDto2 = CompanyData.getReport();
+        reportDto3 = CompanyData.getReport();
+
+        reports = List.of(reportDto,reportDto2, reportDto3);
+        reports2 = List.of(reportDto,reportDto2, reportDto3);
+        reports3 = List.of(reportDto,reportDto2, reportDto3);
+
+        unitsDto = CompanyData.getUnits(reports, reports2, reports3);
+        unitsDto2 = CompanyData.getUnits(reports, reports2, reports3);
+        unitsDto3 = CompanyData.getUnits(reports, reports2, reports3);
+
         responseReportDto = ReportResponseDto.builder()
                 .report(unitsDto)
                 .build();
@@ -232,13 +146,11 @@ public class InfoCompanyServiceTest {
                 .report(unitsDto3)
                 .build();
 
-        reportResponseDtos.addAll(Arrays.asList(responseReportDto, responseReportDto2, responseReportDto3));
+        reportResponseDtos = List.of(responseReportDto, responseReportDto2, responseReportDto3);
 
         dataDto = DataDto.builder()
                 .data(reportResponseDtos)
                 .build();
-
-
     }
 
     @Test

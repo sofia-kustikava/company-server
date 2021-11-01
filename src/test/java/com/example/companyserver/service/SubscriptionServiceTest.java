@@ -8,6 +8,8 @@ import com.example.companyserver.mapper.UserMapper;
 import com.example.companyserver.repo.SubscriptionRepo;
 import com.example.companyserver.repo.UserRepo;
 import com.example.companyserver.repo.UserSubscriptionRepo;
+import com.example.companyserver.utils.CompanyData;
+import com.example.companyserver.utils.SubscriptionData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +24,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -66,112 +67,29 @@ public class SubscriptionServiceTest {
 
     @BeforeEach
     public void beforeTest() {
-        companiesEntity.add(CompanyEntity.builder()
-                .currency("USD")
-                .description("ONE 4 ART LTD")
-                .displaySymbol("ONFA")
-                .figi("BBG002Q0F4D7")
-                .mic("OOTC")
-                .symbol("ONFA")
-                .type("Common Stock")
-                .build()
-        );
+        companiesEntity.add(CompanyData.getCompany("ONFA1"));
+        companiesDto.add(CompanyData.getCompanyDto("ONFA1"));
 
-        companiesDto.add(CompanyDto.builder()
-                .currency("USD")
-                .description("ONE 4 ART LTD")
-                .displaySymbol("ONFA")
-                .figi("BBG002Q0F4D7")
-                .mic("OOTC")
-                .symbol("ONFA")
-                .type("Common Stock")
-                .build()
-        );
-        companyEntity = CompanyEntity.builder()
-                .currency("USD")
-                .description("ONE 4 ART LTD")
-                .displaySymbol("ONFA")
-                .figi("BBG002Q0F4D7")
-                .mic("OOTC")
-                .symbol("ONFA")
-                .type("Common Stock")
-                .build();
-        companyEntity2 = CompanyEntity.builder()
-                .currency("USD")
-                .description("ONE 4 ART LTD")
-                .displaySymbol("ONFA")
-                .figi("BBG002Q0F4D7")
-                .mic("OOTC")
-                .symbol("ONF2A")
-                .type("Common Stock")
-                .build();
-
+        companyEntity = CompanyData.getCompany("ONFA1");
+        companyEntity2 = CompanyData.getCompany("ONFA2");
         companies.addAll(Arrays.asList(companyEntity, companyEntity2));
 
-        subscription = SubscriptionEntity.builder()
-                .name("Golden")
-                .description("Description sample")
-                .price(90D)
-                .build();
+        subscription = SubscriptionData.getSubscription();
 
-        userSubscription = UserSubscriptionEntity.builder()
-                .subscription(subscription)
-                .user(user)
-                .dateEnd(LocalDate.now().minusDays(3))
-                .dateStart(LocalDate.now())
-                .subscriptionStatus(SubscriptionStatus.ACTIVE)
-                .build();
-        userSubscriptionDto = UserSubscriptionDto.builder()
-                .subscription(subscription)
-                .user(1L)
-                .dateEnd(LocalDate.now().minusDays(3))
-                .dateStart(LocalDate.now())
-                .subscriptionStatus(SubscriptionStatus.ACTIVE)
-                .build();
-        user = UserEntity.builder()
-                .id(1L)
-                .firstName("User")
-                .lastName("Userovich")
-                .email("user@mail.com")
-                .status(UserStatus.ACTIVE)
-                .subscription(null)
-                .build();
+        userSubscription = SubscriptionData.getUserSubscription(LocalDate.now());
+        userSubscriptionDto = SubscriptionData.getUserSubscriptionDto(LocalDate.now());
+        user = SubscriptionData.getUser(1L);
 
-        userSubscription2 = UserSubscriptionEntity.builder()
-                .subscription(subscription)
-                .user(user2)
-                .dateEnd(LocalDate.now().minusDays(3))
-                .dateStart(LocalDate.now())
-                .subscriptionStatus(SubscriptionStatus.ACTIVE)
-                .build();
-        userSubscriptionDto2 = UserSubscriptionDto.builder()
-                .subscription(subscription)
-                .dateEnd(LocalDate.now().minusDays(3))
-                .dateStart(LocalDate.now())
-                .subscriptionStatus(SubscriptionStatus.ACTIVE)
-                .build();
-        user2 = UserEntity.builder()
-                .id(2L)
-                .firstName("User2")
-                .lastName("Userovich2")
-                .email("user2@mail.com")
-                .status(UserStatus.ACTIVE)
-                .subscription(userSubscription2)
-                .build();
+        userSubscription2 = SubscriptionData.getUserSubscription(LocalDate.now().minusDays(3));
+        userSubscriptionDto2 = SubscriptionData.getUserSubscriptionDto(LocalDate.now().minusDays(3));
+        userSubscription2.setSubscription(subscription);
+        user2 = SubscriptionData.getUser(2L);
 
         userSubscription2.setUser(user2);
+        user2.setSubscription(userSubscription2);
         userSubscription.setUser(user);
 
         users.addAll(Arrays.asList(user, user2));
-    }
-
-    @Test
-    public void chooseSubscriptionTest() {
-//        when(userRepo.findById(user.getId())).thenReturn(Optional.of(user));
-//        when(subscriptionRepo.findByName("Golden")).thenReturn(Optional.of(subscription));
-//        subscriptionService.chooseSubscription(user.getId(), userSubscriptionDto);
-//        verify(userSubscriptionRepo).save(userSubscription);
-//        verify(userRepo).save(user);
     }
 
     @Test

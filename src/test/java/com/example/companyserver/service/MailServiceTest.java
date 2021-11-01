@@ -3,9 +3,10 @@ package com.example.companyserver.service;
 import com.example.companyserver.dto.RegisterDto;
 import com.example.companyserver.dto.UserDto;
 import com.example.companyserver.entity.SubscriptionEntity;
-import com.example.companyserver.entity.SubscriptionStatus;
 import com.example.companyserver.entity.UserEntity;
 import com.example.companyserver.entity.UserSubscriptionEntity;
+import com.example.companyserver.utils.SubscriptionData;
+import com.example.companyserver.utils.UserData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +16,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-
 import java.time.LocalDate;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,34 +36,17 @@ public class MailServiceTest {
 
     @BeforeEach
     public void beforeTest() {
-        subscription = SubscriptionEntity.builder()
-                .name("Golden")
-                .description("Description sample")
-                .price(90D)
-                .build();
-        userSubscription = UserSubscriptionEntity.builder()
-                .subscription(subscription)
-                .dateEnd(LocalDate.now())
-                .dateStart(LocalDate.now())
-                .subscriptionStatus(SubscriptionStatus.ACTIVE)
-                .build();
-        userDto = UserDto.builder()
-                .firstName("User")
-                .lastName("Userovich")
-                .email("user@mail.com")
-                .build();
-        user = UserEntity.builder()
-                .firstName("User")
-                .lastName("Userovich")
-                .email("user@mail.com")
-                .subscription(userSubscription)
-                .build();
+        subscription = SubscriptionData.getSubscription();
+
+        userSubscription = SubscriptionData.getUserSubscription(LocalDate.now());
+        userSubscription.setSubscription(subscription);
+
+        userDto = SubscriptionData.getUserDto(1L);
+        user = SubscriptionData.getUser(1L);
+        user.setSubscription(userSubscription);
         userSubscription.setUser(user);
-        registerUser = RegisterDto.builder()
-                .firstName("User")
-                .lastName("Userovich")
-                .email("user@mail.com")
-                .build();
+
+        registerUser = UserData.getRegisterUser();
         mail = new SimpleMailMessage();
     }
 
@@ -72,7 +55,6 @@ public class MailServiceTest {
         mail.setTo(registerUser.getEmail());
         mail.setSubject("Registration completed! Enjoy ;)");
         mail.setText("Your account is working!");
-
         mailService.sendEmailRegistration(registerUser);
         Mockito.verify(javaMailSender).send(mail);
     }
@@ -108,7 +90,6 @@ public class MailServiceTest {
                 " subscription is expired. You can update your subscription or buy a new one;)\n" +
                 user.getSubscription().getSubscription().getName() +
                 " description: " + user.getSubscription().getSubscription().getDescription());
-
         mailService.sendEmailSubscriptionExpired(user);
         Mockito.verify(javaMailSender).send(mail);
     }
