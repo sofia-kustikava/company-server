@@ -59,6 +59,12 @@ public class TestingData {
                 .build();
     }
 
+    public static SubscriptionNameDto getSubscriptionName() {
+        return SubscriptionNameDto.builder()
+                .name("Golden")
+                .build();
+    }
+
     public static UserSubscriptionEntity getUserSubscription(LocalDate dateEnd) {
         return UserSubscriptionEntity.builder()
                 .dateEnd(dateEnd)
