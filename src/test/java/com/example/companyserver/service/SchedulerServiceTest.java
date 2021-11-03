@@ -12,8 +12,7 @@ import com.example.companyserver.repo.CompanyRepo;
 import com.example.companyserver.repo.MetricRepo;
 import com.example.companyserver.repo.QuoteRepo;
 import com.example.companyserver.repo.UserRepo;
-import com.example.companyserver.utils.CompanyData;
-import com.example.companyserver.utils.SubscriptionData;
+import com.example.companyserver.utils.TestingData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -89,44 +88,44 @@ class SchedulerServiceTest {
 
     @BeforeEach
     public void beforeTest() {
-        companiesEntity.add(CompanyData.getCompany("ONFA1"));
+        companiesEntity.add(TestingData.getCompany("ONFA1"));
 
-        companiesDto.add(CompanyData.getCompanyDto("ONFA1"));
-        companyEntity = CompanyData.getCompany("ONFA1");
-        companyEntity2 = CompanyData.getCompany("ONFA2");
+        companiesDto.add(TestingData.getCompanyDto("ONFA1"));
+        companyEntity = TestingData.getCompany("ONFA1");
+        companyEntity2 = TestingData.getCompany("ONFA2");
 
-        quoteDto = CompanyData.getQuoteDto(1D);
-        quote = CompanyData.getQuote(1D);
+        quoteDto = TestingData.getQuoteDto(1D);
+        quote = TestingData.getQuote(1D);
         quote.setCompanies(companyEntity);
 
-        quoteDto2 = CompanyData.getQuoteDto(2D);
-        quote2 = CompanyData.getQuote(2D);
+        quoteDto2 = TestingData.getQuoteDto(2D);
+        quote2 = TestingData.getQuote(2D);
         quote2.setCompanies(companyEntity2);
 
-        metricDto = CompanyData.getMetricDto(1D);
-        metric = CompanyData.getMetric(1D);
+        metricDto = TestingData.getMetricDto(1D);
+        metric = TestingData.getMetric(1D);
         metric.setCompanies(companyEntity);
         metricResponseDto = MetricResponseDto.builder().build();
         metricResponseDto.setMetric(metricDto);
 
-        metricDto2 = CompanyData.getMetricDto(2D);
-        metric2 = CompanyData.getMetric(2D);
+        metricDto2 = TestingData.getMetricDto(2D);
+        metric2 = TestingData.getMetric(2D);
         metric2.setCompanies(companyEntity2);
         metricResponseDto2 = MetricResponseDto.builder().build();
         metricResponseDto2.setMetric(metricDto2);
 
         companies.addAll(Arrays.asList(companyEntity, companyEntity2));
 
-        subscription = SubscriptionData.getSubscription();
+        subscription = TestingData.getSubscription();
 
-        userSubscription = SubscriptionData.getUserSubscription(LocalDate.now());
+        userSubscription = TestingData.getUserSubscription(LocalDate.now());
         userSubscription.setSubscription(subscription);
-        user = SubscriptionData.getUser(1L);
+        user = TestingData.getUser(1L, UserStatus.ACTIVE);
         user.setSubscription(userSubscription);
 
-        userSubscription2 = SubscriptionData.getUserSubscription(LocalDate.now().minusDays(3));
+        userSubscription2 = TestingData.getUserSubscription(LocalDate.now().minusDays(3));
         userSubscription2.setSubscription(subscription);
-        user2 = SubscriptionData.getUser(2L);
+        user2 = TestingData.getUser(2L, UserStatus.ACTIVE);
         user2.setSubscription(userSubscription2);
 
         userSubscription2.setUser(user2);

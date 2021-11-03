@@ -17,7 +17,7 @@ import com.example.companyserver.mapper.QuoteMapper;
 import com.example.companyserver.repo.CompanyRepo;
 import com.example.companyserver.repo.MetricRepo;
 import com.example.companyserver.repo.QuoteRepo;
-import com.example.companyserver.utils.CompanyData;
+import com.example.companyserver.utils.TestingData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -97,44 +97,44 @@ public class InfoCompanyServiceTest {
 
     @BeforeEach
     public void beforeTest() {
-        companiesEntity.add(CompanyData.getCompany("ONFA1"));
+        companiesEntity.add(TestingData.getCompany("ONFA1"));
 
-        companiesDto.add(CompanyData.getCompanyDto("ONFA1"));
-        companyEntity = CompanyData.getCompany("ONFA1");
-        companyEntity2 = CompanyData.getCompany("ONFA2");
+        companiesDto.add(TestingData.getCompanyDto("ONFA1"));
+        companyEntity = TestingData.getCompany("ONFA1");
+        companyEntity2 = TestingData.getCompany("ONFA2");
 
-        quoteDto = CompanyData.getQuoteDto(1D);
-        quote = CompanyData.getQuote(1D);
+        quoteDto = TestingData.getQuoteDto(1D);
+        quote = TestingData.getQuote(1D);
         quote.setCompanies(companyEntity);
 
-        quoteDto2 = CompanyData.getQuoteDto(2D);
-        quote2 = CompanyData.getQuote(1D);
+        quoteDto2 = TestingData.getQuoteDto(2D);
+        quote2 = TestingData.getQuote(1D);
         quote2.setCompanies(companyEntity2);
 
-        metric = CompanyData.getMetric(1D);
+        metric = TestingData.getMetric(1D);
         metric.setCompanies(companyEntity);
-        metricDto = CompanyData.getMetricDto(1D);
+        metricDto = TestingData.getMetricDto(1D);
         metricResponseDto = MetricResponseDto.builder().build();
         metricResponseDto.setMetric(metricDto);
 
-        metric2 = CompanyData.getMetric(2D);
-        metricDto2 = CompanyData.getMetricDto(2D);
+        metric2 = TestingData.getMetric(2D);
+        metricDto2 = TestingData.getMetricDto(2D);
         metricResponseDto2 = MetricResponseDto.builder().build();
         metricResponseDto2.setMetric(metricDto2);
 
         companies.addAll(Arrays.asList(companyEntity, companyEntity2));
 
-        reportDto = CompanyData.getReport();
-        reportDto2 = CompanyData.getReport();
-        reportDto3 = CompanyData.getReport();
+        reportDto = TestingData.getReport();
+        reportDto2 = TestingData.getReport();
+        reportDto3 = TestingData.getReport();
 
         reports = List.of(reportDto,reportDto2, reportDto3);
         reports2 = List.of(reportDto,reportDto2, reportDto3);
         reports3 = List.of(reportDto,reportDto2, reportDto3);
 
-        unitsDto = CompanyData.getUnits(reports, reports2, reports3);
-        unitsDto2 = CompanyData.getUnits(reports, reports2, reports3);
-        unitsDto3 = CompanyData.getUnits(reports, reports2, reports3);
+        unitsDto = TestingData.getUnits(reports, reports2, reports3);
+        unitsDto2 = TestingData.getUnits(reports, reports2, reports3);
+        unitsDto3 = TestingData.getUnits(reports, reports2, reports3);
 
         responseReportDto = ReportResponseDto.builder()
                 .report(unitsDto)

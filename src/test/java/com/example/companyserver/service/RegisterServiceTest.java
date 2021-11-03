@@ -2,11 +2,12 @@ package com.example.companyserver.service;
 
 import com.example.companyserver.dto.RegisterDto;
 import com.example.companyserver.entity.UserEntity;
+import com.example.companyserver.entity.UserStatus;
 import com.example.companyserver.exceptions.InvalidUserParameterException;
 import com.example.companyserver.exceptions.UserAlreadyExistException;
 import com.example.companyserver.repo.RoleRepo;
 import com.example.companyserver.repo.UserRepo;
-import com.example.companyserver.utils.UserData;
+import com.example.companyserver.utils.TestingData;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,8 +44,8 @@ public class RegisterServiceTest {
 
     @BeforeEach
     public void beforeTest() {
-        user = UserData.getCreatedUser();
-        registerUser = UserData.getRegisterUser();
+        user = TestingData.getUser(null, UserStatus.CREATED);
+        registerUser = TestingData.getRegisterUser();
     }
 
     @Test

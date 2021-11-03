@@ -5,8 +5,7 @@ import com.example.companyserver.dto.UserDto;
 import com.example.companyserver.entity.SubscriptionEntity;
 import com.example.companyserver.entity.UserEntity;
 import com.example.companyserver.entity.UserSubscriptionEntity;
-import com.example.companyserver.utils.SubscriptionData;
-import com.example.companyserver.utils.UserData;
+import com.example.companyserver.utils.TestingData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,17 +35,17 @@ public class MailServiceTest {
 
     @BeforeEach
     public void beforeTest() {
-        subscription = SubscriptionData.getSubscription();
+        subscription = TestingData.getSubscription();
 
-        userSubscription = SubscriptionData.getUserSubscription(LocalDate.now());
+        userSubscription = TestingData.getUserSubscription(LocalDate.now());
         userSubscription.setSubscription(subscription);
 
-        userDto = SubscriptionData.getUserDto(1L);
-        user = SubscriptionData.getUser(1L);
+        userDto = TestingData.getDtoUser(1L);
+        user = TestingData.getUser(1L, null);
         user.setSubscription(userSubscription);
         userSubscription.setUser(user);
 
-        registerUser = UserData.getRegisterUser();
+        registerUser = TestingData.getRegisterUser();
         mail = new SimpleMailMessage();
     }
 

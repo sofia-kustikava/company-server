@@ -8,8 +8,7 @@ import com.example.companyserver.mapper.UserMapper;
 import com.example.companyserver.repo.SubscriptionRepo;
 import com.example.companyserver.repo.UserRepo;
 import com.example.companyserver.repo.UserSubscriptionRepo;
-import com.example.companyserver.utils.CompanyData;
-import com.example.companyserver.utils.SubscriptionData;
+import com.example.companyserver.utils.TestingData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -67,23 +66,23 @@ public class SubscriptionServiceTest {
 
     @BeforeEach
     public void beforeTest() {
-        companiesEntity.add(CompanyData.getCompany("ONFA1"));
-        companiesDto.add(CompanyData.getCompanyDto("ONFA1"));
+        companiesEntity.add(TestingData.getCompany("ONFA1"));
+        companiesDto.add(TestingData.getCompanyDto("ONFA1"));
 
-        companyEntity = CompanyData.getCompany("ONFA1");
-        companyEntity2 = CompanyData.getCompany("ONFA2");
+        companyEntity = TestingData.getCompany("ONFA1");
+        companyEntity2 = TestingData.getCompany("ONFA2");
         companies.addAll(Arrays.asList(companyEntity, companyEntity2));
 
-        subscription = SubscriptionData.getSubscription();
+        subscription = TestingData.getSubscription();
 
-        userSubscription = SubscriptionData.getUserSubscription(LocalDate.now());
-        userSubscriptionDto = SubscriptionData.getUserSubscriptionDto(LocalDate.now());
-        user = SubscriptionData.getUser(1L);
+        userSubscription = TestingData.getUserSubscription(LocalDate.now());
+        userSubscriptionDto = TestingData.getUserSubscriptionDto(LocalDate.now());
+        user = TestingData.getUser(1L, null);
 
-        userSubscription2 = SubscriptionData.getUserSubscription(LocalDate.now().minusDays(3));
-        userSubscriptionDto2 = SubscriptionData.getUserSubscriptionDto(LocalDate.now().minusDays(3));
+        userSubscription2 = TestingData.getUserSubscription(LocalDate.now().minusDays(3));
+        userSubscriptionDto2 = TestingData.getUserSubscriptionDto(LocalDate.now().minusDays(3));
         userSubscription2.setSubscription(subscription);
-        user2 = SubscriptionData.getUser(2L);
+        user2 = TestingData.getUser(2L, null);
 
         userSubscription2.setUser(user2);
         user2.setSubscription(userSubscription2);

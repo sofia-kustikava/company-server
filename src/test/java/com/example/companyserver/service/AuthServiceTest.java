@@ -3,10 +3,11 @@ package com.example.companyserver.service;
 import com.example.companyserver.dto.AuthDto;
 import com.example.companyserver.dto.TokenDto;
 import com.example.companyserver.entity.UserEntity;
+import com.example.companyserver.entity.UserStatus;
 import com.example.companyserver.exceptions.IncorrectPasswordException;
 import com.example.companyserver.repo.UserRepo;
 import com.example.companyserver.security.JwtProvider;
-import com.example.companyserver.utils.UserData;
+import com.example.companyserver.utils.TestingData;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,11 +44,11 @@ public class AuthServiceTest {
     @BeforeEach
     public void beforeTest() {
         token = new TokenDto("token");
-        user = UserData.getCreatedUser();
+        user = TestingData.getUser(1L, UserStatus.CREATED);
         user.setPassword(passwordEncoder.encode("user"));
-        authUserWithDto = UserData.getAuthUser();
+        authUserWithDto = TestingData.getAuthUser();
         authUserWithDto.setPassword(passwordEncoder.encode("user"));
-        wrongAuthUserWithDto = UserData.getAuthUser();
+        wrongAuthUserWithDto = TestingData.getAuthUser();
         wrongAuthUserWithDto.setPassword(passwordEncoder.encode("admin"));
     }
 

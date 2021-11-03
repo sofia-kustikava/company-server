@@ -2,11 +2,12 @@ package com.example.companyserver.service;
 
 import com.example.companyserver.dto.UserDto;
 import com.example.companyserver.entity.UserEntity;
+import com.example.companyserver.entity.UserStatus;
 import com.example.companyserver.exceptions.UserIsBannedException;
 import com.example.companyserver.exceptions.UserIsUnbannedException;
 import com.example.companyserver.mapper.UserMapper;
 import com.example.companyserver.repo.UserRepo;
-import com.example.companyserver.utils.UserData;
+import com.example.companyserver.utils.TestingData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,9 +38,9 @@ public class UserServiceTest {
 
     @BeforeEach
     public void beforeTest() {
-        user = UserData.getCreatedUser();
-        userWithDto = UserData.getDtoUser();
-        blockedUser = UserData.getBlockedUser();
+        user = TestingData.getUser(1L, UserStatus.CREATED);
+        userWithDto = TestingData.getDtoUser(1L);
+        blockedUser = TestingData.getUser(1L, UserStatus.BANNED);
     }
 
     @Test

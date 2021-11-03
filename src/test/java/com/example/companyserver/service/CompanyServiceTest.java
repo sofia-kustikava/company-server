@@ -5,7 +5,7 @@ import com.example.companyserver.dto.CompanyDto;
 import com.example.companyserver.entity.CompanyEntity;
 import com.example.companyserver.mapper.CompanyMapper;
 import com.example.companyserver.repo.CompanyRepo;
-import com.example.companyserver.utils.CompanyData;
+import com.example.companyserver.utils.TestingData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,8 +41,8 @@ public class CompanyServiceTest {
 
     @BeforeEach
     public void beforeTest() {
-        companiesDto.add(CompanyData.getCompanyDto("ONFA1"));
-        companyEntity = CompanyData.getCompany("ONFA1");
+        companiesDto.add(TestingData.getCompanyDto("ONFA1"));
+        companyEntity = TestingData.getCompany("ONFA1");
         companies.add(companyEntity);
     }
 
