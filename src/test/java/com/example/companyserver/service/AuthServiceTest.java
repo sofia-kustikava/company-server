@@ -39,21 +39,19 @@ public class AuthServiceTest {
     private UserEntity user;
     private AuthDto authUserWithDto;
     private AuthDto wrongAuthUserWithDto;
-    private TokenDto token;
 
     @BeforeEach
     public void beforeTest() {
-        token = new TokenDto("token");
         user = TestingData.getUser(1L, UserStatus.CREATED);
         user.setPassword(passwordEncoder.encode("user"));
         authUserWithDto = TestingData.getAuthUser();
         authUserWithDto.setPassword(passwordEncoder.encode("user"));
-        wrongAuthUserWithDto = TestingData.getAuthUser();
-        wrongAuthUserWithDto.setPassword(passwordEncoder.encode("admin"));
     }
 
     @Test
     public void successfulAuthTest() {
+        TokenDto token = new TokenDto("token");
+
         when(userRepo.findByEmail(authUserWithDto.getEmail())).thenReturn(Optional.of(user));
         when(passwordEncoder.matches(user.getPassword(), authUserWithDto.getPassword())).thenReturn(true);
         when(jwtProvider.generateToken(user.getEmail())).thenReturn(token.getToken());
@@ -63,6 +61,9 @@ public class AuthServiceTest {
 
     @Test
     public void failedAuthTest() {
+        wrongAuthUserWithDto = TestingData.getAuthUser();
+        wrongAuthUserWithDto.setPassword(passwordEncoder.encode("admin"));
+
         when(userRepo.findByEmail(authUserWithDto.getEmail())).thenReturn(Optional.of(user));
         when(passwordEncoder.matches(user.getPassword(), wrongAuthUserWithDto.getPassword())).thenReturn(false);
         Assert.assertThrows(IncorrectPasswordException.class, () -> authService.auth(wrongAuthUserWithDto));

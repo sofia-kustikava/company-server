@@ -41,7 +41,6 @@ public class CompanyServiceTest {
 
     @BeforeEach
     public void beforeTest() {
-        companiesDto.add(TestingData.getCompanyDto("ONFA1"));
         companyEntity = TestingData.getCompany("ONFA1");
         companies.add(companyEntity);
     }
@@ -67,6 +66,7 @@ public class CompanyServiceTest {
 
     @Test
     public void deleteAllCompaniesTest() {
+        companiesDto.add(TestingData.getCompanyDto("ONFA1"));
         when(finnhubClient.getCompanies()).thenReturn(companiesDto);
 
         companyService.deleteAllCompanies();

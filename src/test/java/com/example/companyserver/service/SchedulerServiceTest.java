@@ -94,26 +94,6 @@ class SchedulerServiceTest {
         companyEntity = TestingData.getCompany("ONFA1");
         companyEntity2 = TestingData.getCompany("ONFA2");
 
-        quoteDto = TestingData.getQuoteDto(1D);
-        quote = TestingData.getQuote(1D);
-        quote.setCompanies(companyEntity);
-
-        quoteDto2 = TestingData.getQuoteDto(2D);
-        quote2 = TestingData.getQuote(2D);
-        quote2.setCompanies(companyEntity2);
-
-        metricDto = TestingData.getMetricDto(1D);
-        metric = TestingData.getMetric(1D);
-        metric.setCompanies(companyEntity);
-        metricResponseDto = MetricResponseDto.builder().build();
-        metricResponseDto.setMetric(metricDto);
-
-        metricDto2 = TestingData.getMetricDto(2D);
-        metric2 = TestingData.getMetric(2D);
-        metric2.setCompanies(companyEntity2);
-        metricResponseDto2 = MetricResponseDto.builder().build();
-        metricResponseDto2.setMetric(metricDto2);
-
         companies.addAll(Arrays.asList(companyEntity, companyEntity2));
 
         subscription = TestingData.getSubscription();
@@ -136,6 +116,13 @@ class SchedulerServiceTest {
 
     @Test
     public void saveQuotesByScheduleTest() {
+        quoteDto = TestingData.getQuoteDto(1D);
+        quote = TestingData.getQuote(1D);
+        quote.setCompanies(companyEntity);
+        quoteDto2 = TestingData.getQuoteDto(2D);
+        quote2 = TestingData.getQuote(2D);
+        quote2.setCompanies(companyEntity2);
+
         when(companyRepo.findAll()).thenReturn(companies);
         when(finnhubClient.getQuote(companyEntity.getSymbol())).thenReturn(quoteDto);
         when(finnhubClient.getQuote(companyEntity2.getSymbol())).thenReturn(quoteDto2);
@@ -147,6 +134,17 @@ class SchedulerServiceTest {
 
     @Test
     public void saveMetricsByScheduleTest() {
+        metricDto = TestingData.getMetricDto(1D);
+        metric = TestingData.getMetric(1D);
+        metric.setCompanies(companyEntity);
+        metricResponseDto = MetricResponseDto.builder().build();
+        metricResponseDto.setMetric(metricDto);
+        metricDto2 = TestingData.getMetricDto(2D);
+        metric2 = TestingData.getMetric(2D);
+        metric2.setCompanies(companyEntity2);
+        metricResponseDto2 = MetricResponseDto.builder().build();
+        metricResponseDto2.setMetric(metricDto2);
+
         when(companyRepo.findAll()).thenReturn(companies);
         when(finnhubClient.getMetrics(companies.get(0).getSymbol())).thenReturn(metricResponseDto);
         when(finnhubClient.getMetrics(companies.get(1).getSymbol())).thenReturn(metricResponseDto2);

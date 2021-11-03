@@ -39,17 +39,16 @@ public class RegisterServiceTest {
     @InjectMocks
     private RegisterService registerService;
 
-    private UserEntity user;
     private RegisterDto registerUser;
 
     @BeforeEach
     public void beforeTest() {
-        user = TestingData.getUser(null, UserStatus.CREATED);
         registerUser = TestingData.getRegisterUser();
     }
 
     @Test
     public void registerUserTest() throws InvalidUserParameterException {
+        UserEntity user = TestingData.getUser(null, UserStatus.CREATED);
         when(userRepo.findByEmail(registerUser.getEmail())).thenReturn(Optional.empty());
         when(passwordEncoder.encode(registerUser.getPassword())).thenReturn(registerUser.getPassword());
         when(roleRepo.findByRoleName("USER")).thenReturn(user.getRoles().get(0));

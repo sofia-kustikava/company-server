@@ -26,12 +26,10 @@ public class MailServiceTest {
     @InjectMocks
     private MailService mailService;
 
-    private UserDto userDto;
     private SubscriptionEntity subscription;
     private UserEntity user;
-    private RegisterDto registerUser;
-    private SimpleMailMessage mail;
     private UserSubscriptionEntity userSubscription;
+    private SimpleMailMessage mail;
 
     @BeforeEach
     public void beforeTest() {
@@ -40,17 +38,16 @@ public class MailServiceTest {
         userSubscription = TestingData.getUserSubscription(LocalDate.now());
         userSubscription.setSubscription(subscription);
 
-        userDto = TestingData.getDtoUser(1L);
         user = TestingData.getUser(1L, null);
         user.setSubscription(userSubscription);
         userSubscription.setUser(user);
 
-        registerUser = TestingData.getRegisterUser();
         mail = new SimpleMailMessage();
     }
 
     @Test
     public void sendEmailRegistrationTest() {
+        RegisterDto registerUser = TestingData.getRegisterUser();
         mail.setTo(registerUser.getEmail());
         mail.setSubject("Registration completed! Enjoy ;)");
         mail.setText("Your account is working!");
@@ -60,6 +57,7 @@ public class MailServiceTest {
 
     @Test
     public void sendEmailBeginSubscription() {
+        UserDto userDto = TestingData.getDtoUser(1L);
         mail.setTo(userDto.getEmail());
         mail.setSubject("You've just started to follow by " + subscription.getName() + " completed! Enjoy ;)\n" +
                 "Description: " + subscription.getDescription());

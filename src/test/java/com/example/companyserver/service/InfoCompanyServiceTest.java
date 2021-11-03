@@ -67,32 +67,10 @@ public class InfoCompanyServiceTest {
 
     private QuoteEntity quote;
     private QuoteDto quoteDto;
-    private QuoteDto quoteDto2;
-    private QuoteEntity quote2;
 
     private MetricEntity metric;
     private MetricResponseDto metricResponseDto;
     private MetricDto metricDto;
-
-    private MetricEntity metric2;
-    private MetricDto metricDto2;
-    private MetricResponseDto metricResponseDto2;
-
-    private ReportDto reportDto;
-    private ReportDto reportDto2;
-    private ReportDto reportDto3;
-    private DataDto dataDto;
-    private UnitsDto unitsDto;
-    private UnitsDto unitsDto2;
-    private UnitsDto unitsDto3;
-    private ReportResponseDto responseReportDto;
-    private ReportResponseDto responseReportDto2;
-    private ReportResponseDto responseReportDto3;
-
-    private List<ReportResponseDto> reportResponseDtos = new ArrayList<>();
-    private List<ReportDto> reports = new ArrayList<>();
-    private List<ReportDto> reports2 = new ArrayList<>();
-    private List<ReportDto> reports3 = new ArrayList<>();
 
 
     @BeforeEach
@@ -107,54 +85,22 @@ public class InfoCompanyServiceTest {
         quote = TestingData.getQuote(1D);
         quote.setCompanies(companyEntity);
 
-        quoteDto2 = TestingData.getQuoteDto(2D);
-        quote2 = TestingData.getQuote(1D);
-        quote2.setCompanies(companyEntity2);
-
         metric = TestingData.getMetric(1D);
         metric.setCompanies(companyEntity);
         metricDto = TestingData.getMetricDto(1D);
         metricResponseDto = MetricResponseDto.builder().build();
         metricResponseDto.setMetric(metricDto);
 
-        metric2 = TestingData.getMetric(2D);
-        metricDto2 = TestingData.getMetricDto(2D);
-        metricResponseDto2 = MetricResponseDto.builder().build();
-        metricResponseDto2.setMetric(metricDto2);
-
         companies.addAll(Arrays.asList(companyEntity, companyEntity2));
 
-        reportDto = TestingData.getReport();
-        reportDto2 = TestingData.getReport();
-        reportDto3 = TestingData.getReport();
-
-        reports = List.of(reportDto,reportDto2, reportDto3);
-        reports2 = List.of(reportDto,reportDto2, reportDto3);
-        reports3 = List.of(reportDto,reportDto2, reportDto3);
-
-        unitsDto = TestingData.getUnits(reports, reports2, reports3);
-        unitsDto2 = TestingData.getUnits(reports, reports2, reports3);
-        unitsDto3 = TestingData.getUnits(reports, reports2, reports3);
-
-        responseReportDto = ReportResponseDto.builder()
-                .report(unitsDto)
-                .build();
-        responseReportDto2 = ReportResponseDto.builder()
-                .report(unitsDto2)
-                .build();
-        responseReportDto3 = ReportResponseDto.builder()
-                .report(unitsDto3)
-                .build();
-
-        reportResponseDtos = List.of(responseReportDto, responseReportDto2, responseReportDto3);
-
-        dataDto = DataDto.builder()
-                .data(reportResponseDtos)
-                .build();
     }
 
     @Test
     public void saveQuotesTest() {
+
+        QuoteDto quoteDto2 = TestingData.getQuoteDto(2D);
+        QuoteEntity quote2 = TestingData.getQuote(1D);
+        quote2.setCompanies(companyEntity2);
 
         when(companyRepo.findAll()).thenReturn(companies);
         when(finnhubClient.getQuote(companyEntity.getSymbol())).thenReturn(quoteDto);
@@ -169,6 +115,11 @@ public class InfoCompanyServiceTest {
 
     @Test
     public void saveMetricsTest() {
+        MetricEntity metric2 = TestingData.getMetric(2D);
+        MetricDto metricDto2 = TestingData.getMetricDto(2D);
+        MetricResponseDto metricResponseDto2 = MetricResponseDto.builder().build();
+        metricResponseDto2.setMetric(metricDto2);
+
         when(companyRepo.findAll()).thenReturn(companies);
         when(finnhubClient.getMetrics(companies.get(0).getSymbol())).thenReturn(metricResponseDto);
         when(finnhubClient.getMetrics(companies.get(1).getSymbol())).thenReturn(metricResponseDto2);
@@ -217,6 +168,34 @@ public class InfoCompanyServiceTest {
 
     @Test
     public void getFinnhubReportTest() {
+        ReportDto reportDto = TestingData.getReport();
+        ReportDto reportDto2 = TestingData.getReport();
+        ReportDto reportDto3 = TestingData.getReport();
+
+        List<ReportDto> reports = List.of(reportDto, reportDto2, reportDto3);
+        List<ReportDto> reports2 = List.of(reportDto, reportDto2, reportDto3);
+        List<ReportDto> reports3 = List.of(reportDto, reportDto2, reportDto3);
+
+        UnitsDto unitsDto = TestingData.getUnits(reports, reports2, reports3);
+        UnitsDto unitsDto2 = TestingData.getUnits(reports, reports2, reports3);
+        UnitsDto unitsDto3 = TestingData.getUnits(reports, reports2, reports3);
+
+        ReportResponseDto responseReportDto = ReportResponseDto.builder()
+                .report(unitsDto)
+                .build();
+        ReportResponseDto responseReportDto2 = ReportResponseDto.builder()
+                .report(unitsDto2)
+                .build();
+        ReportResponseDto responseReportDto3 = ReportResponseDto.builder()
+                .report(unitsDto3)
+                .build();
+
+        List<ReportResponseDto> reportResponseDtos = List.of(responseReportDto, responseReportDto2, responseReportDto3);
+
+        DataDto dataDto = DataDto.builder()
+                .data(reportResponseDtos)
+                .build();
+
         when(companyRepo.findBySymbol(companyEntity.getSymbol())).thenReturn(Optional.of(companyEntity));
 
         when(finnhubClient.getReports(companyEntity.getSymbol())).thenReturn(dataDto);
