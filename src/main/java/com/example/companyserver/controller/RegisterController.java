@@ -5,6 +5,7 @@ import com.example.companyserver.exceptions.InvalidUserParameterException;
 import com.example.companyserver.service.RegisterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,9 +19,9 @@ public class RegisterController {
     private final RegisterService registerService;
 
     @PostMapping("/register")
-    public HttpStatus registerUser(@RequestBody @Valid RegisterDto registerDto) throws InvalidUserParameterException {
+    public ResponseEntity<String> registerUser(@RequestBody @Valid RegisterDto registerDto) throws InvalidUserParameterException {
         registerService.registerUser(registerDto);
-        return HttpStatus.OK;
+        return new ResponseEntity<>("Welcome " + registerDto.getEmail(), HttpStatus.OK);
     }
 
 }

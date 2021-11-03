@@ -1,15 +1,12 @@
 package com.example.companyserver.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -26,8 +23,5 @@ public class SubscriptionEntity {
     private String description;
 
     @Column(name = "price")
-    private float price;
-
-    @OneToMany(mappedBy = "subscription")
-    private List<UserSubscriptionEntity> userSubscriptionEntities;
+    private Double price;
 }

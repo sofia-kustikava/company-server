@@ -1,14 +1,15 @@
-package com.example.companyserver.dto;
+package com.example.companyserver.dto.metric;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -19,22 +20,23 @@ import java.util.Date;
         "52WeekPriceReturnDaily"
 })
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MetricDto {
     @JsonProperty("52WeekHigh")
-    private float weekHigh;
+    private Double weekHigh;
 
     @JsonProperty("52WeekHighDate")
-    private Date weekHighDate;
+    private LocalDate weekHighDate;
 
     @JsonProperty("52WeekLow")
-    private float weekLow;
+    private Double weekLow;
 
     @JsonProperty("52WeekLowDate")
-    private Date weekLowDate;
+    private LocalDate weekLowDate;
 
     @JsonProperty("52WeekPriceReturnDaily")
-    private float weekPriceReturnDaily;
+    private Double weekPriceReturnDaily;
 }

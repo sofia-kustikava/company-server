@@ -3,7 +3,7 @@ package com.example.companyserver.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.*;
 
 @Getter
@@ -12,6 +12,7 @@ import java.util.*;
 @NoArgsConstructor
 @Entity
 @Builder
+@ToString
 @Table(name = "users")
 public class UserEntity {
     @Id
@@ -28,10 +29,10 @@ public class UserEntity {
     private String email;
 
     @Column(name = "date_created")
-    private LocalDateTime dateCreated;
+    private LocalDate dateCreated;
 
     @Column(name = "date_updated")
-    private LocalDateTime updated;
+    private LocalDate updated;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
@@ -40,7 +41,7 @@ public class UserEntity {
     @Column(name = "password")
     private String password;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private UserSubscriptionEntity subscription;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

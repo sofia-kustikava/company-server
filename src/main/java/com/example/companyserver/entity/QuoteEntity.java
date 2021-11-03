@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -15,28 +16,28 @@ public class QuoteEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "companies_id")
     private CompanyEntity companies;
 
     @Column(name = "current_price")
-    private float currentPrice;
+    private Double currentPrice;
 
     @Column(name = "change")
-    private float change;
+    private Double change;
 
     @Column(name = "percent_change")
-    private float percentChange;
+    private Double percentChange;
 
     @Column(name = "high_price")
-    private float highPrice;
+    private Double highPrice;
 
     @Column(name = "low_price")
-    private float lowPrice;
+    private Double lowPrice;
 
     @Column(name = "open_price")
-    private float openPrice;
+    private Double openPrice;
 
     @Column(name = "close_price")
-    private float closePrice;
+    private Double closePrice;
 }

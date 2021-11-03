@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Arrays;
 
 @Service
@@ -22,10 +22,10 @@ public class RegisterService {
     private final UserRepo userRepo;
     private final RoleRepo roleRepo;
     private final PasswordEncoder passwordEncoder;
+    private final MailService mailService;
 
     public void registerUser(RegisterDto registerDto) throws InvalidUserParameterException {
-        if (emailExist(registerDto.getEmail())) throw new UserAlreadyExistException("There is an account with that email address: "
-                    + String.format("%s", registerDto.getEmail()));
+        if (emailExist(registerDto.getEmail())) throw new UserAlreadyExistException(String.format("%s", registerDto.getEmail()));
 
         try {
             UserEntity user = UserEntity.builder()
@@ -34,13 +34,14 @@ public class RegisterService {
                     .email(registerDto.getEmail())
                     .password(passwordEncoder.encode(registerDto.getPassword()))
                     .status(UserStatus.CREATED)
-                    .dateCreated(LocalDateTime.now())
-                    .updated(LocalDateTime.now())
+                    .dateCreated(LocalDate.now())
+                    .updated(LocalDate.now())
                     .build();
 
             RoleEntity userRole = roleRepo.findByRoleName("USER");
             user.setRoles(Arrays.asList(userRole));
 
+            mailService.sendEmailRegistration(registerDto);
             userRepo.save(user);
         } catch (Exception e) {
             throw new InvalidUserParameterException(e.getMessage());

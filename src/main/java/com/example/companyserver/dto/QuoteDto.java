@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,29 +20,30 @@ import lombok.NoArgsConstructor;
         "pc"
 })
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class QuoteDto {
 
     @JsonProperty("c")
-    private float currentPrice;
+    private Double currentPrice;
 
     @JsonProperty("d")
-    private float change;
+    private Double change;
 
     @JsonProperty("dp")
-    private float percentChange;
+    private Double percentChange;
 
     @JsonProperty("h")
-    private float highPrice;
+    private Double highPrice;
 
     @JsonProperty("l")
-    private float lowPrice;
+    private Double lowPrice;
 
     @JsonProperty("o")
-    private float openPrice;
+    private Double openPrice;
 
     @JsonProperty("pc")
-    private float closePrice;
+    private Double closePrice;
 }

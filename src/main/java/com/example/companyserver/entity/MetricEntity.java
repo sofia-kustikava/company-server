@@ -3,9 +3,11 @@ package com.example.companyserver.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -15,22 +17,22 @@ public class MetricEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "companies_id")
     private CompanyEntity companies;
 
     @Column(name = "week_high")
-    private String weekHigh;
+    private Double weekHigh;
 
     @Column(name = "week_high_date")
-    private String weekHighDate;
+    private LocalDate weekHighDate;
 
     @Column(name = "week_low")
-    private String weekLow;
+    private Double weekLow;
 
     @Column(name = "week_low_date")
-    private String weekLowDate;
+    private LocalDate weekLowDate;
 
     @Column(name = "week_price_daily")
-    private String weekPriceDaily;
+    private Double weekPriceDaily;
 }

@@ -40,4 +40,28 @@ public class UserExceptionHandler {
                 .message(e.getMessage())
                 .build(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler({UserAlreadyExistException.class})
+    public ResponseEntity<Object> userAlreadyExist(UserAlreadyExistException e) {
+        return new ResponseEntity<>(ExceptionResponse
+                .builder()
+                .message(e.getMessage())
+                .build(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({UserIsBannedException.class})
+    public ResponseEntity<Object> userIsBanned(UserIsBannedException e) {
+        return new ResponseEntity<>(ExceptionResponse
+                .builder()
+                .message(e.getMessage())
+                .build(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({UserIsUnbannedException.class})
+    public ResponseEntity<Object> userIsBanned(UserIsUnbannedException e) {
+        return new ResponseEntity<>(ExceptionResponse
+                .builder()
+                .message(e.getMessage())
+                .build(), HttpStatus.BAD_REQUEST);
+    }
 }

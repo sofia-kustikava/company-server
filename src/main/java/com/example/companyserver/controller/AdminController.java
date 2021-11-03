@@ -6,6 +6,7 @@ import com.example.companyserver.service.CompanyService;
 import com.example.companyserver.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,36 +17,48 @@ import java.util.List;
 public class AdminController {
 
     private final CompanyMapper companyMapper;
-    public final CompanyService companyService;
-    public final UserService userService;
+    private final CompanyService companyService;
+    private final UserService userService;
 
     @GetMapping("/companies")
     public List<CompanyDto> getAllCompanies() {
-        return companyMapper.companiesToDto(companyService.getCompanies());
+        return companyService.getCompanies();
     }
 
-    @PostMapping("/save")
-    public HttpStatus saveAllCompanies() {
-        companyService.saveCompanies(companyService.getCompanies());
-        return HttpStatus.OK;
+    @PostMapping("/save/companies")
+    public ResponseEntity<String> saveAllCompanies() {
+        companyService.saveCompanies(companyMapper.dtoToCompanies(companyService.getCompanies()));
+        return new ResponseEntity<>("All companies were successfully saved", HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/company/{symbol}")
-    public HttpStatus deleteCompanyBySymbol(@PathVariable String symbol) {
+    public ResponseEntity<String> deleteCompanyBySymbol(@PathVariable String symbol) {
         companyService.deleteCompany(symbol);
-        return HttpStatus.OK;
+        return new ResponseEntity<>("Company with this symbol was successfully deleted" + symbol, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/company/all")
-    public HttpStatus deleteAllCompanies() {
+    public ResponseEntity<String> deleteAllCompanies() {
         companyService.deleteAllCompanies();
-        return HttpStatus.OK;
+        return new ResponseEntity<>("All companies were successfully deleted", HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/user/{id}")
-    public HttpStatus delete(@PathVariable Long id){
+    public ResponseEntity<String> delete(@PathVariable Long id){
         userService.delete(id);
-        return HttpStatus.OK;
+        return new ResponseEntity<>("User with this id was deleted: " + id, HttpStatus.OK);
+    }
+
+    @PostMapping("/block/{userId}")
+    public ResponseEntity<String> blockUser(@PathVariable Long userId) {
+        userService.blockUser(userId);
+        return new ResponseEntity<>("User with this id was blocked: " + userId, HttpStatus.OK);
+    }
+
+    @PostMapping("/unblock/{userId}")
+    public ResponseEntity<String> unblockUser(@PathVariable Long userId) {
+        userService.unblockUser(userId);
+        return new ResponseEntity<>("User with this id was unblocked: " + userId, HttpStatus.OK);
     }
 
 }
