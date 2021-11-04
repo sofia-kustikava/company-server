@@ -4,7 +4,6 @@ import com.example.companyserver.dto.SubscriptionNameDto;
 import com.example.companyserver.dto.UserSubscriptionDto;
 import com.example.companyserver.entity.*;
 import com.example.companyserver.exceptions.HaveSubscriptionException;
-import com.example.companyserver.exceptions.PayPalException;
 import com.example.companyserver.exceptions.SubscriptionNotExistException;
 import com.example.companyserver.exceptions.UserNotFoundException;
 import com.example.companyserver.mapper.UserMapper;
@@ -53,20 +52,22 @@ public class SubscriptionService {
         }
     }
 
-    public Links paymentForSubscription(Long userId) throws PayPalRESTException {
+    public String paymentForSubscription(Long userId) throws PayPalRESTException {
         UserEntity user = userRepo.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(String.format("%s", userId)));
         Payment payment = payPalService.createPayment(
+                userId,
                 user.getSubscription().getSubscription().getPrice(),
                 user.getSubscription().getSubscription().getDescription());
-        return payment.getLinks().get(1);
+
+        for(Links link : payment.getLinks()) {
+            if(link.getRel().equals("approval_url")) return link.getHref();
+        }
+        return null;
     }
 
-    public void paySubscription(Long id) throws PayPalException {
+    public void paySubscription(Long id){
         UserEntity user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(String.format("%s", id)));
-        try {
-            payPalService.executePayment(user.getSubscription().getId() , user.getId());
-
             user.getSubscription().setDateStart(LocalDate.now());
             user.getSubscription().setDateEnd(LocalDate.from(LocalDate.now().plusDays(30)));
             user.getSubscription().setSubscriptionStatus(SubscriptionStatus.ACTIVE);
@@ -75,9 +76,6 @@ public class SubscriptionService {
             userSubscriptionRepo.save(user.getSubscription());
             userRepo.save(user);
             mailService.sendEmailBeginSubscription(userMapper.userToDto(user), user.getSubscription().getSubscription());
-        } catch (PayPalRESTException e) {
-            throw new PayPalException(e.getMessage());
-        }
     }
 
     public void changeSubscription(Long userId, UserSubscriptionDto userSubscriptionDto) {
