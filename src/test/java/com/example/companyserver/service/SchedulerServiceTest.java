@@ -98,12 +98,12 @@ class SchedulerServiceTest {
 
         subscription = TestingData.getSubscription();
 
-        userSubscription = TestingData.getUserSubscription(LocalDate.now());
+        userSubscription = TestingData.getUserSubscription(LocalDate.now(), SubscriptionStatus.ACTIVE);
         userSubscription.setSubscription(subscription);
         user = TestingData.getUser(1L, UserStatus.ACTIVE);
         user.setSubscription(userSubscription);
 
-        userSubscription2 = TestingData.getUserSubscription(LocalDate.now().minusDays(3));
+        userSubscription2 = TestingData.getUserSubscription(LocalDate.now().minusDays(3), SubscriptionStatus.ACTIVE);
         userSubscription2.setSubscription(subscription);
         user2 = TestingData.getUser(2L, UserStatus.ACTIVE);
         user2.setSubscription(userSubscription2);

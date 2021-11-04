@@ -65,19 +65,19 @@ public class TestingData {
                 .build();
     }
 
-    public static UserSubscriptionEntity getUserSubscription(LocalDate dateEnd) {
+    public static UserSubscriptionEntity getUserSubscription(LocalDate dateEnd, SubscriptionStatus status) {
         return UserSubscriptionEntity.builder()
                 .dateEnd(dateEnd)
                 .dateStart(LocalDate.now())
-                .subscriptionStatus(SubscriptionStatus.ACTIVE)
+                .subscriptionStatus(status)
                 .build();
     }
 
-    public static UserSubscriptionDto getUserSubscriptionDto(LocalDate dateEnd) {
+    public static UserSubscriptionDto getUserSubscriptionDto(LocalDate dateEnd, SubscriptionStatus status) {
         return UserSubscriptionDto.builder()
                 .dateEnd(dateEnd)
                 .dateStart(LocalDate.now())
-                .subscriptionStatus(SubscriptionStatus.ACTIVE)
+                .subscriptionStatus(status)
                 .build();
     }
 
@@ -154,4 +154,10 @@ public class TestingData {
                 .ic(ic)
                 .build();
     }
+    public static SubscriptionNameDto getSubscriptionName(String name) {
+        return SubscriptionNameDto.builder()
+                .name(name)
+                .build();
+    }
+
 }

@@ -4,6 +4,7 @@ import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -14,8 +15,16 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class PayPalService {
-    public static final String SUCCESS_URL = "/success";
-    public static final String CANCEL_URL = "subscription/cancel";
+    @Value("${paypal.success.url}")
+    private String successUrl;
+    @Value("${paypal.cancel.url}")
+    private String cancelUrl;
+    @Value("${paypal.currency}")
+    private String currency;
+    @Value("${paypal.method}")
+    private String method;
+    @Value("${paypal.intent}")
+    private String intent;
 
     private final APIContext apiContext;
 
@@ -24,7 +33,7 @@ public class PayPalService {
             Double total,
             String description) throws PayPalRESTException{
         Amount amount = new Amount();
-        amount.setCurrency("USD");
+        amount.setCurrency(currency);
         total = new BigDecimal(total).setScale(2, RoundingMode.HALF_UP).doubleValue();
         amount.setTotal(String.format("%.2f", total));
 
@@ -32,19 +41,19 @@ public class PayPalService {
         transaction.setDescription(description);
         transaction.setAmount(amount);
 
-        List transactions = new ArrayList<>();
+        List<Transaction> transactions = new ArrayList<>();
         transactions.add(transaction);
 
         Payer payer = new Payer();
-        payer.setPaymentMethod("PAYPAL");
+        payer.setPaymentMethod(method);
 
         Payment payment = new Payment();
         payment.setPayer(payer);
-        payment.setIntent("SALE");
+        payment.setIntent(intent);
         payment.setTransactions(transactions);
         RedirectUrls redirectUrls = new RedirectUrls();
-        redirectUrls.setCancelUrl("http://localhost:8080/" + CANCEL_URL);
-        redirectUrls.setReturnUrl("http://localhost:8080/subscription/" + id + SUCCESS_URL);
+        redirectUrls.setCancelUrl(cancelUrl);
+        redirectUrls.setReturnUrl(successUrl + id);
         payment.setRedirectUrls(redirectUrls);
 
         return payment.create(apiContext);

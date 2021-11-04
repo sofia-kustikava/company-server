@@ -23,7 +23,7 @@ public class SubscriptionController {
     public final PayPalService payPalService;
 
     @PostMapping("{userId}/create")
-    public ResponseEntity<String> chooseSubscription(@PathVariable("userId") Long userId, @RequestBody SubscriptionNameDto name) throws PayPalRESTException {
+    public ResponseEntity<String> chooseSubscription(@PathVariable("userId") Long userId, @RequestBody SubscriptionNameDto name) {
         subscriptionService.chooseSubscription(userId, name);
         return new ResponseEntity<>("You chose subscription " + name.getName(), HttpStatus.OK);
     }
@@ -34,12 +34,12 @@ public class SubscriptionController {
     }
 
     @PostMapping("{userId}/change")
-    public ResponseEntity<String> changeSubscription(@PathVariable("userId") Long userId, @RequestBody UserSubscriptionDto userSubscriptionDto) {
-        subscriptionService.changeSubscription(userId, userSubscriptionDto);
-        return new ResponseEntity<>("You changed your subscription to " + userSubscriptionDto.getSubscription() , HttpStatus.OK);
+    public ResponseEntity<String> changeSubscription(@PathVariable("userId") Long userId, @RequestBody SubscriptionNameDto name) {
+        subscriptionService.changeSubscription(userId, name);
+        return new ResponseEntity<>("You changed your subscription to " + name.getName() , HttpStatus.OK);
     }
 
-    @GetMapping("{userId}/success")
+    @GetMapping("success/{userId}")
     public ResponseEntity<String> successPayment(@PathVariable("userId") Long userId, HttpServletRequest request) throws PayPalRESTException {
         payPalService.executePayment(request.getParameter("paymentId"), request.getParameter("PayerID"));
         subscriptionService.paySubscription(userId);
