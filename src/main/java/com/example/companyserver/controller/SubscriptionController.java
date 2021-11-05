@@ -1,8 +1,6 @@
 package com.example.companyserver.controller;
 
 import com.example.companyserver.dto.SubscriptionNameDto;
-import com.example.companyserver.dto.UserSubscriptionDto;
-import com.example.companyserver.exceptions.PayPalException;
 import com.example.companyserver.service.PayPalService;
 import com.example.companyserver.service.SubscriptionService;
 import com.paypal.base.rest.PayPalRESTException;
@@ -12,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.stream.Stream;
 
 @RestController
 @RequiredArgsConstructor

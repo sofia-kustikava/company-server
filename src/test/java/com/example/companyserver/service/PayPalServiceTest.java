@@ -1,33 +1,29 @@
 package com.example.companyserver.service;
 
-import com.paypal.base.rest.APIContext;
-import org.junit.jupiter.api.BeforeEach;
+import com.paypal.api.payments.*;
+import com.paypal.base.rest.PayPalRESTException;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-@ExtendWith(MockitoExtension.class)
+import java.util.stream.Collectors;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class PayPalServiceTest {
 
-    @Mock
-    private APIContext apiContext;
-
-    @InjectMocks
+    @Autowired
     private PayPalService payPalService;
 
-    @BeforeEach
-    public void beforeTest() {
-    }
 
     @Test
-    public void createPaymentTest() {
+    public void createPaymentTest() throws PayPalRESTException {
 
-    }
-
-    @Test
-    public void executePaymentTest() {
-
+        Payment expected = payPalService.createPayment(1L, 100.00, "Description");
+        assertTrue(expected.getLinks()
+                .stream()
+                .map(Links::getRel)
+                .collect(Collectors.toList()).contains("approval_url"));
     }
 }
