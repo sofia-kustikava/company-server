@@ -16,7 +16,6 @@ public class PayPalServiceTest {
     @Autowired
     private PayPalService payPalService;
 
-
     @Test
     public void createPaymentTest() throws PayPalRESTException {
 
