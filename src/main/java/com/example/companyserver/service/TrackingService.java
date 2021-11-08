@@ -1,13 +1,17 @@
 package com.example.companyserver.service;
 
 import com.example.companyserver.dto.CompanyDto;
-import com.example.companyserver.entity.CompanyEntity;
-import com.example.companyserver.entity.SubscriptionStatus;
-import com.example.companyserver.entity.UserEntity;
-import com.example.companyserver.entity.UserStatus;
+import com.example.companyserver.dto.QuoteDto;
+import com.example.companyserver.dto.metric.MetricDto;
+import com.example.companyserver.dto.report.ReportDto;
+import com.example.companyserver.entity.*;
 import com.example.companyserver.exceptions.*;
 import com.example.companyserver.mapper.CompanyMapper;
+import com.example.companyserver.mapper.MetricMapper;
+import com.example.companyserver.mapper.QuoteMapper;
 import com.example.companyserver.repo.CompanyRepo;
+import com.example.companyserver.repo.MetricRepo;
+import com.example.companyserver.repo.QuoteRepo;
 import com.example.companyserver.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,37 +20,37 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class TrackingService {
+
     private final UserRepo userRepo;
     private final CompanyRepo companyRepo;
     private final CompanyMapper companyMapper;
+    private final InfoCompanyService infoCompanyService;
+    private final QuoteRepo quoteRepo;
+    private final QuoteMapper quoteMapper;
+    private final MetricRepo metricRepo;
+    private final MetricMapper metricMapper;
 
     public void addUserCompany(String symbol) {
         UserEntity user = getUser();
         if (isUserHaveAccessToGetCompanies(user)) {
             CompanyEntity company = companyRepo.findBySymbol(symbol)
                     .orElseThrow(() -> new CompanyNotFoundException(String.format("%s", symbol)));
-            if (!user.getSubscription().getSubscription().getName().equals("Bronze")) {
-                if (user.getCompanies().size() < 3) {
-                    user.getCompanies().add(company);
-                    userRepo.save(user);
-                } else {
-                    log.info("You can't add another company.");
-                    throw new MaximumCompaniesException();
-                }
+            if (user.getCompanies().size() < user.getSubscription().getSubscription().getTrackingSize()) {
+                user.getCompanies().add(company);
+                userRepo.save(user);
             } else {
-                if (user.getCompanies().size() <= 2) {
-                    user.getCompanies().add(company);
-                    userRepo.save(user);
-                } else {
-                    log.info("You can't add another company.");
-                    throw new MaximumCompaniesException();
-                }
+                log.info("You can't add another company.");
+                throw new MaximumCompaniesException();
             }
+        } else {
+            log.info("This user don't have an access to this method {}", user.getEmail());
+            throw new NoAccessTrackingException(user.getEmail());
         }
     }
 
@@ -57,20 +61,7 @@ public class TrackingService {
     }
 
     private boolean isUserHaveAccessToGetCompanies(UserEntity user) {
-        if (user.getSubscription() != null) {
-            if (user.getSubscription().getSubscriptionStatus().equals(SubscriptionStatus.ACTIVE)) {
-                return true;
-            } else if (user.getStatus().equals(UserStatus.BANNED)){
-                log.info("This user is banned: {}", user.getEmail());
-                throw new BannedUserException(String.format("%s", user.getEmail()));
-            } else {
-                log.info("Subscription is inactive for this user: {}", user.getEmail());
-                throw new InactiveSubscriptionException(String.format("%s", user.getEmail()));
-            }
-        } else {
-            log.info("There is no subscription for this user: {}", user.getEmail());
-            throw new NoSubscriptionException(String.format("%s", user.getEmail()));
-        }
+        return user.getSubscription() != null && user.getSubscription().getSubscriptionStatus().equals(SubscriptionStatus.ACTIVE);
     }
 
     private UserEntity getUser() {
@@ -79,4 +70,68 @@ public class TrackingService {
         return userRepo.findByEmail(username).orElseThrow(() -> new UserNotFoundException(username));
     }
 
+    public void deleteCompany(String symbol) {
+        UserEntity user = getUser();
+        if (isTrackingSymbol(user, symbol)) {
+            CompanyEntity company = companyRepo.findBySymbol(symbol).orElseThrow(() -> new CompanyNotFoundException(symbol));
+            user.getCompanies().remove(company);
+            userRepo.save(user);
+            log.info("Company was deleted with this symbol: {}", symbol);
+        } else {
+            log.info("This company not exist on user's tracking list {}", symbol);
+            throw new NotTrackingException(symbol);
+        }
+    }
+
+    public QuoteDto getTrackingQuote(String symbol) {
+        UserEntity user = getUser();
+        if (isTrackingSymbol(user, symbol)) {
+            QuoteEntity quote = quoteRepo.findByCompanies(symbol)
+                    .orElseThrow(() -> new CompanyNotFoundException(String.format("%s", symbol)));
+            return quoteMapper.quoteToDto(quote);
+        } else {
+            log.info("This company not exist on your tracking list {}", symbol);
+            throw new NotTrackingException(symbol);
+        }
+    }
+
+    public MetricDto getTrackingMetric(String symbol) {
+        UserEntity user = getUser();
+        if (!user.getSubscription().getSubscription().getName().equals("Bronze")) {
+            if (isTrackingSymbol(user, symbol)) {
+                MetricEntity quote = metricRepo.findByCompanies(symbol)
+                        .orElseThrow(() -> new CompanyNotFoundException(String.format("%s", symbol)));
+                return metricMapper.metricToDto(quote);
+            } else {
+                log.info("This company not exist on user's tracking list {}", symbol);
+                throw new NotTrackingException(symbol);
+            }
+        } else {
+            log.info("This user don't have an access to this method {}", user.getSubscription().getSubscription().getName());
+            throw new NoAccessTrackingException(user.getEmail());
+        }
+    }
+
+    public List<ReportDto> getTrackingReport(String symbol) {
+        UserEntity user = getUser();
+        if (user.getSubscription().getSubscription().getName().equals("Golden")) {
+            if (isTrackingSymbol(user, symbol)) {
+                return infoCompanyService.getFinnhubReport(symbol);
+            } else {
+                log.info("This company not exist on user's tracking list {}", symbol);
+                throw new NotTrackingException(symbol);
+            }
+        } else {
+            log.info("This user don't have an access to this method {}", user.getSubscription().getSubscription().getName());
+            throw new NoAccessTrackingException(user.getEmail());
+        }
+    }
+
+    private boolean isTrackingSymbol(UserEntity user, String symbol) {
+        return user.getCompanies() != null && user.getCompanies()
+                .stream()
+                .map(CompanyEntity::getSymbol)
+                .collect(Collectors.toList())
+                .contains(symbol);
+    }
 }

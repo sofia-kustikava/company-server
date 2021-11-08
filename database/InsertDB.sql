@@ -1,6 +1,6 @@
-INSERT INTO Subscriptions VALUES (1, 'Golden','With a Golden subscription, you have an opportunity to add three companies for tracking and receiving data on shares of specific companies for 52 weeks and financial statements of companies.', 90.00);
-INSERT INTO Subscriptions VALUES (2, 'Silver','With a Silver subscription, you have an opportunity to add three companies for tracking and get 52 weeks of stock data for specific companies.', 60.00);
-INSERT INTO Subscriptions VALUES (3, 'Bronze','With a Bronze subscription, you have an opportunity to add two companies for tracking', 30.00);
+INSERT INTO Subscriptions VALUES (1, 'Golden','With a Golden subscription, you have an opportunity to add three companies for tracking and receiving data on shares of specific companies for 52 weeks and financial statements of companies.', 90.00, 3);
+INSERT INTO Subscriptions VALUES (2, 'Silver','With a Silver subscription, you have an opportunity to add three companies for tracking and get 52 weeks of stock data for specific companies.', 60.00, 3);
+INSERT INTO Subscriptions VALUES (3, 'Bronze','With a Bronze subscription, you have an opportunity to add two companies for tracking', 30.00, 2);
 
 INSERT INTO Users VALUES (1, 'Admin' , 'Adminovich','admin@mail.com' , '2021-08-23', '2021-09-16', 'ACTIVE', '$2a$12$XmFno4d.H65Xo6hdwIiwqepfBjkq9e86HTKnG5LLlF4Z8RPbRIY5K');
 INSERT INTO Users VALUES (2, 'User' ,'Userovich' ,'user@mail.com' , '2021-09-01', '2021-11-16', 'ACTIVE', '$2a$12$uZZIRrElg9H/gdd3nx/52u8mx2Y5qaGHWVXHWb6LVjNPXDe1d5xdm');
