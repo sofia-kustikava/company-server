@@ -3,6 +3,7 @@ package com.example.companyserver.service;
 import com.example.companyserver.dto.RegisterDto;
 import com.example.companyserver.dto.UserDto;
 import com.example.companyserver.entity.SubscriptionEntity;
+import com.example.companyserver.entity.SubscriptionStatus;
 import com.example.companyserver.entity.UserEntity;
 import com.example.companyserver.entity.UserSubscriptionEntity;
 import com.example.companyserver.utils.TestingData;
@@ -35,7 +36,7 @@ public class MailServiceTest {
     public void beforeTest() {
         subscription = TestingData.getSubscription();
 
-        userSubscription = TestingData.getUserSubscription(LocalDate.now());
+        userSubscription = TestingData.getUserSubscription(LocalDate.now(), SubscriptionStatus.ACTIVE);
         userSubscription.setSubscription(subscription);
 
         user = TestingData.getUser(1L, null);
