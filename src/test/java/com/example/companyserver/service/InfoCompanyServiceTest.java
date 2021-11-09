@@ -132,22 +132,6 @@ public class InfoCompanyServiceTest {
     }
 
     @Test
-    public void getQuoteTest() {
-        when(quoteRepo.findByCompanies(companyEntity.getSymbol())).thenReturn(Optional.of(quote));
-        when(quoteMapper.quoteToDto(quote)).thenReturn(quoteDto);
-        QuoteDto quoteFindDto = infoCompanyService.getQuote(companyEntity.getSymbol());
-        assertEquals(quoteDto, quoteFindDto);
-    }
-
-    @Test
-    public void getMetricTest() {
-        when(metricRepo.findByCompanies(companyEntity.getSymbol())).thenReturn(Optional.of(metric));
-        when(metricMapper.metricToDto(metric)).thenReturn(metricDto);
-        MetricDto metricFindDto = infoCompanyService.getMetric(companyEntity.getSymbol());
-        assertEquals(metricDto, metricFindDto);
-    }
-
-    @Test
     public void getFinnhubQuoteTest() {
         when(companyRepo.findBySymbol(companyEntity.getSymbol())).thenReturn(Optional.of(companyEntity));
         when(finnhubClient.getQuote(companyEntity.getSymbol())).thenReturn(quoteDto);

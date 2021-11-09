@@ -35,9 +35,10 @@ public class TrackingService {
     private final QuoteMapper quoteMapper;
     private final MetricRepo metricRepo;
     private final MetricMapper metricMapper;
+    private final AuthenticationService authenticationService;
 
     public void addUserCompany(String symbol) {
-        UserEntity user = getUser();
+        UserEntity user = authenticationService.getUser();
         if (isUserHaveAccessToGetCompanies(user)) {
             CompanyEntity company = companyRepo.findBySymbol(symbol)
                     .orElseThrow(() -> new CompanyNotFoundException(String.format("%s", symbol)));
@@ -55,7 +56,7 @@ public class TrackingService {
     }
 
     public List<CompanyDto> getUserCompanies() {
-        UserEntity user = getUser();
+        UserEntity user = authenticationService.getUser();
         List<CompanyEntity> companies = user.getCompanies();
         return companyMapper.companiesToDto(companies);
     }
@@ -64,14 +65,8 @@ public class TrackingService {
         return user.getSubscription() != null && user.getSubscription().getSubscriptionStatus().equals(SubscriptionStatus.ACTIVE);
     }
 
-    private UserEntity getUser() {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = userDetails.getUsername();
-        return userRepo.findByEmail(username).orElseThrow(() -> new UserNotFoundException(username));
-    }
-
     public void deleteCompany(String symbol) {
-        UserEntity user = getUser();
+        UserEntity user = authenticationService.getUser();
         if (isTrackingSymbol(user, symbol)) {
             CompanyEntity company = companyRepo.findBySymbol(symbol).orElseThrow(() -> new CompanyNotFoundException(symbol));
             user.getCompanies().remove(company);
@@ -83,25 +78,28 @@ public class TrackingService {
         }
     }
 
-    public QuoteDto getTrackingQuote(String symbol) {
-        UserEntity user = getUser();
+    public List<QuoteDto> getTrackingQuote(String symbol) {
+        UserEntity user = authenticationService.getUser();
         if (isTrackingSymbol(user, symbol)) {
-            QuoteEntity quote = quoteRepo.findByCompanies(symbol)
-                    .orElseThrow(() -> new CompanyNotFoundException(String.format("%s", symbol)));
-            return quoteMapper.quoteToDto(quote);
+            CompanyEntity company = companyRepo.findBySymbol(symbol).orElseThrow(() -> new CompanyNotFoundException(symbol));
+            List<QuoteEntity> quotes = quoteRepo.findByCompanies(company);
+
+            return quotes.stream().map(quoteMapper::quoteToDto).collect(Collectors.toList());
         } else {
             log.info("This company not exist on your tracking list {}", symbol);
             throw new NotTrackingException(symbol);
         }
+
     }
 
     public MetricDto getTrackingMetric(String symbol) {
-        UserEntity user = getUser();
+        UserEntity user = authenticationService.getUser();
         if (!user.getSubscription().getSubscription().getName().equals("Bronze")) {
             if (isTrackingSymbol(user, symbol)) {
-                MetricEntity quote = metricRepo.findByCompanies(symbol)
+                CompanyEntity company = companyRepo.findBySymbol(symbol).orElseThrow(() -> new CompanyNotFoundException(symbol));
+                MetricEntity metric = metricRepo.findByCompanies(company)
                         .orElseThrow(() -> new CompanyNotFoundException(String.format("%s", symbol)));
-                return metricMapper.metricToDto(quote);
+                return metricMapper.metricToDto(metric);
             } else {
                 log.info("This company not exist on user's tracking list {}", symbol);
                 throw new NotTrackingException(symbol);
@@ -113,7 +111,7 @@ public class TrackingService {
     }
 
     public List<ReportDto> getTrackingReport(String symbol) {
-        UserEntity user = getUser();
+        UserEntity user = authenticationService.getUser();
         if (user.getSubscription().getSubscription().getName().equals("Golden")) {
             if (isTrackingSymbol(user, symbol)) {
                 return infoCompanyService.getFinnhubReport(symbol);

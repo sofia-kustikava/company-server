@@ -18,20 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     public final UserService userService;
-    private final InfoCompanyService infoCompanyService;
 
     @GetMapping("/{id}")
     public UserDto getUser(@PathVariable("id") Long id) {
         return userService.findById(id);
-    }
-
-    @GetMapping("/get/quote/{symbol}")
-    public QuoteDto getQuoteBySymbol(@PathVariable("symbol") String symbol) {
-        return infoCompanyService.getQuote(symbol);
-    }
-
-    @GetMapping("/get/metric/{symbol}")
-    public MetricDto getMetricBySymbol(@PathVariable("symbol") String symbol) {
-        return infoCompanyService.getMetric(symbol);
     }
 }

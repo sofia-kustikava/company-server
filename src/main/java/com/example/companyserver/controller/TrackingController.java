@@ -4,6 +4,7 @@ import com.example.companyserver.dto.CompanyDto;
 import com.example.companyserver.dto.QuoteDto;
 import com.example.companyserver.dto.metric.MetricDto;
 import com.example.companyserver.dto.report.ReportDto;
+import com.example.companyserver.entity.QuoteEntity;
 import com.example.companyserver.service.TrackingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,7 +38,7 @@ public class TrackingController {
     }
 
     @GetMapping("/quotes/{symbol}")
-    public QuoteDto getTrackingQuote(@PathVariable("symbol") String symbol) {
+    public List<QuoteDto>  getTrackingQuote(@PathVariable("symbol") String symbol) {
         return trackingService.getTrackingQuote(symbol);
     }
 
