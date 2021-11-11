@@ -8,6 +8,9 @@ import com.example.companyserver.dto.report.ReportDto;
 import com.example.companyserver.dto.report.ReportResponseDto;
 import com.example.companyserver.dto.report.UnitsDto;
 import com.example.companyserver.entity.*;
+import com.example.companyserver.exceptions.MaximumCompaniesException;
+import com.example.companyserver.exceptions.NoAccessTrackingException;
+import com.example.companyserver.exceptions.NotTrackingException;
 import com.example.companyserver.mapper.CompanyMapper;
 import com.example.companyserver.mapper.MetricMapper;
 import com.example.companyserver.mapper.QuoteMapper;
@@ -29,6 +32,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -116,9 +120,10 @@ public class TrackingServiceTest {
     public void getTrackingQuoteTest() {
         List<QuoteEntity> quotes = new ArrayList<>();
         List<QuoteDto> quoteDtos = new ArrayList<>();
-        QuoteDto quoteDto = TestingData.getQuoteDto(2D);
+        QuoteDto quoteDto = TestingData.getQuoteDto(1D);
         QuoteEntity quote = TestingData.getQuote(1D);
         quote.setCompanies(companyEntity);
+        quotes.add(quote);
         quoteDtos.add(quoteDto);
         when(authenticationService.getUser()).thenReturn(user);
         when(companyRepo.findBySymbol(companyEntity.getSymbol())).thenReturn(Optional.of(companyEntity));
@@ -149,31 +154,39 @@ public class TrackingServiceTest {
         ReportDto reportDto3 = TestingData.getReport();
 
         List<ReportDto> reports = List.of(reportDto, reportDto2, reportDto3);
-        List<ReportDto> reports2 = List.of(reportDto, reportDto2, reportDto3);
-        List<ReportDto> reports3 = List.of(reportDto, reportDto2, reportDto3);
 
-        UnitsDto unitsDto = TestingData.getUnits(reports, reports2, reports3);
-        UnitsDto unitsDto2 = TestingData.getUnits(reports, reports2, reports3);
-        UnitsDto unitsDto3 = TestingData.getUnits(reports, reports2, reports3);
-
-        ReportResponseDto responseReportDto = ReportResponseDto.builder()
-                .report(unitsDto)
-                .build();
-        ReportResponseDto responseReportDto2 = ReportResponseDto.builder()
-                .report(unitsDto2)
-                .build();
-        ReportResponseDto responseReportDto3 = ReportResponseDto.builder()
-                .report(unitsDto3)
-                .build();
-
-        List<ReportResponseDto> reportResponseDtos = List.of(responseReportDto, responseReportDto2, responseReportDto3);
-
-        DataDto dataDto = DataDto.builder()
-                .data(reportResponseDtos)
-                .build();
         when(authenticationService.getUser()).thenReturn(user);
         when(infoCompanyService.getFinnhubReport(companyEntity.getSymbol())).thenReturn(reports);
         List<ReportDto> actual = trackingService.getTrackingReport(companyEntity.getSymbol());
         assertEquals(3, actual.size());
+    }
+
+    @Test
+    public void noAccessTrackingExceptionTest() {
+        UserEntity userWithNoSub = TestingData.getUser(2L, UserStatus.BANNED);
+        when(authenticationService.getUser()).thenReturn(userWithNoSub);
+        assertThrows(NoAccessTrackingException.class, () -> trackingService.addUserCompany(companyEntity.getSymbol()));
+    }
+
+    @Test
+    public void maximumCompaniesExceptionTest() {
+        UserEntity userWithMaxCompanies = TestingData.getUser(3L, UserStatus.ACTIVE);
+        UserSubscriptionEntity userPaidSubscription = TestingData.getUserSubscription(LocalDate.now().minusDays(3), SubscriptionStatus.ACTIVE);
+        userPaidSubscription.setSubscription(subscription);
+        userPaidSubscription.setUser(userWithMaxCompanies);
+        userWithMaxCompanies.setSubscription(userPaidSubscription);
+        CompanyEntity companyEntity2 = TestingData.getCompany("ONFA2");
+        CompanyEntity companyEntity3 = TestingData.getCompany("ONFA3");
+        List<CompanyEntity> companiesUsersWithMaxCompanies = List.of(companyEntity, companyEntity2, companyEntity3);
+        userWithMaxCompanies.setCompanies(companiesUsersWithMaxCompanies);
+        when(authenticationService.getUser()).thenReturn(userWithMaxCompanies);
+        when(companyRepo.findBySymbol(companyEntity.getSymbol())).thenReturn(Optional.of(companyEntity));
+        assertThrows(MaximumCompaniesException.class, () -> trackingService.addUserCompany(companyEntity.getSymbol()));
+    }
+
+    @Test
+    public void notTrackingExceptionTest() {
+        when(authenticationService.getUser()).thenReturn(user);
+        assertThrows(NotTrackingException.class, () -> trackingService.deleteCompany("ONFA2"));
     }
 }
