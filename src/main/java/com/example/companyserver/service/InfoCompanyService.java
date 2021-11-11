@@ -54,16 +54,6 @@ public class InfoCompanyService {
         metricRepo.saveAll(collect);
     }
 
-    public QuoteDto getQuote(String symbol) {
-        QuoteEntity quote = quoteRepo.findByCompanies(symbol).orElseThrow(() -> new CompanyNotFoundException(String.format("%s", symbol)));
-        return quoteMapper.quoteToDto(quote);
-    }
-
-    public MetricDto getMetric(String symbol) {
-        MetricEntity quote = metricRepo.findByCompanies(symbol).orElseThrow(() -> new CompanyNotFoundException(String.format("%s", symbol)));
-        return metricMapper.metricToDto(quote);
-    }
-
     public QuoteDto getFinnhubQuote(String symbol) {
         CompanyEntity companySymbol = companyRepo.findBySymbol(symbol).orElseThrow(() -> new CompanyNotFoundException(String.format("%s", symbol)));
         return finnhubClient.getQuote(companySymbol.getSymbol());

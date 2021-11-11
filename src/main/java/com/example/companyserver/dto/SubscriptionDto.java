@@ -24,4 +24,8 @@ public class SubscriptionDto {
     @NotNull
     @NotEmpty
     private Double price;
+
+    @NotNull
+    @NotEmpty
+    private Integer trackingSize;
 }

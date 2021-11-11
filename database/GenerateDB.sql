@@ -15,8 +15,8 @@ CREATE TABLE Subscriptions
     id bigint NOT NULL PRIMARY KEY,
     name varchar(255) NOT NULL,
     description varchar(255) NOT NULL,
-    price float NOT NULL
-
+    price float NOT NULL,
+    tracking_size int NOT NULL
 );
 
 CREATE TABLE Users_Subscriptions

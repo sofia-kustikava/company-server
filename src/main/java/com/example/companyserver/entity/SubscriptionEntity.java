@@ -24,4 +24,7 @@ public class SubscriptionEntity {
 
     @Column(name = "price")
     private Double price;
+
+    @Column(name = "tracking_size")
+    private Integer trackingSize;
 }

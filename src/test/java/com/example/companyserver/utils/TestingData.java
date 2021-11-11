@@ -57,6 +57,7 @@ public class TestingData {
                 .name("Golden")
                 .description("Description sample")
                 .price(90D)
+                .trackingSize(3)
                 .build();
     }
 
