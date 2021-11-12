@@ -2,10 +2,7 @@ package com.example.companyserver.service;
 
 import com.example.companyserver.dto.SubscriptionNameDto;
 import com.example.companyserver.entity.*;
-import com.example.companyserver.exceptions.HaveSubscriptionException;
-import com.example.companyserver.exceptions.SubscriptionNotExistException;
-import com.example.companyserver.exceptions.SubscriptionPaidException;
-import com.example.companyserver.exceptions.UserNotFoundException;
+import com.example.companyserver.exceptions.*;
 import com.example.companyserver.mapper.UserMapper;
 import com.example.companyserver.repo.SubscriptionRepo;
 import com.example.companyserver.repo.UserRepo;
@@ -29,10 +26,10 @@ public class SubscriptionService {
     private final MailService mailService;
     private final UserMapper userMapper;
     private final PayPalService payPalService;
+    private final AuthenticationService authenticationService;
 
-    public void chooseSubscription(Long userId, SubscriptionNameDto name) {
-        UserEntity user = userRepo.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(String.format("%s", userId)));
+    public void chooseSubscription(SubscriptionNameDto name) {
+        UserEntity user = authenticationService.getUser();
         if (user.getSubscription() == null) {
             UserSubscriptionEntity subscription = UserSubscriptionEntity.builder()
                     .subscription(subscriptionRepo.findByName(name.getName())
@@ -52,16 +49,15 @@ public class SubscriptionService {
         }
     }
 
-    public String paymentForSubscription(Long userId) throws PayPalRESTException {
-        UserEntity user = userRepo.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(String.format("%s", userId)));
+    public String paymentForSubscription() throws PayPalRESTException {
+        UserEntity user = authenticationService.getUser();
         if (!user.getSubscription().getSubscriptionStatus().equals(SubscriptionStatus.ACTIVE)) {
             Payment payment = payPalService.createPayment(
-                    userId,
+                    user.getId(),
                     user.getSubscription().getSubscription().getPrice(),
                     user.getSubscription().getSubscription().getDescription());
-            for(Links link : payment.getLinks()) {
-                if(link.getRel().equals("approval_url")) return link.getHref();
+            for (Links link : payment.getLinks()) {
+                if (link.getRel().equals("approval_url")) return link.getHref();
             }
         } else {
             log.info("You already paid for the subscription: {}", user.getSubscription().getSubscription().getName());
@@ -70,21 +66,21 @@ public class SubscriptionService {
         return null;
     }
 
-    public void paySubscription(Long id){
-        UserEntity user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(String.format("%s", id)));
-            user.getSubscription().setDateStart(LocalDate.now());
-            user.getSubscription().setDateEnd(LocalDate.from(LocalDate.now().plusDays(30)));
-            user.getSubscription().setSubscriptionStatus(SubscriptionStatus.ACTIVE);
-            user.setStatus(UserStatus.ACTIVE);
+    public void paySubscription(Long userId) {
+        UserEntity user = userRepo.findById(userId).orElseThrow(() -> new UserNotFoundException(userId.toString()));
+        user.getSubscription().setDateStart(LocalDate.now());
+        user.getSubscription().setDateEnd(LocalDate.from(LocalDate.now().plusDays(30)));
+        user.getSubscription().setSubscriptionStatus(SubscriptionStatus.ACTIVE);
+        user.setStatus(UserStatus.ACTIVE);
 
-            userSubscriptionRepo.save(user.getSubscription());
-            userRepo.save(user);
-            mailService.sendEmailBeginSubscription(userMapper.userToDto(user), user.getSubscription().getSubscription());
+        userSubscriptionRepo.save(user.getSubscription());
+        userRepo.save(user);
+        mailService.sendEmailBeginSubscription(userMapper.userToDto(user), user.getSubscription().getSubscription());
     }
 
-    public void changeSubscription(Long userId, SubscriptionNameDto name) {
-        UserEntity user = userRepo.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(String.format("%s", userId)));
+    public void changeSubscription(SubscriptionNameDto name) {
+        UserEntity user = authenticationService.getUser();
+        if (user.getSubscription().getSubscription().getName().equals(name.getName())) throw new HaveSubscriptionException(name.getName());
         user.getSubscription().setSubscription(subscriptionRepo.findByName(name.getName())
                 .orElseThrow(() -> new SubscriptionNotExistException(String.format("%s", name.getName()))));
         user.getSubscription().setDateStart(null);

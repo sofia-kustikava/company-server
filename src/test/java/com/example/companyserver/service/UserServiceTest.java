@@ -44,26 +44,11 @@ public class UserServiceTest {
     }
 
     @Test
-    public void findUserByEmailTest() {
-        when(userRepo.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-        when(userMapper.userToDto(user)).thenReturn(userWithDto);
-        UserDto userFindEmail = userService.findByEmail(user.getEmail());
-        assertEquals(userWithDto, userFindEmail);
-    }
-
-    @Test
     public void findUserByIdTest() {
         when(userRepo.findById(user.getId())).thenReturn(Optional.of(user));
         when(userMapper.userToDto(user)).thenReturn(userWithDto);
         UserDto userFindId = userService.findById(user.getId());
         assertEquals(userWithDto, userFindId);
-    }
-
-    @Test
-    public void findUserByEntityEmailTest() {
-        when(userRepo.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-        UserEntity actual = userService.findEntityByEmail(user.getEmail());
-        assertEquals(user, actual);
     }
 
     @Test

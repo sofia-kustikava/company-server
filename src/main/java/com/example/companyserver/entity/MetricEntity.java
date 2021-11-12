@@ -7,10 +7,10 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "metrics")
 public class MetricEntity {
     @Id

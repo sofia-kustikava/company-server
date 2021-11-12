@@ -51,6 +51,9 @@ public class SubscriptionServiceTest {
     @Mock
     private PayPalService payPalService;
 
+    @Mock
+    private AuthenticationService authenticationService;
+
     @InjectMocks
     private SubscriptionService subscriptionService;
 
@@ -62,12 +65,11 @@ public class SubscriptionServiceTest {
     private UserEntity userInactive;
     private UserDto userInactiveDto;
 
-    private UserEntity userPaid;
     private SubscriptionEntity subscription;
 
     @BeforeEach
     public void beforeTest() {
-        subscription = TestingData.getSubscription();
+        subscription = TestingData.getSubscription("Golden");
 
         UserSubscriptionEntity userSubscription = TestingData.getUserSubscription(LocalDate.now(), SubscriptionStatus.INACTIVE);
         subscriptionNameDto = TestingData.getSubscriptionName("Golden");
@@ -85,9 +87,9 @@ public class SubscriptionServiceTest {
 
     @Test
     public void chooseSubscriptionTest() {
-        when(userRepo.findById(user.getId())).thenReturn(Optional.of(user));
+        when(authenticationService.getUser()).thenReturn(user);
         when(subscriptionRepo.findByName(subscriptionNameDto.getName())).thenReturn(Optional.of(subscription));
-        subscriptionService.chooseSubscription(user.getId(), subscriptionNameDto);
+        subscriptionService.chooseSubscription(subscriptionNameDto);
         verify(userSubscriptionRepo).save(user.getSubscription());
         verify(userRepo).save(user);
     }
@@ -96,11 +98,11 @@ public class SubscriptionServiceTest {
     public void paymentForSubscriptionTest() throws PayPalRESTException {
         Payment pay = new Payment();
 
-        String link ="https://www.sandbox.paypal.com";
-        when(userRepo.findById(userInactive.getId())).thenReturn(Optional.of(userInactive));
+        String link = "https://www.sandbox.paypal.com";
+        when(authenticationService.getUser()).thenReturn(userInactive);
         when(payPalService.createPayment(
                 userInactive.getId(), subscription.getPrice(), subscription.getDescription())).thenReturn(pay.setLinks(new ArrayList<>(Arrays.asList(new Links(link, "approval_url")))));
-        String payment = subscriptionService.paymentForSubscription(userInactive.getId());
+        String payment = subscriptionService.paymentForSubscription();
         assertEquals(link, payment);
     }
 
@@ -116,10 +118,12 @@ public class SubscriptionServiceTest {
 
     @Test
     public void changeSubscriptionTest() {
-        when(userRepo.findById(userInactive.getId())).thenReturn(Optional.of(userInactive));
-        when(subscriptionRepo.findByName(subscriptionNameDto.getName())).thenReturn(Optional.of(subscription));
+        SubscriptionNameDto subscriptionNameDtoInactive2 = TestingData.getSubscriptionName("Silver");
+        SubscriptionEntity subscription2 = TestingData.getSubscription("Silver");
+        when(authenticationService.getUser()).thenReturn(userInactive);
+        when(subscriptionRepo.findByName("Silver")).thenReturn(Optional.of(subscription2));
         when(userMapper.userToDto(userInactive)).thenReturn(userInactiveDto);
-        subscriptionService.changeSubscription(userInactive.getId(), subscriptionNameDtoInactive);
+        subscriptionService.changeSubscription(subscriptionNameDtoInactive2);
         verify(userRepo).save(userInactive);
     }
 
@@ -127,17 +131,16 @@ public class SubscriptionServiceTest {
     public void userAlreadyPaidException() {
         UserSubscriptionEntity userPaidSubscription = TestingData.getUserSubscription(LocalDate.now().minusDays(3), SubscriptionStatus.ACTIVE);
         userPaidSubscription.setSubscription(subscription);
-        userPaid = TestingData.getUser(3L, UserStatus.ACTIVE);
-
+        UserEntity userPaid = TestingData.getUser(3L, UserStatus.ACTIVE);
         userPaidSubscription.setUser(userPaid);
         userPaid.setSubscription(userPaidSubscription);
-        when(userRepo.findById(userPaid.getId())).thenReturn(Optional.of(userPaid));
-        assertThrows(SubscriptionPaidException.class, () -> subscriptionService.paymentForSubscription(userPaid.getId()));
+        when(authenticationService.getUser()).thenReturn(userPaid);
+        assertThrows(SubscriptionPaidException.class, () -> subscriptionService.paymentForSubscription());
     }
 
     @Test
     public void userHaveSubscriptionTest() {
-        when(userRepo.findById(userInactive.getId())).thenReturn(Optional.of(userInactive));
-        assertThrows(HaveSubscriptionException.class, () -> subscriptionService.chooseSubscription(userInactive.getId(), subscriptionNameDtoInactive));
+        when(authenticationService.getUser()).thenReturn(userInactive);
+        assertThrows(HaveSubscriptionException.class, () -> subscriptionService.chooseSubscription(subscriptionNameDtoInactive));
     }
 }

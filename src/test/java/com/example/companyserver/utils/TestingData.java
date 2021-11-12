@@ -52,9 +52,9 @@ public class TestingData {
                 .build();
     }
 
-    public static SubscriptionEntity getSubscription() {
+    public static SubscriptionEntity getSubscription(String name) {
         return SubscriptionEntity.builder()
-                .name("Golden")
+                .name(name)
                 .description("Description sample")
                 .price(90D)
                 .trackingSize(3)

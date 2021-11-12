@@ -3,8 +3,10 @@ package com.example.companyserver.service;
 import com.example.companyserver.client.FinnhubClient;
 import com.example.companyserver.dto.CompanyDto;
 import com.example.companyserver.entity.CompanyEntity;
-import com.example.companyserver.mapper.CompanyMapper;
+import com.example.companyserver.entity.UserEntity;
+import com.example.companyserver.entity.UserStatus;
 import com.example.companyserver.repo.CompanyRepo;
+import com.example.companyserver.repo.UserRepo;
 import com.example.companyserver.utils.TestingData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
@@ -27,10 +30,10 @@ public class CompanyServiceTest {
     private CompanyRepo companyRepo;
 
     @Mock
-    private CompanyMapper companyMapper;
+    private FinnhubClient finnhubClient;
 
     @Mock
-    private FinnhubClient finnhubClient;
+    private UserRepo userRepo;
 
     @InjectMocks
     private CompanyService companyService;
@@ -61,16 +64,23 @@ public class CompanyServiceTest {
     @Test
     public void deleteCompanyBySymbolTest() {
         when(companyRepo.findBySymbol(companyEntity.getSymbol())).thenReturn(Optional.of(companyEntity));
+        UserEntity user1 = TestingData.getUser(1L, UserStatus.ACTIVE);
+        UserEntity user2 = TestingData.getUser(2L, UserStatus.ACTIVE);
+        user1.setCompanies(companies);
+        user2.setCompanies(companies);
+        List<UserEntity> users = new ArrayList<>(List.of(user1, user2));
+        companyEntity.setUsers(users);
+
         companyService.deleteCompany(companyEntity.getSymbol());
+        users.forEach(user -> {
+            List<CompanyEntity> companyEntities = user.getCompanies()
+                    .stream()
+                    .filter(companyEntity -> !companyEntity.equals(companyEntity))
+                    .collect(Collectors.toList());
+            user.setCompanies(companyEntities);
+            verify(userRepo).save(user);
+        });
+        verify(companyRepo).delete(companyEntity);
+
     }
-
-    @Test
-    public void deleteAllCompaniesTest() {
-        companiesDto.add(TestingData.getCompanyDto("ONFA1"));
-        when(finnhubClient.getCompanies()).thenReturn(companiesDto);
-
-        companyService.deleteAllCompanies();
-        verify(companyMapper).dtoToCompanies(companiesDto);
-    }
-
 }

@@ -2,7 +2,6 @@ package com.example.companyserver.security;
 
 import com.example.companyserver.config.CustomUserDetails;
 import com.example.companyserver.config.CustomUserDetailsService;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

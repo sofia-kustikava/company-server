@@ -37,12 +37,6 @@ public class AdminController {
         return new ResponseEntity<>("Company with this symbol was successfully deleted" + symbol, HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/company/all")
-    public ResponseEntity<String> deleteAllCompanies() {
-        companyService.deleteAllCompanies();
-        return new ResponseEntity<>("All companies were successfully deleted", HttpStatus.OK);
-    }
-
     @DeleteMapping("/delete/user/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id){
         userService.delete(id);

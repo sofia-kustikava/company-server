@@ -20,15 +20,6 @@ public class UserService {
     private final UserRepo userRepo;
     private final UserMapper userMapper;
 
-    public UserDto findByEmail(String email) {
-        UserEntity user = userRepo.findByEmail(email).orElseThrow(() -> new UserNotFoundException(String.format("%s", email)));
-        return userMapper.userToDto(user);
-    }
-
-    public UserEntity findEntityByEmail(String email) {
-        return userRepo.findByEmail(email).orElseThrow(() -> new UserNotFoundException(String.format("%s", email)));
-    }
-
     public UserDto findById(Long id) {
         UserEntity user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(String.format("%s", id)));
         return userMapper.userToDto(user);
