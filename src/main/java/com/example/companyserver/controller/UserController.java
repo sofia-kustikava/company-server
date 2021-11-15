@@ -1,9 +1,6 @@
 package com.example.companyserver.controller;
 
-import com.example.companyserver.dto.QuoteDto;
 import com.example.companyserver.dto.UserDto;
-import com.example.companyserver.dto.metric.MetricDto;
-import com.example.companyserver.service.InfoCompanyService;
 import com.example.companyserver.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

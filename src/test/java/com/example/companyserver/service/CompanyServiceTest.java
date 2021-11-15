@@ -75,7 +75,7 @@ public class CompanyServiceTest {
         users.forEach(user -> {
             List<CompanyEntity> companyEntities = user.getCompanies()
                     .stream()
-                    .filter(companyEntity -> !companyEntity.equals(companyEntity))
+                    .filter(company1 -> !company1.equals(companyEntity))
                     .collect(Collectors.toList());
             user.setCompanies(companyEntities);
             verify(userRepo).save(user);
