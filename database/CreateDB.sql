@@ -1,4 +1,4 @@
-CREATE DATABASE company_db
+ CREATE DATABASE company_db
     WITH
     OWNER = postgres
     ENCODING = 'UTF8'
