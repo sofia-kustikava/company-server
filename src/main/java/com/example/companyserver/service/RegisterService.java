@@ -12,8 +12,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.Email;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +28,8 @@ public class RegisterService {
     private final MailService mailService;
 
     public void registerUser(RegisterDto registerDto) throws InvalidUserParameterException {
-        if (emailExist(registerDto.getEmail())) throw new UserAlreadyExistException(String.format("%s", registerDto.getEmail()));
+        if (emailExist(registerDto.getEmail()))
+            throw new UserAlreadyExistException(String.format("%s", registerDto.getEmail()));
 
         try {
             UserEntity user = UserEntity.builder()
@@ -47,6 +51,20 @@ public class RegisterService {
             throw new InvalidUserParameterException(e.getMessage());
         }
 
+    }
+
+    public void saveUsers() throws InvalidUserParameterException {
+        List<String> emails = new ArrayList<>(List.of("a1@ma.r", "21a@ma.r", "31a@ma.r"));
+        for (int i = 100; i < 150; i++) {
+            String email = emails.size() > 0 ? emails.remove(0):i + "@sjdklhdfhs.fr";
+            RegisterDto registerDto = RegisterDto.builder()
+                    .firstName(String.valueOf(i))
+                    .lastName(String.valueOf(i))
+                    .email(email)
+                    .password(i + "00000000000")
+                    .build();
+            registerUser(registerDto);
+        }
     }
 
     private boolean emailExist(String email) {

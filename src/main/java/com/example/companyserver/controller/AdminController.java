@@ -1,8 +1,10 @@
 package com.example.companyserver.controller;
 
 import com.example.companyserver.dto.CompanyDto;
+import com.example.companyserver.exceptions.InvalidUserParameterException;
 import com.example.companyserver.mapper.CompanyMapper;
 import com.example.companyserver.service.CompanyService;
+import com.example.companyserver.service.RegisterService;
 import com.example.companyserver.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ public class AdminController {
     private final CompanyMapper companyMapper;
     private final CompanyService companyService;
     private final UserService userService;
+    private final RegisterService registerService;
 
     @GetMapping("/companies")
     public List<CompanyDto> getAllCompanies() {
@@ -53,6 +56,12 @@ public class AdminController {
     public ResponseEntity<String> unblockUser(@PathVariable Long userId) {
         userService.unblockUser(userId);
         return new ResponseEntity<>("User with this id was unblocked: " + userId, HttpStatus.OK);
+    }
+
+    @PostMapping("/save/users")
+    public ResponseEntity<String> createUsers() throws InvalidUserParameterException {
+        registerService.saveUsers();
+        return new ResponseEntity<>("Users ware saved ", HttpStatus.OK);
     }
 
 }
