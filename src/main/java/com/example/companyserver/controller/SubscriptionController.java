@@ -19,20 +19,20 @@ public class SubscriptionController {
     public final SubscriptionService subscriptionService;
     public final PayPalService payPalService;
 
-    @PostMapping("{userId}/create")
-    public ResponseEntity<String> chooseSubscription(@PathVariable("userId") Long userId, @RequestBody SubscriptionNameDto name) {
-        subscriptionService.chooseSubscription(userId, name);
+    @PostMapping("/create")
+    public ResponseEntity<String> chooseSubscription(@RequestBody SubscriptionNameDto name) {
+        subscriptionService.chooseSubscription(name);
         return new ResponseEntity<>("You chose subscription " + name.getName(), HttpStatus.OK);
     }
 
-    @PostMapping("{userId}/payment")
-    public String paymentForSubscription(@PathVariable("userId") Long userId) throws PayPalRESTException {
-        return subscriptionService.paymentForSubscription(userId);
+    @PostMapping("/payment")
+    public String paymentForSubscription() throws PayPalRESTException {
+        return subscriptionService.paymentForSubscription();
     }
 
-    @PostMapping("{userId}/change")
-    public ResponseEntity<String> changeSubscription(@PathVariable("userId") Long userId, @RequestBody SubscriptionNameDto name) {
-        subscriptionService.changeSubscription(userId, name);
+    @PostMapping("/change")
+    public ResponseEntity<String> changeSubscription(@RequestBody SubscriptionNameDto name) {
+        subscriptionService.changeSubscription(name);
         return new ResponseEntity<>("You changed your subscription to " + name.getName() , HttpStatus.OK);
     }
 

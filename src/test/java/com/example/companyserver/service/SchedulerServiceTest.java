@@ -63,20 +63,6 @@ class SchedulerServiceTest {
     private CompanyEntity companyEntity;
     private CompanyEntity companyEntity2;
 
-    private QuoteEntity quote;
-    private QuoteDto quoteDto;
-
-    private MetricEntity metric;
-    private MetricDto metricDto;
-    private MetricResponseDto metricResponseDto;
-
-    private MetricEntity metric2;
-    private MetricDto metricDto2;
-    private MetricResponseDto metricResponseDto2;
-
-    private QuoteDto quoteDto2;
-    private QuoteEntity quote2;
-
     private UserEntity user;
     private UserSubscriptionEntity userSubscription;
 
@@ -96,7 +82,7 @@ class SchedulerServiceTest {
 
         companies.addAll(Arrays.asList(companyEntity, companyEntity2));
 
-        subscription = TestingData.getSubscription();
+        subscription = TestingData.getSubscription("Golden");
 
         userSubscription = TestingData.getUserSubscription(LocalDate.now(), SubscriptionStatus.ACTIVE);
         userSubscription.setSubscription(subscription);
@@ -116,11 +102,11 @@ class SchedulerServiceTest {
 
     @Test
     public void saveQuotesByScheduleTest() {
-        quoteDto = TestingData.getQuoteDto(1D);
-        quote = TestingData.getQuote(1D);
+        QuoteDto quoteDto = TestingData.getQuoteDto(1D);
+        QuoteEntity quote = TestingData.getQuote(1D);
         quote.setCompanies(companyEntity);
-        quoteDto2 = TestingData.getQuoteDto(2D);
-        quote2 = TestingData.getQuote(2D);
+        QuoteDto quoteDto2 = TestingData.getQuoteDto(2D);
+        QuoteEntity quote2 = TestingData.getQuote(2D);
         quote2.setCompanies(companyEntity2);
 
         when(companyRepo.findAll()).thenReturn(companies);
@@ -134,15 +120,15 @@ class SchedulerServiceTest {
 
     @Test
     public void saveMetricsByScheduleTest() {
-        metricDto = TestingData.getMetricDto(1D);
-        metric = TestingData.getMetric(1D);
+        MetricDto metricDto = TestingData.getMetricDto(1D);
+        MetricEntity metric = TestingData.getMetric(1D);
         metric.setCompanies(companyEntity);
-        metricResponseDto = MetricResponseDto.builder().build();
+        MetricResponseDto metricResponseDto = MetricResponseDto.builder().build();
         metricResponseDto.setMetric(metricDto);
-        metricDto2 = TestingData.getMetricDto(2D);
-        metric2 = TestingData.getMetric(2D);
+        MetricDto metricDto2 = TestingData.getMetricDto(2D);
+        MetricEntity metric2 = TestingData.getMetric(2D);
         metric2.setCompanies(companyEntity2);
-        metricResponseDto2 = MetricResponseDto.builder().build();
+        MetricResponseDto metricResponseDto2 = MetricResponseDto.builder().build();
         metricResponseDto2.setMetric(metricDto2);
 
         when(companyRepo.findAll()).thenReturn(companies);

@@ -2,9 +2,8 @@ package com.example.companyserver.security;
 
 import com.example.companyserver.config.CustomUserDetails;
 import com.example.companyserver.config.CustomUserDetailsService;
-import lombok.extern.java.Log;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -21,14 +20,13 @@ import static io.jsonwebtoken.lang.Strings.hasText;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtFilter extends GenericFilterBean {
 
     public static final String AUTHORIZATION = "Authorization";
 
-    @Autowired
-    private JwtProvider jwtProvider;
-    @Autowired
-    private CustomUserDetailsService customUserDetailsService;
+    private final JwtProvider jwtProvider;
+    private final CustomUserDetailsService customUserDetailsService;
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)

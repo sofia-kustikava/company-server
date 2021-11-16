@@ -7,10 +7,10 @@ import java.util.List;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "companies")
 public class CompanyEntity {
     @Id
@@ -41,10 +41,10 @@ public class CompanyEntity {
     @ManyToMany(mappedBy = "companies")
     private List<UserEntity> users;
 
-    @OneToMany(mappedBy = "companies")
+    @OneToMany(mappedBy = "companies", cascade = CascadeType.ALL)
     private List<MetricEntity> metrics;
 
-    @OneToMany(mappedBy = "companies")
+    @OneToMany(mappedBy = "companies", cascade = CascadeType.ALL)
     private List<QuoteEntity> quotes;
 
     @OneToMany(mappedBy = "companies")

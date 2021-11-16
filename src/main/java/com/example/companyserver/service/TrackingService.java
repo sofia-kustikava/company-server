@@ -55,6 +55,7 @@ public class TrackingService {
 
     public List<CompanyDto> getUserCompanies() {
         UserEntity user = authenticationService.getUser();
+        if (!user.getSubscription().getSubscriptionStatus().equals(SubscriptionStatus.ACTIVE)) throw new NotTrackingException(user.getEmail());
         List<CompanyEntity> companies = user.getCompanies();
         return companyMapper.companiesToDto(companies);
     }
@@ -65,6 +66,7 @@ public class TrackingService {
 
     public void deleteCompany(String symbol) {
         UserEntity user = authenticationService.getUser();
+        if (!user.getSubscription().getSubscriptionStatus().equals(SubscriptionStatus.ACTIVE)) throw new NotTrackingException(user.getEmail());
         if (isTrackingSymbol(user, symbol)) {
             CompanyEntity company = companyRepo.findBySymbol(symbol).orElseThrow(() -> new CompanyNotFoundException(symbol));
             user.getCompanies().remove(company);
@@ -78,6 +80,7 @@ public class TrackingService {
 
     public List<QuoteDto> getTrackingQuote(String symbol) {
         UserEntity user = authenticationService.getUser();
+        if (!user.getSubscription().getSubscriptionStatus().equals(SubscriptionStatus.ACTIVE)) throw new NotTrackingException(user.getEmail());
         if (isTrackingSymbol(user, symbol)) {
             CompanyEntity company = companyRepo.findBySymbol(symbol).orElseThrow(() -> new CompanyNotFoundException(symbol));
             List<QuoteEntity> quotes = quoteRepo.findByCompanies(company);
@@ -92,6 +95,7 @@ public class TrackingService {
 
     public MetricDto getTrackingMetric(String symbol) {
         UserEntity user = authenticationService.getUser();
+        if (!user.getSubscription().getSubscriptionStatus().equals(SubscriptionStatus.ACTIVE)) throw new NotTrackingException(user.getEmail());
         if (!user.getSubscription().getSubscription().getName().equals("Bronze")) {
             if (isTrackingSymbol(user, symbol)) {
                 CompanyEntity company = companyRepo.findBySymbol(symbol).orElseThrow(() -> new CompanyNotFoundException(symbol));
@@ -110,6 +114,7 @@ public class TrackingService {
 
     public List<ReportDto> getTrackingReport(String symbol) {
         UserEntity user = authenticationService.getUser();
+        if (!user.getSubscription().getSubscriptionStatus().equals(SubscriptionStatus.ACTIVE)) throw new NotTrackingException(user.getEmail());
         if (user.getSubscription().getSubscription().getName().equals("Golden")) {
             if (isTrackingSymbol(user, symbol)) {
                 return infoCompanyService.getFinnhubReport(symbol);

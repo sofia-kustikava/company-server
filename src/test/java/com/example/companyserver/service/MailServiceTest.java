@@ -34,7 +34,7 @@ public class MailServiceTest {
 
     @BeforeEach
     public void beforeTest() {
-        subscription = TestingData.getSubscription();
+        subscription = TestingData.getSubscription("Golden");
 
         userSubscription = TestingData.getUserSubscription(LocalDate.now(), SubscriptionStatus.ACTIVE);
         userSubscription.setSubscription(subscription);

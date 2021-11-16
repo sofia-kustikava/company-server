@@ -7,10 +7,12 @@ import com.example.companyserver.exceptions.UserIsBannedException;
 import com.example.companyserver.exceptions.UserIsUnbannedException;
 import com.example.companyserver.exceptions.UserNotFoundException;
 import com.example.companyserver.mapper.UserMapper;
+import com.example.companyserver.repo.CompanyRepo;
 import com.example.companyserver.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 
 @Slf4j
 @Service
@@ -20,15 +22,6 @@ public class UserService {
     private final UserRepo userRepo;
     private final UserMapper userMapper;
 
-    public UserDto findByEmail(String email) {
-        UserEntity user = userRepo.findByEmail(email).orElseThrow(() -> new UserNotFoundException(String.format("%s", email)));
-        return userMapper.userToDto(user);
-    }
-
-    public UserEntity findEntityByEmail(String email) {
-        return userRepo.findByEmail(email).orElseThrow(() -> new UserNotFoundException(String.format("%s", email)));
-    }
-
     public UserDto findById(Long id) {
         UserEntity user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(String.format("%s", id)));
         return userMapper.userToDto(user);
@@ -37,6 +30,7 @@ public class UserService {
     public void delete(Long id) {
         UserEntity user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(String.format("%s", id)));
         user.setRoles(null);
+        user.setCompanies(null);
         userRepo.delete(user);
         log.info("User was deleted with this id: {}", id);
     }

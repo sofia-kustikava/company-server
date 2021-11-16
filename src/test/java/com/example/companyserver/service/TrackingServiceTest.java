@@ -3,10 +3,7 @@ package com.example.companyserver.service;
 import com.example.companyserver.dto.CompanyDto;
 import com.example.companyserver.dto.QuoteDto;
 import com.example.companyserver.dto.metric.MetricDto;
-import com.example.companyserver.dto.report.DataDto;
 import com.example.companyserver.dto.report.ReportDto;
-import com.example.companyserver.dto.report.ReportResponseDto;
-import com.example.companyserver.dto.report.UnitsDto;
 import com.example.companyserver.entity.*;
 import com.example.companyserver.exceptions.MaximumCompaniesException;
 import com.example.companyserver.exceptions.NoAccessTrackingException;
@@ -79,7 +76,7 @@ public class TrackingServiceTest {
 
     @BeforeEach
     public void beforeTest() {
-        subscription = TestingData.getSubscription();
+        subscription = TestingData.getSubscription("Golden");
         UserSubscriptionEntity userPaidSubscription = TestingData.getUserSubscription(LocalDate.now().minusDays(3), SubscriptionStatus.ACTIVE);
         userPaidSubscription.setSubscription(subscription);
         user = TestingData.getUser(1L, UserStatus.ACTIVE);

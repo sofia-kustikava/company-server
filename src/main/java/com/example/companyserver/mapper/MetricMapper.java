@@ -3,14 +3,11 @@ package com.example.companyserver.mapper;
 import com.example.companyserver.dto.metric.MetricDto;
 import com.example.companyserver.entity.MetricEntity;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
 @Mapper
 public interface MetricMapper {
-
-    MetricMapper INSTANCE = Mappers.getMapper(MetricMapper.class);
 
     MetricDto metricToDto (MetricEntity metric);
     List<MetricDto> metricsToDto (List<MetricEntity> metrics);

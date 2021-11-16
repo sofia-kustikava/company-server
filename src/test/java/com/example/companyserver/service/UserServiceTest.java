@@ -1,6 +1,7 @@
 package com.example.companyserver.service;
 
 import com.example.companyserver.dto.UserDto;
+import com.example.companyserver.entity.CompanyEntity;
 import com.example.companyserver.entity.UserEntity;
 import com.example.companyserver.entity.UserStatus;
 import com.example.companyserver.exceptions.UserIsBannedException;
@@ -15,9 +16,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -44,14 +50,6 @@ public class UserServiceTest {
     }
 
     @Test
-    public void findUserByEmailTest() {
-        when(userRepo.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-        when(userMapper.userToDto(user)).thenReturn(userWithDto);
-        UserDto userFindEmail = userService.findByEmail(user.getEmail());
-        assertEquals(userWithDto, userFindEmail);
-    }
-
-    @Test
     public void findUserByIdTest() {
         when(userRepo.findById(user.getId())).thenReturn(Optional.of(user));
         when(userMapper.userToDto(user)).thenReturn(userWithDto);
@@ -60,16 +58,18 @@ public class UserServiceTest {
     }
 
     @Test
-    public void findUserByEntityEmailTest() {
-        when(userRepo.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-        UserEntity actual = userService.findEntityByEmail(user.getEmail());
-        assertEquals(user, actual);
-    }
-
-    @Test
     public void deleteUserTest() {
         when(userRepo.findById(user.getId())).thenReturn(Optional.of(user));
+        CompanyEntity company1 = TestingData.getCompany("ONFA1");
+        CompanyEntity company2 = TestingData.getCompany("ONFA2");
+        List<UserEntity> users = new ArrayList<>();
+        users.add(user);
+        company1.setUsers(users);
+        company2.setUsers(users);
+        List<CompanyEntity> companies = new ArrayList<>(List.of(company1, company2));
+        user.setCompanies(companies);
         userService.delete(user.getId());
+        verify(userRepo).delete(user);
     }
 
     @Test
