@@ -18,11 +18,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -69,6 +72,7 @@ public class SubscriptionServiceTest {
 
     @BeforeEach
     public void beforeTest() {
+        ReflectionTestUtils.setField(subscriptionService, "approvalUrl", "approval_url");
         subscription = TestingData.getSubscription("Golden");
 
         UserSubscriptionEntity userSubscription = TestingData.getUserSubscription(LocalDate.now(), SubscriptionStatus.INACTIVE);
@@ -97,11 +101,12 @@ public class SubscriptionServiceTest {
     @Test
     public void paymentForSubscriptionTest() throws PayPalRESTException {
         Payment pay = new Payment();
-
+        String approvalUrl = "approval_url";
         String link = "https://www.sandbox.paypal.com";
         when(authenticationService.getUser()).thenReturn(userInactive);
         when(payPalService.createPayment(
-                userInactive.getId(), subscription.getPrice(), subscription.getDescription())).thenReturn(pay.setLinks(new ArrayList<>(Arrays.asList(new Links(link, "approval_url")))));
+                userInactive.getId(), subscription.getPrice(), subscription.getDescription()))
+                .thenReturn(pay.setLinks(new ArrayList<>(List.of(new Links(link, approvalUrl)))));
         String payment = subscriptionService.paymentForSubscription();
         assertEquals(link, payment);
     }

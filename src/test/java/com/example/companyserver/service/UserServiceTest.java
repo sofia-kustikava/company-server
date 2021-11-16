@@ -7,7 +7,6 @@ import com.example.companyserver.entity.UserStatus;
 import com.example.companyserver.exceptions.UserIsBannedException;
 import com.example.companyserver.exceptions.UserIsUnbannedException;
 import com.example.companyserver.mapper.UserMapper;
-import com.example.companyserver.repo.CompanyRepo;
 import com.example.companyserver.repo.UserRepo;
 import com.example.companyserver.utils.TestingData;
 import org.junit.jupiter.api.Test;
@@ -21,7 +20,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -36,9 +34,6 @@ public class UserServiceTest {
 
     @Mock
     private UserMapper userMapper;
-
-    @Mock
-    private CompanyRepo companyRepo;
 
     @InjectMocks
     private UserService userService;
@@ -73,16 +68,7 @@ public class UserServiceTest {
         company2.setUsers(users);
         List<CompanyEntity> companies = new ArrayList<>(List.of(company1, company2));
         user.setCompanies(companies);
-
         userService.delete(user.getId());
-        companies.forEach(company -> {
-            List<UserEntity> userEntities = company.getUsers()
-                    .stream()
-                    .filter(user1 -> !user1.equals(user))
-                    .collect(Collectors.toList());
-            company.setUsers(userEntities);
-            verify(companyRepo).save(company);
-        });
         verify(userRepo).delete(user);
     }
 

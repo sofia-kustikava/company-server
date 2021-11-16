@@ -1,7 +1,6 @@
 package com.example.companyserver.service;
 
 import com.example.companyserver.dto.*;
-import com.example.companyserver.entity.CompanyEntity;
 import com.example.companyserver.entity.UserEntity;
 import com.example.companyserver.entity.UserStatus;
 import com.example.companyserver.exceptions.UserIsBannedException;
@@ -14,8 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -24,7 +21,6 @@ public class UserService {
 
     private final UserRepo userRepo;
     private final UserMapper userMapper;
-    private final CompanyRepo companyRepo;
 
     public UserDto findById(Long id) {
         UserEntity user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(String.format("%s", id)));
@@ -34,15 +30,7 @@ public class UserService {
     public void delete(Long id) {
         UserEntity user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(String.format("%s", id)));
         user.setRoles(null);
-        List<CompanyEntity> companies = user.getCompanies();
-        companies.forEach(company -> {
-            List<UserEntity> users = company.getUsers()
-                    .stream()
-                    .filter(userEntity -> !userEntity.equals(user))
-                    .collect(Collectors.toList());
-            company.setUsers(users);
-            companyRepo.save(company);
-        });
+        user.setCompanies(null);
         userRepo.delete(user);
         log.info("User was deleted with this id: {}", id);
     }
