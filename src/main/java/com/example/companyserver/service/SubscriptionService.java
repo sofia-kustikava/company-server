@@ -56,7 +56,7 @@ public class SubscriptionService {
 
     public String paymentForSubscription() throws PayPalRESTException {
         UserEntity user = authenticationService.getUser();
-        if (user.getSubscription() != null && !user.getSubscription().getSubscriptionStatus().equals(SubscriptionStatus.ACTIVE)) {
+        if (user.getSubscription() != null && user.getSubscription().getSubscriptionStatus().equals(SubscriptionStatus.INACTIVE)) {
             Payment payment = payPalService.createPayment(
                     user.getId(),
                     user.getSubscription().getSubscription().getPrice(),
