@@ -153,7 +153,7 @@ public class TrackingServiceTest {
         List<ReportDto> reports = List.of(reportDto, reportDto2, reportDto3);
 
         when(authenticationService.getUser()).thenReturn(user);
-        when(infoCompanyService.getFinnhubReport(companyEntity.getSymbol())).thenReturn(reports);
+        when(infoCompanyService.getReport(companyEntity.getSymbol())).thenReturn(reports);
         List<ReportDto> actual = trackingService.getTrackingReport(companyEntity.getSymbol());
         assertEquals(3, actual.size());
     }

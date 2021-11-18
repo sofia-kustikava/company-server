@@ -117,7 +117,7 @@ public class TrackingService {
         if (!user.getSubscription().getSubscriptionStatus().equals(SubscriptionStatus.ACTIVE)) throw new NotTrackingException(user.getEmail());
         if (user.getSubscription().getSubscription().getName().equals("Golden")) {
             if (isTrackingSymbol(user, symbol)) {
-                return infoCompanyService.getFinnhubReport(symbol);
+                return infoCompanyService.getReport(symbol);
             } else {
                 log.info("This company not exist on user's tracking list {}", symbol);
                 throw new NotTrackingException(symbol);

@@ -1,10 +1,10 @@
 package com.example.companyserver.service;
 
+import com.example.companyserver.client.MicroserviceClient;
 import com.example.companyserver.dto.CompanyDto;
 import com.example.companyserver.entity.CompanyEntity;
 import com.example.companyserver.entity.UserEntity;
 import com.example.companyserver.exceptions.CompanyNotFoundException;
-import com.example.companyserver.client.FinnhubClient;
 import com.example.companyserver.repo.CompanyRepo;
 import com.example.companyserver.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
@@ -21,12 +21,9 @@ import java.util.stream.Collectors;
 public class CompanyService {
 
     private final CompanyRepo companyRepo;
-    private final FinnhubClient finnhubClient;
     private final UserRepo userRepo;
+    private final MicroserviceClient microserviceClient;
 
-    public List<CompanyDto> getCompanies() {
-        return finnhubClient.getCompanies();
-    }
 
     public void saveCompanies(List<CompanyEntity> companies) {
         companies.stream().limit(100).forEach(companyEntity -> {
@@ -50,5 +47,9 @@ public class CompanyService {
         });
         companyRepo.delete(company);
         log.info("Company was deleted with this id: {}", symbol);
+    }
+
+    public List<CompanyDto> getFinnhubCompanies() {
+        return microserviceClient.getCompanies();
     }
 }

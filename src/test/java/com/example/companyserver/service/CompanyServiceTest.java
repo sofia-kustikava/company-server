@@ -1,7 +1,5 @@
 package com.example.companyserver.service;
 
-import com.example.companyserver.client.FinnhubClient;
-import com.example.companyserver.dto.CompanyDto;
 import com.example.companyserver.entity.CompanyEntity;
 import com.example.companyserver.entity.UserEntity;
 import com.example.companyserver.entity.UserStatus;
@@ -20,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,15 +28,11 @@ public class CompanyServiceTest {
     private CompanyRepo companyRepo;
 
     @Mock
-    private FinnhubClient finnhubClient;
-
-    @Mock
     private UserRepo userRepo;
 
     @InjectMocks
     private CompanyService companyService;
 
-    private List<CompanyDto> companiesDto = new ArrayList<>();
     private List<CompanyEntity> companies = new ArrayList<>();
     private CompanyEntity companyEntity;
 
@@ -46,12 +40,6 @@ public class CompanyServiceTest {
     public void beforeTest() {
         companyEntity = TestingData.getCompany("ONFA1");
         companies.add(companyEntity);
-    }
-
-    @Test
-    public void getCompaniesTest() {
-        finnhubClient.getCompanies();
-        verify(finnhubClient).getCompanies();
     }
 
     @Test

@@ -21,13 +21,13 @@ public class AdminController {
     private final UserService userService;
 
     @GetMapping("/companies")
-    public List<CompanyDto> getAllCompanies() {
-        return companyService.getCompanies();
+    public List<CompanyDto> getAllCompaniesMic() {
+        return companyService.getFinnhubCompanies();
     }
 
     @PostMapping("/save/companies")
     public ResponseEntity<String> saveAllCompanies() {
-        companyService.saveCompanies(companyMapper.dtoToCompanies(companyService.getCompanies()));
+        companyService.saveCompanies(companyMapper.dtoToCompanies(companyService.getFinnhubCompanies()));
         return new ResponseEntity<>("All companies were successfully saved", HttpStatus.OK);
     }
 

@@ -1,5 +1,6 @@
 package com.example.companyserver.controller;
 
+import com.example.companyserver.client.MicroserviceClient;
 import com.example.companyserver.dto.QuoteDto;
 import com.example.companyserver.dto.metric.MetricDto;
 import com.example.companyserver.dto.report.ReportDto;
@@ -17,25 +18,26 @@ import java.util.List;
 public class AdminSubscriptionController {
 
     public final InfoCompanyService infoCompanyService;
+    public final MicroserviceClient microserviceClient;
 
     @PostMapping("/save/quotes")
-    public ResponseEntity<String> saveAllQuotes() {
-        infoCompanyService.saveQuotes();
+    public ResponseEntity<String> saveQuotes() {
+        microserviceClient.saveQuotes();
         return new ResponseEntity<>("All quotes were successfully saved", HttpStatus.OK);
     }
 
     @PostMapping("/save/metrics")
-    public ResponseEntity<String> saveAllMetrics() {
-        infoCompanyService.saveMetrics();
+    public ResponseEntity<String> saveMetrics() {
+        microserviceClient.saveMetrics();
         return new ResponseEntity<>("All metrics were successfully saved", HttpStatus.OK);
     }
 
     @GetMapping("/quote/{symbol}")
-    public QuoteDto getFinnhubQuote(@PathVariable String symbol) {return infoCompanyService.getFinnhubQuote(symbol); }
+    public QuoteDto getFinnhubQuote(@PathVariable String symbol) {return infoCompanyService.getQuote(symbol); }
 
     @GetMapping("/report/{symbol}")
-    public List<ReportDto> getFinnhubReport(@PathVariable String symbol) {return infoCompanyService.getFinnhubReport(symbol);}
+    public List<ReportDto> getFinnhubReport(@PathVariable String symbol) {return infoCompanyService.getReport(symbol);}
 
     @GetMapping("/metric/{symbol}")
-    public MetricDto getFinnhubMetric(@PathVariable String symbol) {return infoCompanyService.getFinnhubMetric(symbol);}
+    public MetricDto getFinnhubMetric(@PathVariable String symbol) {return infoCompanyService.getMetric(symbol);}
 }

@@ -1,23 +1,19 @@
-package com.example.companyserver.service;
+package com.microservice.finnhub.service;
 
-import com.example.companyserver.client.FinnhubClient;
-import com.example.companyserver.dto.CompanyDto;
-import com.example.companyserver.dto.QuoteDto;
-import com.example.companyserver.dto.metric.MetricDto;
-import com.example.companyserver.dto.metric.MetricResponseDto;
-import com.example.companyserver.dto.report.DataDto;
-import com.example.companyserver.dto.report.ReportDto;
-import com.example.companyserver.dto.report.ReportResponseDto;
-import com.example.companyserver.dto.report.UnitsDto;
-import com.example.companyserver.entity.CompanyEntity;
-import com.example.companyserver.entity.MetricEntity;
-import com.example.companyserver.entity.QuoteEntity;
-import com.example.companyserver.mapper.MetricMapper;
-import com.example.companyserver.mapper.QuoteMapper;
-import com.example.companyserver.repo.CompanyRepo;
-import com.example.companyserver.repo.MetricRepo;
-import com.example.companyserver.repo.QuoteRepo;
-import com.example.companyserver.utils.TestingData;
+import com.microservice.finnhub.client.FinnhubClient;
+import com.microservice.finnhub.dto.CompanyDto;
+import com.microservice.finnhub.dto.QuoteDto;
+import com.microservice.finnhub.dto.metric.MetricDto;
+import com.microservice.finnhub.dto.metric.MetricResponseDto;
+import com.microservice.finnhub.dto.report.DataDto;
+import com.microservice.finnhub.dto.report.ReportDto;
+import com.microservice.finnhub.dto.report.ReportResponseDto;
+import com.microservice.finnhub.dto.report.UnitsDto;
+import com.microservice.finnhub.entity.CompanyEntity;
+import com.microservice.finnhub.entity.MetricEntity;
+import com.microservice.finnhub.entity.QuoteEntity;
+import com.microservice.finnhub.repo.CompanyRepo;
+import com.microservice.finnhub.utils.TestingData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,34 +31,21 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class InfoCompanyServiceTest {
-
+public class FinnhubCompaniesServiceTest {
     @Mock
     private CompanyRepo companyRepo;
 
     @Mock
-    private QuoteRepo quoteRepo;
-
-    @Mock
-    private MetricRepo metricRepo;
-
-    @Mock
     private FinnhubClient finnhubClient;
 
-    @Mock
-    public QuoteMapper quoteMapper;
-
-    @Mock
-    public MetricMapper metricMapper;
-
     @InjectMocks
-    private InfoCompanyService infoCompanyService;
+    private FinnhubCompaniesService finnhubCompaniesService;
 
+    private List<CompanyEntity> companies = new ArrayList<>();
+    private CompanyEntity companyEntity;
     private List<CompanyEntity> companiesEntity = new ArrayList<>();
     private List<CompanyDto> companiesDto = new ArrayList<>();
-    private List<CompanyEntity> companies = new ArrayList<>();
 
-    private CompanyEntity companyEntity;
     private CompanyEntity companyEntity2;
 
     private QuoteEntity quote;
@@ -71,7 +54,6 @@ public class InfoCompanyServiceTest {
     private MetricEntity metric;
     private MetricResponseDto metricResponseDto;
     private MetricDto metricDto;
-
 
     @BeforeEach
     public void beforeTest() {
@@ -92,51 +74,20 @@ public class InfoCompanyServiceTest {
         metricResponseDto.setMetric(metricDto);
 
         companies.addAll(Arrays.asList(companyEntity, companyEntity2));
-
     }
 
     @Test
-    public void saveQuotesTest() {
-
-        QuoteDto quoteDto2 = TestingData.getQuoteDto(2D);
-        QuoteEntity quote2 = TestingData.getQuote(1D);
-        quote2.setCompanies(companyEntity2);
-
-        when(companyRepo.findAll()).thenReturn(companies);
-        when(finnhubClient.getQuote(companyEntity.getSymbol())).thenReturn(quoteDto);
-        when(finnhubClient.getQuote(companyEntity2.getSymbol())).thenReturn(quoteDto2);
-
-        when(quoteMapper.dtoToQuote(quoteDto)).thenReturn(quote);
-        when(quoteMapper.dtoToQuote(quoteDto2)).thenReturn(quote2);
-
-        infoCompanyService.saveQuotes();
-        verify(quoteRepo).saveAll(Arrays.asList(quote, quote2));
+    public void getCompaniesTest() {
+        finnhubCompaniesService.getCompanies();
+        verify(finnhubClient).getCompanies();
     }
 
     @Test
-    public void saveMetricsTest() {
-        MetricEntity metric2 = TestingData.getMetric(2D);
-        MetricDto metricDto2 = TestingData.getMetricDto(2D);
-        MetricResponseDto metricResponseDto2 = MetricResponseDto.builder().build();
-        metricResponseDto2.setMetric(metricDto2);
-
-        when(companyRepo.findAll()).thenReturn(companies);
-        when(finnhubClient.getMetrics(companies.get(0).getSymbol())).thenReturn(metricResponseDto);
-        when(finnhubClient.getMetrics(companies.get(1).getSymbol())).thenReturn(metricResponseDto2);
-
-        when(metricMapper.dtoToMetric(metricDto)).thenReturn(metric);
-        when(metricMapper.dtoToMetric(metricDto2)).thenReturn(metric2);
-
-        infoCompanyService.saveMetrics();
-        verify(metricRepo).saveAll(Arrays.asList(metric, metric2));
-    }
-
-    @Test
-    public void getFinnhubQuoteTest() {
+    public void getQuoteTest() {
         when(companyRepo.findBySymbol(companyEntity.getSymbol())).thenReturn(Optional.of(companyEntity));
         when(finnhubClient.getQuote(companyEntity.getSymbol())).thenReturn(quoteDto);
 
-        QuoteDto actual = infoCompanyService.getFinnhubQuote(companyEntity.getSymbol());
+        QuoteDto actual = finnhubCompaniesService.getQuote(companyEntity.getSymbol());
         assertEquals(quoteDto, actual);
     }
 
@@ -146,7 +97,7 @@ public class InfoCompanyServiceTest {
 
         when(finnhubClient.getMetrics(companyEntity.getSymbol())).thenReturn(metricResponseDto);
 
-        MetricDto actual = infoCompanyService.getFinnhubMetric(companyEntity.getSymbol());
+        MetricDto actual = finnhubCompaniesService.getMetric(companyEntity.getSymbol());
         assertEquals(metricDto, actual);
     }
 
@@ -184,7 +135,7 @@ public class InfoCompanyServiceTest {
 
         when(finnhubClient.getReports(companyEntity.getSymbol())).thenReturn(dataDto);
 
-        List<ReportDto> actual = infoCompanyService.getFinnhubReport(companyEntity.getSymbol());
+        List<ReportDto> actual = finnhubCompaniesService.getReport(companyEntity.getSymbol());
         assertEquals(10, actual.size());
     }
 }
