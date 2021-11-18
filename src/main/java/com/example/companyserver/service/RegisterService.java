@@ -11,7 +11,6 @@ import com.example.companyserver.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.Arrays;
 
@@ -25,7 +24,8 @@ public class RegisterService {
     private final MailService mailService;
 
     public void registerUser(RegisterDto registerDto) throws InvalidUserParameterException {
-        if (emailExist(registerDto.getEmail())) throw new UserAlreadyExistException(String.format("%s", registerDto.getEmail()));
+        if (emailExist(registerDto.getEmail()))
+            throw new UserAlreadyExistException(String.format("%s", registerDto.getEmail()));
 
         try {
             UserEntity user = UserEntity.builder()
@@ -46,7 +46,6 @@ public class RegisterService {
         } catch (Exception e) {
             throw new InvalidUserParameterException(e.getMessage());
         }
-
     }
 
     private boolean emailExist(String email) {
