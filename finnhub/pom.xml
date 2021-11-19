@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.microservice</groupId>
     <artifactId>finnhub</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1</version>
     <name>finnhub</name>
     <description>finnhub</description>
     <properties>
@@ -171,7 +171,10 @@
                     </compilerArgs>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
-
 </project>

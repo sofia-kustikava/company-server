@@ -1,0 +1,37 @@
+version: '2'
+services:
+  finnhub-server:
+    container_name: app
+    build: finnhub
+    ports:
+      - 8081:8081
+    networks:
+      - spring-network
+    depends_on:
+      - "db"
+#  company-server:
+#    container_name: main
+#    build: .
+#    ports:
+#      - 8080:8080
+#      - 465:465
+#    networks:
+#      - spring-network
+#    depends_on:
+#      - "db"
+  db:
+    image: 'postgres:13.1-alpine'
+    container_name: db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+    ports:
+      - 5432:5432
+    networks:
+      - spring-network
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+      - ./database/CreateDB.sql:/docker-entrypoint-initdb.d/Create.sql
+networks:
+  spring-network:
+    driver: bridge

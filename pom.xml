@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.example</groupId>
     <artifactId>company-server</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1</version>
     <name>company-server</name>
     <description>company-server</description>
     <properties>
@@ -195,7 +195,10 @@
                     </compilerArgs>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
-
 </project>
