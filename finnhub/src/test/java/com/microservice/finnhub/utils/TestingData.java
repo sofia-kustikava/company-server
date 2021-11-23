@@ -9,7 +9,6 @@ import com.microservice.finnhub.entity.CompanyEntity;
 import com.microservice.finnhub.entity.MetricEntity;
 import com.microservice.finnhub.entity.QuoteEntity;
 
-import java.time.LocalDate;
 import java.util.*;
 
 public class TestingData {

@@ -83,13 +83,13 @@ CREATE TABLE Quote
 (
     id bigint NOT NULL PRIMARY KEY,
     companies_id bigint NOT NULL,
-    current_price float NOT NULL,
-    change float NOT NULL,
-    percent_change float NOT NULL,
-    high_price float NOT NULL,
-    low_price float NOT NULL,
-    open_price float NOT NULL,
-    close_price float NOT NULL
+    current_price float,
+    change float,
+    percent_change float,
+    high_price float,
+    low_price float,
+    open_price float,
+    close_price float
 );
 
 ALTER TABLE Quote
@@ -98,13 +98,44 @@ ALTER TABLE Quote
 CREATE TABLE Metrics
 (
     id bigint NOT NULL PRIMARY KEY,
-    companies_id bigint NOT NULL,
-    week_high float NOT NULL,
+    companies_id bigint,
+    week_high float,
     week_high_date date,
-    week_low float NOT NULL,
+    week_low float,
     week_low_date date,
-    week_price_daily float NOT NULL
+    week_price_daily float
 );
 
 ALTER TABLE Metrics
     ADD CONSTRAINT CompaniesId FOREIGN KEY(companies_id) REFERENCES Companies(id);
+
+create sequence users_subscriptions_id_seq;
+
+alter sequence users_subscriptions_id_seq owner to postgres;
+
+alter sequence users_subscriptions_id_seq owned by users_subscriptions.id;
+
+create sequence users_id_seq;
+
+alter sequence users_id_seq owner to postgres;
+
+alter sequence users_id_seq owned by users.id;
+
+create sequence companies_id_seq;
+
+alter sequence companies_id_seq owner to postgres;
+
+alter sequence companies_id_seq owned by companies.id;
+
+create sequence quote_id_seq;
+
+alter sequence quote_id_seq owner to postgres;
+
+alter sequence quote_id_seq owned by quote.id;
+
+create sequence metrics_id_seq;
+
+alter sequence metrics_id_seq owner to postgres;
+
+alter sequence metrics_id_seq owned by metrics.id;
+

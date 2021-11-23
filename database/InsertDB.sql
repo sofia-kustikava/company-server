@@ -1,6 +1,6 @@
-INSERT INTO Subscriptions VALUES (1, 'Golden','With a Golden subscription, you have an opportunity to add three companies for tracking and receiving data on shares of specific companies for 52 weeks and financial statements of companies.', 90.00, 3);
-INSERT INTO Subscriptions VALUES (2, 'Silver','With a Silver subscription, you have an opportunity to add three companies for tracking and get 52 weeks of stock data for specific companies.', 60.00, 3);
-INSERT INTO Subscriptions VALUES (3, 'Bronze','With a Bronze subscription, you have an opportunity to add two companies for tracking', 30.00, 2);
+INSERT INTO Subscriptions (id, name, description, price, tracking_size) VALUES (1, 'Golden','With a Golden subscription, you have an opportunity to add three companies for tracking and receiving data on shares of specific companies for 52 weeks and financial statements of companies.', 90.00, 3);
+INSERT INTO Subscriptions (id, name, description, price, tracking_size) VALUES (2, 'Silver','With a Silver subscription, you have an opportunity to add three companies for tracking and get 52 weeks of stock data for specific companies.', 60.00, 3);
+INSERT INTO Subscriptions  (id, name, description, price, tracking_size)VALUES (3, 'Bronze','With a Bronze subscription, you have an opportunity to add two companies for tracking', 30.00, 2);
 
 INSERT INTO Roles (id, role_name) VALUES (1, 'ADMIN');
 INSERT INTO Roles (id, role_name) VALUES (2, 'USER');
