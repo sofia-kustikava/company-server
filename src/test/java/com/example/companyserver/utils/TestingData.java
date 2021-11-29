@@ -5,7 +5,6 @@ import com.example.companyserver.dto.metric.MetricDto;
 import com.example.companyserver.dto.report.ReportDto;
 import com.example.companyserver.dto.report.UnitsDto;
 import com.example.companyserver.entity.*;
-import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.OAuthTokenCredential;
 import com.paypal.base.rest.PayPalRESTException;
@@ -52,8 +51,18 @@ public class TestingData {
                 .build();
     }
 
-    public static SubscriptionEntity getSubscription(String name) {
+    public static SubscriptionEntity getSubscription(Long id, String name) {
         return SubscriptionEntity.builder()
+                .id(id)
+                .name(name)
+                .description("Description sample")
+                .price(90D)
+                .trackingSize(3)
+                .build();
+    }
+
+    public static SubscriptionDto getSubscriptionDto(String name) {
+        return SubscriptionDto.builder()
                 .name(name)
                 .description("Description sample")
                 .price(90D)
@@ -71,25 +80,13 @@ public class TestingData {
 
     public static CompanyEntity getCompany(String symbol) {
         return CompanyEntity.builder()
-                .currency("USD")
-                .description("ONE 4 ART LTD")
-                .displaySymbol("ONFA")
-                .figi("BBG002Q0F4D7")
-                .mic("OOTC")
                 .symbol(symbol)
-                .type("Common Stock")
                 .build();
     }
 
     public static CompanyDto getCompanyDto(String symbol) {
         return CompanyDto.builder()
-                .currency("USD")
-                .description("ONE 4 ART LTD")
-                .displaySymbol("ONFA")
-                .figi("BBG002Q0F4D7")
-                .mic("OOTC")
                 .symbol(symbol)
-                .type("Common Stock")
                 .build();
     }
 
@@ -102,25 +99,6 @@ public class TestingData {
                 .lowPrice(1D)
                 .openPrice(1D)
                 .closePrice(1D)
-                .build();
-    }
-
-    public static QuoteEntity getQuote(Double change) {
-        return QuoteEntity.builder()
-                .currentPrice(1D)
-                .change(change)
-                .percentChange(1D)
-                .highPrice(1D)
-                .lowPrice(1D)
-                .openPrice(1D)
-                .closePrice(1D)
-                .build();
-    }
-
-    public static MetricEntity getMetric(Double weekHigh) {
-        return MetricEntity.builder()
-                .weekHigh(weekHigh)
-                .weekLow(1D)
                 .build();
     }
 
@@ -141,45 +119,6 @@ public class TestingData {
                 .cf(cf)
                 .ic(ic)
                 .build();
-    }
-    public static SubscriptionNameDto getSubscriptionName(String name) {
-        return SubscriptionNameDto.builder()
-                .name(name)
-                .build();
-    }
-    public static RedirectUrls createRedirectUrls() {
-        RedirectUrls redirectUrls = new RedirectUrls();
-        redirectUrls.setCancelUrl("http://somedomain.com");
-        redirectUrls.setReturnUrl("http://somedomain.com");
-        return  redirectUrls;
-    }
-
-    public static Amount createAmount(String total) {
-        Amount amount = new Amount();
-        amount.setCurrency("USD");
-        amount.setTotal(total);
-        return amount;
-    }
-
-    public static Transactions createTransactions(Amount amount) {
-        Transactions transactions = new Transactions();
-        transactions.setAmount(amount);
-        return transactions;
-    }
-
-    public static Payer createPayer() {
-        Payer payer = new Payer();
-        payer.setPaymentMethod("PAYPAL");
-        return payer;
-    }
-
-    public static Payment createPayment(Payer payer, RedirectUrls redirectUrls) {
-        Payment payment = new Payment();
-        payment.setIntent("SALE");
-        payment.setId("1L");
-        payment.setPayer(payer);
-        payment.setRedirectUrls(redirectUrls);
-        return payment;
     }
 
     public static Map paypalSdkConfig() {

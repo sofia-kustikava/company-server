@@ -1,6 +1,6 @@
 package com.microservice.finnhub.service;
 
-import com.microservice.finnhub.client.FinnhubClient;
+import com.microservice.finnhub.client.ApiClient;
 import com.microservice.finnhub.dto.CompanyDto;
 import com.microservice.finnhub.dto.QuoteDto;
 import com.microservice.finnhub.dto.metric.MetricDto;
@@ -24,6 +24,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -34,7 +35,7 @@ public class SaveFinnhubServiceTest {
     private CompanyRepo companyRepo;
 
     @Mock
-    private FinnhubClient finnhubClient;
+    private ApiClient apiClient;
 
     @Mock
     private QuoteMapper quoteMapper;
@@ -89,6 +90,13 @@ public class SaveFinnhubServiceTest {
     }
 
     @Test
+    public void saveCompaniesTest() {
+        when(companyRepo.findBySymbol(companyEntity.getSymbol())).thenReturn(Optional.of(companyEntity));
+        saveFinnhubService.saveCompanies(companies);
+        companies.forEach(companyEntity->verify(companyRepo).save(companyEntity));
+    }
+
+    @Test
     public void saveQuotesTest() {
 
         QuoteDto quoteDto2 = TestingData.getQuoteDto(2D);
@@ -96,8 +104,8 @@ public class SaveFinnhubServiceTest {
         quote2.setCompanies(companyEntity2);
 
         when(companyRepo.findAll()).thenReturn(companies);
-        when(finnhubClient.getQuote(companyEntity.getSymbol())).thenReturn(quoteDto);
-        when(finnhubClient.getQuote(companyEntity2.getSymbol())).thenReturn(quoteDto2);
+        when(apiClient.getQuote(companyEntity.getSymbol())).thenReturn(quoteDto);
+        when(apiClient.getQuote(companyEntity2.getSymbol())).thenReturn(quoteDto2);
 
         when(quoteMapper.dtoToQuote(quoteDto)).thenReturn(quote);
         when(quoteMapper.dtoToQuote(quoteDto2)).thenReturn(quote2);
@@ -114,8 +122,8 @@ public class SaveFinnhubServiceTest {
         metricResponseDto2.setMetric(metricDto2);
 
         when(companyRepo.findAll()).thenReturn(companies);
-        when(finnhubClient.getMetrics(companies.get(0).getSymbol())).thenReturn(metricResponseDto);
-        when(finnhubClient.getMetrics(companies.get(1).getSymbol())).thenReturn(metricResponseDto2);
+        when(apiClient.getMetrics(companies.get(0).getSymbol())).thenReturn(metricResponseDto);
+        when(apiClient.getMetrics(companies.get(1).getSymbol())).thenReturn(metricResponseDto2);
 
         when(metricMapper.dtoToMetric(metricDto)).thenReturn(metric);
         when(metricMapper.dtoToMetric(metricDto2)).thenReturn(metric2);

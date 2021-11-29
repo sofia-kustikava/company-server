@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+
 
 @Slf4j
 @Service
@@ -21,10 +23,16 @@ public class UserService {
 
     private final UserRepo userRepo;
     private final UserMapper userMapper;
+    private final AuthenticationService authenticationService;
 
     public UserDto findById(Long id) {
         UserEntity user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(String.format("%s", id)));
         return userMapper.userToDto(user);
+    }
+
+    public Long findByIdUser(HttpServletRequest request) {
+        Long userId = authenticationService.getAuthUserId(request);
+        return userId;
     }
 
     public void delete(Long id) {

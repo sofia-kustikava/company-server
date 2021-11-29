@@ -1,11 +1,9 @@
 package com.example.companyserver.service;
 
-import com.example.companyserver.client.MicroserviceClient;
+import com.example.companyserver.client.FinnhubClient;
 import com.example.companyserver.dto.QuoteDto;
 import com.example.companyserver.dto.metric.MetricDto;
 import com.example.companyserver.dto.report.ReportDto;
-import com.example.companyserver.mapper.MetricMapper;
-import com.example.companyserver.mapper.QuoteMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -14,19 +12,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class InfoCompanyService {
 
-    public final QuoteMapper quoteMapper;
-    public final MetricMapper metricMapper;
-    private final MicroserviceClient microserviceClient;
+    private final FinnhubClient finnhubClient;
 
     public QuoteDto getQuote(String symbol){
-        return microserviceClient.getQuote(symbol);
+        return finnhubClient.getQuote(symbol);
     }
 
     public MetricDto getMetric(String symbol){
-        return microserviceClient.getMetric(symbol);
+        return finnhubClient.getMetric(symbol);
     }
 
     public List<ReportDto> getReport(String symbol){
-        return microserviceClient.getReport(symbol);
+        return finnhubClient.getReport(symbol);
     }
 }

@@ -1,6 +1,6 @@
 package com.example.companyserver.controller;
 
-import com.example.companyserver.client.MicroserviceClient;
+import com.example.companyserver.client.FinnhubClient;
 import com.example.companyserver.dto.QuoteDto;
 import com.example.companyserver.dto.metric.MetricDto;
 import com.example.companyserver.dto.report.ReportDto;
@@ -18,17 +18,17 @@ import java.util.List;
 public class AdminSubscriptionController {
 
     public final InfoCompanyService infoCompanyService;
-    public final MicroserviceClient microserviceClient;
+    public final FinnhubClient finnhubClient;
 
-    @PostMapping("/save/quotes")
+    @PostMapping("/save/quote")
     public ResponseEntity<String> saveQuotes() {
-        microserviceClient.saveQuotes();
+        finnhubClient.saveQuotes();
         return new ResponseEntity<>("All quotes were successfully saved", HttpStatus.OK);
     }
 
-    @PostMapping("/save/metrics")
+    @PostMapping("/save/metric")
     public ResponseEntity<String> saveMetrics() {
-        microserviceClient.saveMetrics();
+        finnhubClient.saveMetrics();
         return new ResponseEntity<>("All metrics were successfully saved", HttpStatus.OK);
     }
 

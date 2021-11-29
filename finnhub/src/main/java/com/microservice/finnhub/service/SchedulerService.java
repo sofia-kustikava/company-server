@@ -1,6 +1,6 @@
 package com.microservice.finnhub.service;
 
-import com.microservice.finnhub.client.FinnhubClient;
+import com.microservice.finnhub.client.ApiClient;
 import com.microservice.finnhub.entity.MetricEntity;
 import com.microservice.finnhub.entity.QuoteEntity;
 import com.microservice.finnhub.mapper.MetricMapper;
@@ -20,18 +20,18 @@ import java.util.stream.Collectors;
 public class SchedulerService {
 
     private final CompanyRepo companyRepo;
-    private final FinnhubClient finnhubClient;
+    private final ApiClient apiClient;
     private final QuoteMapper quoteMapper;
     private final QuoteRepo quoteRepo;
     private final MetricMapper metricMapper;
     private final MetricRepo metricRepo;
 
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 */5 * ? * *")
     public void saveQuotes() {
         List<QuoteEntity> collect = companyRepo.findAll().stream()
                 .limit(10)
                 .map(company -> {
-                    QuoteEntity quoteEntity = quoteMapper.dtoToQuote(finnhubClient.getQuote(company.getSymbol()));
+                    QuoteEntity quoteEntity = quoteMapper.dtoToQuote(apiClient.getQuote(company.getSymbol()));
                     quoteEntity.setCompanies(company);
                     return quoteEntity;
                 })
@@ -44,7 +44,7 @@ public class SchedulerService {
         List<MetricEntity> collect = companyRepo.findAll().stream()
                 .limit(10)
                 .map(company -> {
-                    MetricEntity metricEntities = metricMapper.dtoToMetric(finnhubClient.getMetrics(company.getSymbol()).getMetric());
+                    MetricEntity metricEntities = metricMapper.dtoToMetric(apiClient.getMetrics(company.getSymbol()).getMetric());
                     metricEntities.setCompanies(company);
                     return metricEntities;
                 })

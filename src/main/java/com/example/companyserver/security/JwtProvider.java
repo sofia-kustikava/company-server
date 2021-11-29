@@ -1,5 +1,6 @@
 package com.example.companyserver.security;
 
+import com.example.companyserver.entity.UserEntity;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,11 +15,14 @@ public class JwtProvider {
     @Value("${jwt.expired}")
     private long tokenTime;
 
-    public String generateToken(String email) {
+    public String generateToken(UserEntity user) {
         Date now = new Date();
         Date timeline = new Date(now.getTime()+tokenTime);
         return Jwts.builder()
-                .setSubject(email)
+                .setId(Long.toString(user.getId()))
+                .setSubject(user.getEmail())
+                .claim("firstname", user.getFirstName())
+                .claim("lastname", user.getLastName())
                 .setExpiration(timeline)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
@@ -46,4 +50,5 @@ public class JwtProvider {
         Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
         return claims.getSubject();
     }
+
 }

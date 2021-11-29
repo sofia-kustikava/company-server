@@ -1,6 +1,6 @@
 package com.microservice.finnhub.service;
 
-import com.microservice.finnhub.client.FinnhubClient;
+import com.microservice.finnhub.client.ApiClient;
 import com.microservice.finnhub.dto.CompanyDto;
 import com.microservice.finnhub.dto.QuoteDto;
 import com.microservice.finnhub.dto.metric.MetricDto;
@@ -36,7 +36,7 @@ public class FinnhubCompaniesServiceTest {
     private CompanyRepo companyRepo;
 
     @Mock
-    private FinnhubClient finnhubClient;
+    private ApiClient apiClient;
 
     @InjectMocks
     private FinnhubCompaniesService finnhubCompaniesService;
@@ -79,13 +79,13 @@ public class FinnhubCompaniesServiceTest {
     @Test
     public void getCompaniesTest() {
         finnhubCompaniesService.getCompanies();
-        verify(finnhubClient).getCompanies();
+        verify(apiClient).getCompanies();
     }
 
     @Test
     public void getQuoteTest() {
         when(companyRepo.findBySymbol(companyEntity.getSymbol())).thenReturn(Optional.of(companyEntity));
-        when(finnhubClient.getQuote(companyEntity.getSymbol())).thenReturn(quoteDto);
+        when(apiClient.getQuote(companyEntity.getSymbol())).thenReturn(quoteDto);
 
         QuoteDto actual = finnhubCompaniesService.getQuote(companyEntity.getSymbol());
         assertEquals(quoteDto, actual);
@@ -95,7 +95,7 @@ public class FinnhubCompaniesServiceTest {
     public void getFinnhubMetricTest() {
         when(companyRepo.findBySymbol(companyEntity.getSymbol())).thenReturn(Optional.of(companyEntity));
 
-        when(finnhubClient.getMetrics(companyEntity.getSymbol())).thenReturn(metricResponseDto);
+        when(apiClient.getMetrics(companyEntity.getSymbol())).thenReturn(metricResponseDto);
 
         MetricDto actual = finnhubCompaniesService.getMetric(companyEntity.getSymbol());
         assertEquals(metricDto, actual);
@@ -133,7 +133,7 @@ public class FinnhubCompaniesServiceTest {
 
         when(companyRepo.findBySymbol(companyEntity.getSymbol())).thenReturn(Optional.of(companyEntity));
 
-        when(finnhubClient.getReports(companyEntity.getSymbol())).thenReturn(dataDto);
+        when(apiClient.getReports(companyEntity.getSymbol())).thenReturn(dataDto);
 
         List<ReportDto> actual = finnhubCompaniesService.getReport(companyEntity.getSymbol());
         assertEquals(10, actual.size());

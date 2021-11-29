@@ -39,7 +39,7 @@ class SchedulerServiceTest {
 
     @BeforeEach
     public void beforeTest() {
-        subscription = TestingData.getSubscription("Golden");
+        subscription = TestingData.getSubscription(1L, "Golden");
 
         userSubscription = TestingData.getUserSubscription(LocalDate.now(), SubscriptionStatus.ACTIVE);
         userSubscription.setSubscription(subscription);

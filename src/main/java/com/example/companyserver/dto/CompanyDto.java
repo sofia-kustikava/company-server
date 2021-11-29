@@ -11,13 +11,7 @@ import lombok.NoArgsConstructor;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "currency",
-        "description",
-        "displaySymbol",
-        "figi",
-        "mic",
-        "symbol",
-        "type"
+        "symbol"
 })
 @Data
 @Builder
@@ -25,25 +19,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CompanyDto {
-    @JsonProperty("currency")
-    private String currency;
-
-    @JsonProperty("description")
-    private String description;
-
-    @JsonProperty("displaySymbol")
-    private String displaySymbol;
-
-    @JsonProperty("figi")
-    private String figi;
-
-    @JsonProperty("mic")
-    private String mic;
-
     @JsonProperty("symbol")
     private String symbol;
-
-    @JsonProperty("type")
-    private String type;
 
 }

@@ -1,6 +1,6 @@
 package com.microservice.finnhub.service;
 
-import com.microservice.finnhub.client.FinnhubClient;
+import com.microservice.finnhub.client.ApiClient;
 import com.microservice.finnhub.entity.CompanyEntity;
 import com.microservice.finnhub.entity.MetricEntity;
 import com.microservice.finnhub.entity.QuoteEntity;
@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,18 +22,26 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SaveFinnhubService {
 
-    private final FinnhubClient finnhubClient;
+    private final ApiClient apiClient;
     private final CompanyRepo companyRepo;
     private final QuoteMapper quoteMapper;
     private final QuoteRepo quoteRepo;
     private final MetricRepo metricRepo;
     public final MetricMapper metricMapper;
 
+    public void saveCompanies(List<CompanyEntity> companies) {
+        companies.stream().limit(100).forEach(companyEntity -> {
+            Optional<CompanyEntity> bySymbol = companyRepo.findBySymbol(companyEntity.getSymbol());
+            bySymbol.ifPresent(entity -> companyEntity.setId(entity.getId()));
+            companyRepo.save(companyEntity);
+        });
+    }
+
     public void saveQuotes() {
         List<CompanyEntity> companies = companyRepo.findAll();
         List<QuoteEntity> collect = companies.stream()
                 .limit(10).map(company -> {
-                    QuoteEntity quoteEntity = quoteMapper.dtoToQuote(finnhubClient.getQuote(company.getSymbol()));
+                    QuoteEntity quoteEntity = quoteMapper.dtoToQuote(apiClient.getQuote(company.getSymbol()));
                     quoteEntity.setCompanies(company);
                     return quoteEntity;
                 })
@@ -44,7 +53,7 @@ public class SaveFinnhubService {
         List<CompanyEntity> companies = companyRepo.findAll();
         List<MetricEntity> collect = companies.stream()
                 .limit(10).map(company -> {
-                    MetricEntity metricEntities = metricMapper.dtoToMetric(finnhubClient.getMetrics(company.getSymbol()).getMetric());
+                    MetricEntity metricEntities = metricMapper.dtoToMetric(apiClient.getMetrics(company.getSymbol()).getMetric());
                     metricEntities.setCompanies(company);
                     return metricEntities;
                 })

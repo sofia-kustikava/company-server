@@ -1,6 +1,6 @@
 package com.example.companyserver.controller;
 
-import com.example.companyserver.dto.SubscriptionNameDto;
+import com.example.companyserver.dto.SubscriptionDto;
 import com.example.companyserver.service.PayPalService;
 import com.example.companyserver.service.SubscriptionService;
 import com.paypal.base.rest.PayPalRESTException;
@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,21 +20,26 @@ public class SubscriptionController {
     public final SubscriptionService subscriptionService;
     public final PayPalService payPalService;
 
-    @PostMapping("/create")
-    public ResponseEntity<String> chooseSubscription(@RequestBody SubscriptionNameDto name) {
-        subscriptionService.chooseSubscription(name);
-        return new ResponseEntity<>("You chose subscription " + name.getName(), HttpStatus.OK);
+    @GetMapping("/all")
+    public List<SubscriptionDto> allSubscriptions() {
+        return subscriptionService.getAllSubscriptions();
+    }
+
+    @PostMapping("/create/{id}")
+    public ResponseEntity<String> chooseSubscription(@PathVariable("id") Long id) {
+        subscriptionService.chooseSubscription(id);
+        return new ResponseEntity<>("You chose subscription " + id, HttpStatus.OK);
     }
 
     @PostMapping("/payment")
-    public String paymentForSubscription() throws PayPalRESTException {
-        return subscriptionService.paymentForSubscription();
+    public String paymentForSubscription(HttpServletRequest request) throws PayPalRESTException {
+        return subscriptionService.paymentForSubscription(request);
     }
 
-    @PostMapping("/change")
-    public ResponseEntity<String> changeSubscription(@RequestBody SubscriptionNameDto name) {
-        subscriptionService.changeSubscription(name);
-        return new ResponseEntity<>("You changed your subscription to " + name.getName() , HttpStatus.OK);
+    @PostMapping("/change/{id}")
+    public ResponseEntity<String> changeSubscription(@PathVariable("id") Long id) {
+        subscriptionService.changeSubscription(id);
+        return new ResponseEntity<>("You changed your subscription to id " + id , HttpStatus.OK);
     }
 
     @GetMapping("success/{userId}")

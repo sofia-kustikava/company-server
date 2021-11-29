@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.List;
 
 @FeignClient(value = "finnhub", url = "https://finnhub.io")
-public interface FinnhubClient {
+public interface ApiClient {
 
     @GetMapping("/api/v1/stock/symbol?exchange=${exchange}&token=${token}")
     List<CompanyDto> getCompanies();

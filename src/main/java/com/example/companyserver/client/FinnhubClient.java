@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import java.util.List;
 
 @FeignClient(value = "mic", url = "${microservice.path}")
-public interface MicroserviceClient {
+public interface FinnhubClient {
     @GetMapping("/finnhub/all")
     List<CompanyDto> getCompanies();
 
-    @GetMapping("/finnhub/report/{symbol}")
+    @GetMapping("/track/report/{symbol}")
     List<ReportDto> getReport(@PathVariable(name = "symbol") String symbol);
 
     @GetMapping("/finnhub/quote/{symbol}")
@@ -26,9 +26,21 @@ public interface MicroserviceClient {
     @GetMapping("/finnhub/metric/{symbol}")
     MetricDto getMetric(@PathVariable(name = "symbol") String symbol);
 
+    @GetMapping("/finnhub/database")
+    List<CompanyDto> getDatabaseCompanies();
+
+    @PostMapping("/admin/save/companies")
+    ResponseEntity<String> saveAllCompanies();
+
     @PostMapping("/save/quote")
     ResponseEntity<String> saveQuotes();
 
     @PostMapping("/save/metric")
     ResponseEntity<String> saveMetrics();
+
+    @GetMapping("/track/quotes/{symbol}")
+    List<QuoteDto> getTrackingQuote(@PathVariable(name = "symbol") String symbol);
+
+    @GetMapping("/track/metric/{symbol}")
+    MetricDto getTrackingMetric(@PathVariable(name = "symbol") String symbol);
 }

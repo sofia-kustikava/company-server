@@ -43,7 +43,4 @@ public class CompanyEntity {
 
     @OneToMany(mappedBy = "companies", cascade = CascadeType.ALL)
     private List<QuoteEntity> quotes;
-
-    @OneToMany(mappedBy = "companies")
-    private List<ReportEntity> reports;
 }

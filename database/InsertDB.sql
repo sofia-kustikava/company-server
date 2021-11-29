@@ -9,9 +9,9 @@ INSERT INTO Users(id, first_name, last_name, email, date_created, date_updated, 
 INSERT INTO Users (id, first_name, last_name, email, date_created, date_updated, status, password) VALUES (2, 'User' ,'Userovich' ,'user@mail.com' , '2021-09-01', '2021-11-16', 'ACTIVE', '$2a$12$uZZIRrElg9H/gdd3nx/52u8mx2Y5qaGHWVXHWb6LVjNPXDe1d5xdm');
 INSERT INTO Users (id, first_name, last_name, email, date_created, date_updated, status, password) VALUES (3, 'Anna' ,'Ivanova' ,'anna@mail.com' , '2021-09-02', '2021-09-16', 'CREATED', '$2a$12$jHxrU5xPBg0JT9EmYbQuce12SfmXav.071MXYy1KgR4mOiPIkA8Yq');
 
-INSERT INTO Users_Subscriptions (id, users_id, subscriptions_id, date_start, date_end, sub_status) VALUES (1, 1, 1,'2021-09-02','2021-11-16','ACTIVE');
-INSERT INTO Users_Subscriptions (id, users_id, subscriptions_id, date_start, date_end, sub_status) VALUES (2, 2, 2,'2021-09-02','2021-11-16','INACTIVE');
-INSERT INTO Users_Subscriptions (id, users_id, subscriptions_id, date_start, date_end, sub_status) VALUES (3, 3, 3,'2021-09-02','2021-11-16','EXPIRED');
+INSERT INTO Users_Subscriptions (id, users_id, subscriptions_id, date_start, date_end, sub_status) VALUES (1, 1, 1,'2021-11-16','2021-12-16','ACTIVE');
+INSERT INTO Users_Subscriptions (id, users_id, subscriptions_id, date_start, date_end, sub_status) VALUES (2, 2, 2,'2021-11-02','2021-12-02','ACTIVE');
+INSERT INTO Users_Subscriptions (id, users_id, subscriptions_id, date_start, date_end, sub_status) VALUES (3, 3, 3,null, null,'INACTIVE');
 
 INSERT INTO Users_Roles (users_id, roles_id) VALUES (1, 1);
 INSERT INTO Users_Roles (users_id, roles_id) VALUES (2, 2);

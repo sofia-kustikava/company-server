@@ -1,17 +1,17 @@
 package com.example.companyserver.service;
 
+import com.example.companyserver.client.FinnhubClient;
 import com.example.companyserver.dto.CompanyDto;
 import com.example.companyserver.dto.QuoteDto;
 import com.example.companyserver.dto.metric.MetricDto;
 import com.example.companyserver.dto.report.ReportDto;
 import com.example.companyserver.entity.*;
-import com.example.companyserver.exceptions.*;
+import com.example.companyserver.exceptions.CompanyNotFoundException;
+import com.example.companyserver.exceptions.MaximumCompaniesException;
+import com.example.companyserver.exceptions.NoAccessTrackingException;
+import com.example.companyserver.exceptions.NotTrackingException;
 import com.example.companyserver.mapper.CompanyMapper;
-import com.example.companyserver.mapper.MetricMapper;
-import com.example.companyserver.mapper.QuoteMapper;
 import com.example.companyserver.repo.CompanyRepo;
-import com.example.companyserver.repo.MetricRepo;
-import com.example.companyserver.repo.QuoteRepo;
 import com.example.companyserver.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,11 +28,7 @@ public class TrackingService {
     private final UserRepo userRepo;
     private final CompanyRepo companyRepo;
     private final CompanyMapper companyMapper;
-    private final InfoCompanyService infoCompanyService;
-    private final QuoteRepo quoteRepo;
-    private final QuoteMapper quoteMapper;
-    private final MetricRepo metricRepo;
-    private final MetricMapper metricMapper;
+    private final FinnhubClient finnhubClient;
     private final AuthenticationService authenticationService;
 
     public void addUserCompany(String symbol) {
@@ -82,10 +78,9 @@ public class TrackingService {
         UserEntity user = authenticationService.getUser();
         if (!user.getSubscription().getSubscriptionStatus().equals(SubscriptionStatus.ACTIVE)) throw new NotTrackingException(user.getEmail());
         if (isTrackingSymbol(user, symbol)) {
-            CompanyEntity company = companyRepo.findBySymbol(symbol).orElseThrow(() -> new CompanyNotFoundException(symbol));
-            List<QuoteEntity> quotes = quoteRepo.findByCompanies(company);
 
-            return quotes.stream().map(quoteMapper::quoteToDto).collect(Collectors.toList());
+            return finnhubClient.getTrackingQuote(symbol);
+
         } else {
             log.info("This company not exist on your tracking list {}", symbol);
             throw new NotTrackingException(symbol);
@@ -98,10 +93,9 @@ public class TrackingService {
         if (!user.getSubscription().getSubscriptionStatus().equals(SubscriptionStatus.ACTIVE)) throw new NotTrackingException(user.getEmail());
         if (!user.getSubscription().getSubscription().getName().equals("Bronze")) {
             if (isTrackingSymbol(user, symbol)) {
-                CompanyEntity company = companyRepo.findBySymbol(symbol).orElseThrow(() -> new CompanyNotFoundException(symbol));
-                MetricEntity metric = metricRepo.findByCompanies(company)
-                        .orElseThrow(() -> new CompanyNotFoundException(String.format("%s", symbol)));
-                return metricMapper.metricToDto(metric);
+
+                return finnhubClient.getTrackingMetric(symbol);
+
             } else {
                 log.info("This company not exist on user's tracking list {}", symbol);
                 throw new NotTrackingException(symbol);
@@ -117,7 +111,9 @@ public class TrackingService {
         if (!user.getSubscription().getSubscriptionStatus().equals(SubscriptionStatus.ACTIVE)) throw new NotTrackingException(user.getEmail());
         if (user.getSubscription().getSubscription().getName().equals("Golden")) {
             if (isTrackingSymbol(user, symbol)) {
-                return infoCompanyService.getReport(symbol);
+
+                return finnhubClient.getReport(symbol);
+
             } else {
                 log.info("This company not exist on user's tracking list {}", symbol);
                 throw new NotTrackingException(symbol);

@@ -1,5 +1,6 @@
 package com.example.companyserver.controller;
 
+import com.example.companyserver.client.FinnhubClient;
 import com.example.companyserver.dto.CompanyDto;
 import com.example.companyserver.mapper.CompanyMapper;
 import com.example.companyserver.service.CompanyService;
@@ -19,6 +20,7 @@ public class AdminController {
     private final CompanyMapper companyMapper;
     private final CompanyService companyService;
     private final UserService userService;
+    private final FinnhubClient finnhubClient;
 
     @GetMapping("/companies")
     public List<CompanyDto> getAllCompaniesMic() {
@@ -27,14 +29,9 @@ public class AdminController {
 
     @PostMapping("/save/companies")
     public ResponseEntity<String> saveAllCompanies() {
-        companyService.saveCompanies(companyMapper.dtoToCompanies(companyService.getFinnhubCompanies()));
+        finnhubClient.saveAllCompanies();
+        companyService.saveCompanies(companyMapper.dtoToCompanies(companyService.getDatabaseCompanies()));
         return new ResponseEntity<>("All companies were successfully saved", HttpStatus.OK);
-    }
-
-    @DeleteMapping("/delete/company/{symbol}")
-    public ResponseEntity<String> deleteCompanyBySymbol(@PathVariable String symbol) {
-        companyService.deleteCompany(symbol);
-        return new ResponseEntity<>("Company with this symbol was successfully deleted" + symbol, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/user/{id}")

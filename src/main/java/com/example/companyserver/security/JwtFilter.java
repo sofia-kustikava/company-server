@@ -16,15 +16,11 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-import static io.jsonwebtoken.lang.Strings.hasText;
-
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtFilter extends GenericFilterBean {
-
-    public static final String AUTHORIZATION = "Authorization";
-
+    private final JwtUtils jwtUtils;
     private final JwtProvider jwtProvider;
     private final CustomUserDetailsService customUserDetailsService;
 
@@ -32,7 +28,7 @@ public class JwtFilter extends GenericFilterBean {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
         log.info("Do filter...");
-        String token = getTokenFromRequest((HttpServletRequest) servletRequest);
+        String token = jwtUtils.getTokenFromRequest((HttpServletRequest) servletRequest);
         if (token != null && jwtProvider.validateToken(token)) {
             String userEmail = jwtProvider.getEmailFromToken(token);
             CustomUserDetails customUserDetails = (CustomUserDetails) customUserDetailsService.loadUserByUsername(userEmail);
@@ -40,13 +36,5 @@ public class JwtFilter extends GenericFilterBean {
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
         filterChain.doFilter(servletRequest, servletResponse);
-    }
-
-    private String getTokenFromRequest(HttpServletRequest request) {
-        String bearer = request.getHeader(AUTHORIZATION);
-        if (hasText(bearer) && bearer.startsWith("Bearer ")) {
-            return bearer.substring(7);
-        }
-        return null;
     }
 }

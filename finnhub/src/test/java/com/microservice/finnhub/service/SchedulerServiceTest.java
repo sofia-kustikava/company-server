@@ -1,6 +1,6 @@
 package com.microservice.finnhub.service;
 
-import com.microservice.finnhub.client.FinnhubClient;
+import com.microservice.finnhub.client.ApiClient;
 import com.microservice.finnhub.dto.CompanyDto;
 import com.microservice.finnhub.dto.QuoteDto;
 import com.microservice.finnhub.dto.metric.MetricDto;
@@ -34,7 +34,7 @@ public class SchedulerServiceTest {
     private CompanyRepo companyRepo;
 
     @Mock
-    private FinnhubClient finnhubClient;
+    private ApiClient apiClient;
 
     @Mock
     private QuoteMapper quoteMapper;
@@ -79,8 +79,8 @@ public class SchedulerServiceTest {
         quote2.setCompanies(companyEntity2);
 
         when(companyRepo.findAll()).thenReturn(companies);
-        when(finnhubClient.getQuote(companyEntity.getSymbol())).thenReturn(quoteDto);
-        when(finnhubClient.getQuote(companyEntity2.getSymbol())).thenReturn(quoteDto2);
+        when(apiClient.getQuote(companyEntity.getSymbol())).thenReturn(quoteDto);
+        when(apiClient.getQuote(companyEntity2.getSymbol())).thenReturn(quoteDto2);
         when(quoteMapper.dtoToQuote(quoteDto)).thenReturn(quote);
         when(quoteMapper.dtoToQuote(quoteDto2)).thenReturn(quote2);
         schedulerService.saveQuotes();
@@ -101,8 +101,8 @@ public class SchedulerServiceTest {
         metricResponseDto2.setMetric(metricDto2);
 
         when(companyRepo.findAll()).thenReturn(companies);
-        when(finnhubClient.getMetrics(companies.get(0).getSymbol())).thenReturn(metricResponseDto);
-        when(finnhubClient.getMetrics(companies.get(1).getSymbol())).thenReturn(metricResponseDto2);
+        when(apiClient.getMetrics(companies.get(0).getSymbol())).thenReturn(metricResponseDto);
+        when(apiClient.getMetrics(companies.get(1).getSymbol())).thenReturn(metricResponseDto2);
         when(metricMapper.dtoToMetric(metricDto)).thenReturn(metric);
         when(metricMapper.dtoToMetric(metricDto2)).thenReturn(metric2);
         schedulerService.saveMetrics();

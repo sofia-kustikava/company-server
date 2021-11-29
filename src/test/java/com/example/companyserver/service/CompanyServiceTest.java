@@ -1,10 +1,8 @@
 package com.example.companyserver.service;
 
+import com.example.companyserver.dto.CompanyDto;
 import com.example.companyserver.entity.CompanyEntity;
-import com.example.companyserver.entity.UserEntity;
-import com.example.companyserver.entity.UserStatus;
 import com.example.companyserver.repo.CompanyRepo;
-import com.example.companyserver.repo.UserRepo;
 import com.example.companyserver.utils.TestingData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,19 +25,21 @@ public class CompanyServiceTest {
     @Mock
     private CompanyRepo companyRepo;
 
-    @Mock
-    private UserRepo userRepo;
 
     @InjectMocks
     private CompanyService companyService;
 
     private List<CompanyEntity> companies = new ArrayList<>();
+    private List<CompanyDto> companyDtos = new ArrayList<>();
     private CompanyEntity companyEntity;
+    private CompanyDto companyDto;
 
     @BeforeEach
     public void beforeTest() {
         companyEntity = TestingData.getCompany("ONFA1");
+        companyDto = TestingData.getCompanyDto("ONFA1");
         companies.add(companyEntity);
+        companyDtos.add(companyDto);
     }
 
     @Test
@@ -47,28 +47,5 @@ public class CompanyServiceTest {
         when(companyRepo.findBySymbol(companyEntity.getSymbol())).thenReturn(Optional.of(companyEntity));
         companyService.saveCompanies(companies);
         companies.forEach(companyEntity->verify(companyRepo).save(companyEntity));
-    }
-
-    @Test
-    public void deleteCompanyBySymbolTest() {
-        when(companyRepo.findBySymbol(companyEntity.getSymbol())).thenReturn(Optional.of(companyEntity));
-        UserEntity user1 = TestingData.getUser(1L, UserStatus.ACTIVE);
-        UserEntity user2 = TestingData.getUser(2L, UserStatus.ACTIVE);
-        user1.setCompanies(companies);
-        user2.setCompanies(companies);
-        List<UserEntity> users = new ArrayList<>(List.of(user1, user2));
-        companyEntity.setUsers(users);
-
-        companyService.deleteCompany(companyEntity.getSymbol());
-        users.forEach(user -> {
-            List<CompanyEntity> companyEntities = user.getCompanies()
-                    .stream()
-                    .filter(company1 -> !company1.equals(companyEntity))
-                    .collect(Collectors.toList());
-            user.setCompanies(companyEntities);
-            verify(userRepo).save(user);
-        });
-        verify(companyRepo).delete(companyEntity);
-
     }
 }

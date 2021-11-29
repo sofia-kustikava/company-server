@@ -54,7 +54,7 @@ public class AuthServiceTest {
 
         when(userRepo.findByEmail(authUserWithDto.getEmail())).thenReturn(Optional.of(user));
         when(passwordEncoder.matches(user.getPassword(), authUserWithDto.getPassword())).thenReturn(true);
-        when(jwtProvider.generateToken(user.getEmail())).thenReturn(token.getToken());
+        when(jwtProvider.generateToken(user)).thenReturn(token.getToken());
         TokenDto authToken = authService.auth(authUserWithDto);
         assertEquals(token, authToken);
     }

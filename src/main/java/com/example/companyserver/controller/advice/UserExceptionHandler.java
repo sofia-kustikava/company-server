@@ -64,4 +64,12 @@ public class UserExceptionHandler {
                 .message(e.getMessage())
                 .build(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler({InvalidJwtException.class})
+    public ResponseEntity<Object> invalidToken(InvalidJwtException e) {
+        return new ResponseEntity<>(ExceptionResponse
+                .builder()
+                .message(e.getMessage())
+                .build(), HttpStatus.BAD_REQUEST);
+    }
 }
