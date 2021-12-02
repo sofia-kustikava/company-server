@@ -1,5 +1,6 @@
 package com.example.companyserver.service;
 
+import com.example.companyserver.client.FinnhubClient;
 import com.example.companyserver.dto.CompanyDto;
 import com.example.companyserver.entity.CompanyEntity;
 import com.example.companyserver.repo.CompanyRepo;
@@ -10,11 +11,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -25,6 +26,8 @@ public class CompanyServiceTest {
     @Mock
     private CompanyRepo companyRepo;
 
+    @Mock
+    private FinnhubClient finnhubClient;
 
     @InjectMocks
     private CompanyService companyService;

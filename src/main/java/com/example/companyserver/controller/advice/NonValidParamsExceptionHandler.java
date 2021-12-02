@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class NonValidParamsExceptionHandler {
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    protected ResponseEntity<Object> handleGlobalExceptions(MethodArgumentNotValidException e) {
+    protected ResponseEntity<ExceptionResponse> handleGlobalExceptions() {
         return new ResponseEntity<>(ExceptionResponse
                 .builder()
                 .message("Incorrect parameters entered")

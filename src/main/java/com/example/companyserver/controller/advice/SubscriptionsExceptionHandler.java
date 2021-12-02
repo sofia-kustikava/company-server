@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class SubscriptionsExceptionHandler {
 
     @ExceptionHandler({SubscriptionNotExistException.class})
-    public ResponseEntity<Object> subscriptionNotExist(SubscriptionNotExistException e) {
+    public ResponseEntity<ExceptionResponse> subscriptionNotExist(SubscriptionNotExistException e) {
         return new ResponseEntity<>(ExceptionResponse
                 .builder()
                 .message(e.getMessage())
@@ -21,7 +21,7 @@ public class SubscriptionsExceptionHandler {
     }
 
     @ExceptionHandler({HaveSubscriptionException.class})
-    public ResponseEntity<Object> haveSubscription(HaveSubscriptionException e) {
+    public ResponseEntity<ExceptionResponse> haveSubscription(HaveSubscriptionException e) {
         return new ResponseEntity<>(ExceptionResponse
                 .builder()
                 .message(e.getMessage())
@@ -29,7 +29,7 @@ public class SubscriptionsExceptionHandler {
     }
 
     @ExceptionHandler({SubscriptionPaidException.class})
-    public ResponseEntity<Object> subscriptionPaid(SubscriptionPaidException e) {
+    public ResponseEntity<ExceptionResponse> subscriptionPaid(SubscriptionPaidException e) {
         return new ResponseEntity<>(ExceptionResponse
                 .builder()
                 .message(e.getMessage())

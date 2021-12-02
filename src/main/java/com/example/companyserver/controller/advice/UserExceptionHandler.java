@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class UserExceptionHandler {
 
     @ExceptionHandler({UserNotFoundException.class})
-    public ResponseEntity<Object> userNotFound(UserNotFoundException e) {
+    public ResponseEntity<ExceptionResponse> userNotFound(UserNotFoundException e) {
         return new ResponseEntity<>(ExceptionResponse
                 .builder()
                 .message(e.getMessage())
@@ -18,7 +18,7 @@ public class UserExceptionHandler {
     }
 
     @ExceptionHandler({UserNotExistException.class})
-    public ResponseEntity<Object> userNotExist(UserNotExistException e) {
+    public ResponseEntity<ExceptionResponse> userNotExist(UserNotExistException e) {
         return new ResponseEntity<>(ExceptionResponse
                 .builder()
                 .message(e.getMessage())
@@ -26,7 +26,7 @@ public class UserExceptionHandler {
     }
 
     @ExceptionHandler({IncorrectPasswordException.class})
-    public ResponseEntity<Object> incorrectPassword(IncorrectPasswordException e) {
+    public ResponseEntity<ExceptionResponse> incorrectPassword(IncorrectPasswordException e) {
         return new ResponseEntity<>(ExceptionResponse
                 .builder()
                 .message(e.getMessage())
@@ -34,7 +34,7 @@ public class UserExceptionHandler {
     }
 
     @ExceptionHandler({InvalidUserParameterException.class})
-    public ResponseEntity<Object> incorrectUserParameter(InvalidUserParameterException e) {
+    public ResponseEntity<ExceptionResponse> incorrectUserParameter(InvalidUserParameterException e) {
         return new ResponseEntity<>(ExceptionResponse
                 .builder()
                 .message(e.getMessage())
@@ -42,7 +42,7 @@ public class UserExceptionHandler {
     }
 
     @ExceptionHandler({UserAlreadyExistException.class})
-    public ResponseEntity<Object> userAlreadyExist(UserAlreadyExistException e) {
+    public ResponseEntity<ExceptionResponse> userAlreadyExist(UserAlreadyExistException e) {
         return new ResponseEntity<>(ExceptionResponse
                 .builder()
                 .message(e.getMessage())
@@ -50,7 +50,7 @@ public class UserExceptionHandler {
     }
 
     @ExceptionHandler({UserIsBannedException.class})
-    public ResponseEntity<Object> userIsBanned(UserIsBannedException e) {
+    public ResponseEntity<ExceptionResponse> userIsBanned(UserIsBannedException e) {
         return new ResponseEntity<>(ExceptionResponse
                 .builder()
                 .message(e.getMessage())
@@ -58,7 +58,7 @@ public class UserExceptionHandler {
     }
 
     @ExceptionHandler({UserIsUnbannedException.class})
-    public ResponseEntity<Object> userIsBanned(UserIsUnbannedException e) {
+    public ResponseEntity<ExceptionResponse> userIsBanned(UserIsUnbannedException e) {
         return new ResponseEntity<>(ExceptionResponse
                 .builder()
                 .message(e.getMessage())
@@ -66,7 +66,7 @@ public class UserExceptionHandler {
     }
 
     @ExceptionHandler({InvalidJwtException.class})
-    public ResponseEntity<Object> invalidToken(InvalidJwtException e) {
+    public ResponseEntity<ExceptionResponse> invalidToken(InvalidJwtException e) {
         return new ResponseEntity<>(ExceptionResponse
                 .builder()
                 .message(e.getMessage())

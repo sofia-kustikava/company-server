@@ -98,38 +98,6 @@ public class TrackingServiceTest {
         verify(userRepo).save(user);
     }
 
-//    @Test
-//    public void getTrackingQuoteTest() {
-//        when(authenticationService.getUser()).thenReturn(user);
-//        List<QuoteDto> actual = trackingService.getTrackingQuote(companyEntity.getSymbol());
-//        List<QuoteDto> expected = finnhubClient.getTrackingQuote(companyEntity.getSymbol());
-//        assertEquals(expected, actual);
-//
-//    }
-//
-//    @Test
-//    public void getTrackingMetricTest() {
-//        when(authenticationService.getUser()).thenReturn(user);
-//        when(companyRepo.findBySymbol(companyEntity.getSymbol())).thenReturn(Optional.of(companyEntity));
-//        MetricDto expected = finnhubClient.getTrackingMetric(companyEntity.getSymbol());
-//        MetricDto actual = trackingService.getTrackingMetric("ONFA");
-//        assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void getTrackingReportTest() {
-//        ReportDto reportDto = TestingData.getReport();
-//        ReportDto reportDto2 = TestingData.getReport();
-//        ReportDto reportDto3 = TestingData.getReport();
-//
-//        List<ReportDto> reports = List.of(reportDto, reportDto2, reportDto3);
-//
-//        when(authenticationService.getUser()).thenReturn(user);
-//        List<ReportDto> expected = finnhubClient.getReport(companyEntity.getSymbol());
-//        List<ReportDto> actual = trackingService.getTrackingReport(companyEntity.getSymbol());
-//        assertEquals(3, actual.size());
-//    }
-
     @Test
     public void noAccessTrackingExceptionTest() {
         UserEntity userWithNoSub = TestingData.getUser(2L, UserStatus.BANNED);

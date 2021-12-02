@@ -90,37 +90,6 @@ public class TestingData {
                 .build();
     }
 
-    public static QuoteDto getQuoteDto(Double change) {
-        return QuoteDto.builder()
-                .currentPrice(1D)
-                .change(change)
-                .percentChange(1D)
-                .highPrice(1D)
-                .lowPrice(1D)
-                .openPrice(1D)
-                .closePrice(1D)
-                .build();
-    }
-
-    public static MetricDto getMetricDto(Double weekHigh) {
-        return MetricDto.builder()
-                .weekHigh(weekHigh)
-                .weekLow(2D)
-                .build();
-    }
-
-    public static ReportDto getReport() {
-        return ReportDto.builder().build();
-    }
-
-    public static UnitsDto getUnits(List<ReportDto> bs, List<ReportDto> cf, List<ReportDto> ic) {
-        return UnitsDto.builder()
-                .bs(bs)
-                .cf(cf)
-                .ic(ic)
-                .build();
-    }
-
     public static Map paypalSdkConfig() {
         Map configMap = new HashMap<>();
         configMap.put("mode", "mode");

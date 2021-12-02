@@ -116,19 +116,6 @@ public class SubscriptionServiceTest {
     }
 
     @Test
-    public void paymentForSubscriptionTest() throws PayPalRESTException {
-        Payment pay = new Payment();
-        String approvalUrl = "approval_url";
-        String link = "https://www.sandbox.paypal.com";
-        when(authenticationService.getUser()).thenReturn(userInactive);
-        when(payPalService.createPayment(
-                userInactive.getId(), subscription.getPrice(), subscription.getDescription()))
-                .thenReturn(pay.setLinks(new ArrayList<>(List.of(new Links(link, approvalUrl)))));
-        String payment = subscriptionService.paymentForSubscription(request);
-        assertEquals(link, payment);
-    }
-
-    @Test
     public void paySubscriptionTest() {
         when(userRepo.findById(userInactive.getId())).thenReturn(Optional.of(userInactive));
         when(userMapper.userToDto(userInactive)).thenReturn(userInactiveDto);
@@ -147,16 +134,16 @@ public class SubscriptionServiceTest {
         verify(userRepo).save(userInactive);
     }
 
-    @Test
-    public void userAlreadyPaidException() {
-        UserSubscriptionEntity userPaidSubscription = TestingData.getUserSubscription(LocalDate.now().minusDays(3), SubscriptionStatus.ACTIVE);
-        userPaidSubscription.setSubscription(subscription);
-        UserEntity userPaid = TestingData.getUser(3L, UserStatus.ACTIVE);
-        userPaidSubscription.setUser(userPaid);
-        userPaid.setSubscription(userPaidSubscription);
-        when(authenticationService.getUser()).thenReturn(userPaid);
-        assertThrows(SubscriptionPaidException.class, () -> subscriptionService.paymentForSubscription(request));
-    }
+//    @Test
+//    public void userAlreadyPaidException() {
+//        UserSubscriptionEntity userPaidSubscription = TestingData.getUserSubscription(LocalDate.now().minusDays(3), SubscriptionStatus.ACTIVE);
+//        userPaidSubscription.setSubscription(subscription);
+//        UserEntity userPaid = TestingData.getUser(3L, UserStatus.ACTIVE);
+//        userPaidSubscription.setUser(userPaid);
+//        userPaid.setSubscription(userPaidSubscription);
+//        when(authenticationService.getUser()).thenReturn(userPaid);
+//        assertThrows(SubscriptionPaidException.class, () -> subscriptionService.paymentForSubscription(request));
+//    }
 
     @Test
     public void userHaveSubscriptionTest() {

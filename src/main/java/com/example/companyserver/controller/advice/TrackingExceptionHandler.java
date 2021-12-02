@@ -1,7 +1,6 @@
 package com.example.companyserver.controller.advice;
 
 import com.example.companyserver.exceptions.*;
-import org.springframework.core.NestedExceptionUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class TrackingExceptionHandler {
 
     @ExceptionHandler({MaximumCompaniesException.class})
-    public ResponseEntity<Object> maximumCompanies(MaximumCompaniesException e) {
+    public ResponseEntity<ExceptionResponse> maximumCompanies(MaximumCompaniesException e) {
         return new ResponseEntity<>(ExceptionResponse
                 .builder()
                 .message(e.getMessage())
@@ -20,7 +19,7 @@ public class TrackingExceptionHandler {
     }
 
     @ExceptionHandler({NotTrackingException.class})
-    public ResponseEntity<Object> notTracking(NotTrackingException e) {
+    public ResponseEntity<ExceptionResponse> notTracking(NotTrackingException e) {
         return new ResponseEntity<>(ExceptionResponse
                 .builder()
                 .message(e.getMessage())
@@ -28,7 +27,7 @@ public class TrackingExceptionHandler {
     }
 
     @ExceptionHandler({NoAccessTrackingException.class})
-    public ResponseEntity<Object> noAccessTracking(NoAccessTrackingException e) {
+    public ResponseEntity<ExceptionResponse> noAccessTracking(NoAccessTrackingException e) {
         return new ResponseEntity<>(ExceptionResponse
                 .builder()
                 .message(e.getMessage())
@@ -36,7 +35,7 @@ public class TrackingExceptionHandler {
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<?> conflict(DataIntegrityViolationException e) {
+    public ResponseEntity<?> conflict() {
         return new ResponseEntity<>(ExceptionResponse
                 .builder()
                 .message("You can't add the same company")

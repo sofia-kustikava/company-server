@@ -3,15 +3,13 @@ package com.example.companyserver.dto;
 import com.example.companyserver.entity.SubscriptionEntity;
 import com.example.companyserver.entity.SubscriptionStatus;
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

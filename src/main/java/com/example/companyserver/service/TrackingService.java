@@ -91,7 +91,7 @@ public class TrackingService {
     public MetricDto getTrackingMetric(String symbol) {
         UserEntity user = authenticationService.getUser();
         if (!user.getSubscription().getSubscriptionStatus().equals(SubscriptionStatus.ACTIVE)) throw new NotTrackingException(user.getEmail());
-        if (!user.getSubscription().getSubscription().getName().equals("Bronze")) {
+        if (user.getSubscription().getSubscription().getId() != 3) {
             if (isTrackingSymbol(user, symbol)) {
 
                 return finnhubClient.getTrackingMetric(symbol);
@@ -109,7 +109,7 @@ public class TrackingService {
     public List<ReportDto> getTrackingReport(String symbol) {
         UserEntity user = authenticationService.getUser();
         if (!user.getSubscription().getSubscriptionStatus().equals(SubscriptionStatus.ACTIVE)) throw new NotTrackingException(user.getEmail());
-        if (user.getSubscription().getSubscription().getName().equals("Golden")) {
+        if (user.getSubscription().getSubscription().getId() == 1) {
             if (isTrackingSymbol(user, symbol)) {
 
                 return finnhubClient.getReport(symbol);
