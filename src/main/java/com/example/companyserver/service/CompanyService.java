@@ -25,7 +25,6 @@ public class CompanyService {
 
 
     public void saveCompanies(List<CompanyEntity> companies) {
-        finnhubClient.saveAllCompanies();
         companies.forEach(companyEntity -> {
             Optional<CompanyEntity> bySymbol = companyRepo.findBySymbol(companyEntity.getSymbol());
             bySymbol.ifPresent(entity -> companyEntity.setId(entity.getId()));

@@ -60,9 +60,13 @@ public class TrackingService {
         return user.getSubscription() != null && user.getSubscription().getSubscriptionStatus().equals(SubscriptionStatus.ACTIVE);
     }
 
+    private boolean isUserHaveAccessTracking(UserEntity user) {
+        return !user.getSubscription().getSubscriptionStatus().equals(SubscriptionStatus.ACTIVE) || !user.getStatus().equals(UserStatus.ACTIVE);
+    }
+
     public void deleteCompany(String symbol) {
         UserEntity user = authenticationService.getUser();
-        if (!user.getSubscription().getSubscriptionStatus().equals(SubscriptionStatus.ACTIVE)) throw new NotTrackingException(user.getEmail());
+        if (isUserHaveAccessTracking(user)) throw new NotTrackingException(user.getEmail());
         if (isTrackingSymbol(user, symbol)) {
             CompanyEntity company = companyRepo.findBySymbol(symbol).orElseThrow(() -> new CompanyNotFoundException(symbol));
             user.getCompanies().remove(company);
@@ -76,7 +80,7 @@ public class TrackingService {
 
     public List<QuoteDto> getTrackingQuote(String symbol) {
         UserEntity user = authenticationService.getUser();
-        if (!user.getSubscription().getSubscriptionStatus().equals(SubscriptionStatus.ACTIVE)) throw new NotTrackingException(user.getEmail());
+        if (isUserHaveAccessTracking(user)) throw new NotTrackingException(user.getEmail());
         if (isTrackingSymbol(user, symbol)) {
 
             return finnhubClient.getTrackingQuote(symbol);
@@ -90,7 +94,7 @@ public class TrackingService {
 
     public MetricDto getTrackingMetric(String symbol) {
         UserEntity user = authenticationService.getUser();
-        if (!user.getSubscription().getSubscriptionStatus().equals(SubscriptionStatus.ACTIVE)) throw new NotTrackingException(user.getEmail());
+        if (isUserHaveAccessTracking(user)) throw new NotTrackingException(user.getEmail());
         if (user.getSubscription().getSubscription().getId() != 3) {
             if (isTrackingSymbol(user, symbol)) {
 
@@ -108,7 +112,7 @@ public class TrackingService {
 
     public List<ReportDto> getTrackingReport(String symbol) {
         UserEntity user = authenticationService.getUser();
-        if (!user.getSubscription().getSubscriptionStatus().equals(SubscriptionStatus.ACTIVE)) throw new NotTrackingException(user.getEmail());
+        if (isUserHaveAccessTracking(user)) throw new NotTrackingException(user.getEmail());
         if (user.getSubscription().getSubscription().getId() == 1) {
             if (isTrackingSymbol(user, symbol)) {
 

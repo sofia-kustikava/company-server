@@ -1,6 +1,7 @@
 package com.example.companyserver.service;
 
 import com.example.companyserver.dto.*;
+import com.example.companyserver.entity.SubscriptionStatus;
 import com.example.companyserver.entity.UserEntity;
 import com.example.companyserver.entity.UserStatus;
 import com.example.companyserver.exceptions.UserIsBannedException;
@@ -25,16 +26,10 @@ public class UserService {
 
     private final UserRepo userRepo;
     private final UserMapper userMapper;
-    private final AuthenticationService authenticationService;
 
     public UserDto findById(Long id) {
         UserEntity user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(String.format("%s", id)));
         return userMapper.userToDto(user);
-    }
-
-    public Long findByIdUser(HttpServletRequest request) {
-        Long userId = authenticationService.getAuthUserId(request);
-        return userId;
     }
 
     public void delete(Long id) {
@@ -49,6 +44,11 @@ public class UserService {
         UserEntity user = userRepo.findById(userId).orElseThrow(() -> new UserNotFoundException(String.format("%s", userId)));
         if (!user.getStatus().equals(UserStatus.BANNED)) {
             user.setStatus(UserStatus.BANNED);
+            if (user.getSubscription() != null) {
+                user.getSubscription().setSubscriptionStatus(SubscriptionStatus.INACTIVE);
+                user.getSubscription().setDateEnd(null);
+                user.getSubscription().setDateStart(null);
+            }
             userRepo.save(user);
         } else {
             log.info("This user is already banned: {}", user.getEmail());
@@ -60,6 +60,11 @@ public class UserService {
         UserEntity user = userRepo.findById(userId).orElseThrow(() -> new UserNotFoundException(String.format("%s", userId)));
         if (user.getStatus().equals(UserStatus.BANNED)) {
             user.setStatus(UserStatus.CREATED);
+            if (user.getSubscription() != null) {
+                user.getSubscription().setSubscriptionStatus(SubscriptionStatus.INACTIVE);
+                user.getSubscription().setDateEnd(null);
+                user.getSubscription().setDateStart(null);
+            }
             userRepo.save(user);
         } else {
             log.info("This user is already unbanned: {}", user.getEmail());

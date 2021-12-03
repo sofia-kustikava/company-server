@@ -23,8 +23,4 @@ public class UserController {
         return userService.findById(id);
     }
 
-    @GetMapping("/profile")
-    public Long getIdUser(HttpServletRequest request) {
-        return userService.findByIdUser(request);
-    }
 }
