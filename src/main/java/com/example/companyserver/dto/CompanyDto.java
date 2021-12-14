@@ -8,7 +8,13 @@ import lombok.*;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "symbol"
+        "symbol",
+        "currency",
+        "description",
+        "displaySymbol",
+        "figi",
+        "mic",
+        "type"
 })
 @Getter
 @Setter
@@ -19,5 +25,24 @@ import lombok.*;
 public class CompanyDto {
     @JsonProperty("symbol")
     private String symbol;
+
+    @JsonProperty("currency")
+    private String currency;
+
+    @JsonProperty("description")
+    private String description;
+
+    @JsonProperty("displaySymbol")
+    private String displaySymbol;
+
+    @JsonProperty("figi")
+    private String figi;
+
+    @JsonProperty("mic")
+    private String mic;
+
+    @JsonProperty("type")
+    private String type;
+
 
 }

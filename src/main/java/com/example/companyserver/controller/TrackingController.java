@@ -4,6 +4,7 @@ import com.example.companyserver.dto.CompanyDto;
 import com.example.companyserver.dto.QuoteDto;
 import com.example.companyserver.dto.metric.MetricDto;
 import com.example.companyserver.dto.report.ReportDto;
+import com.example.companyserver.service.CompanyService;
 import com.example.companyserver.service.TrackingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,12 @@ import java.util.List;
 public class TrackingController {
 
     public final TrackingService trackingService;
+    public final CompanyService companyService;
+
+    @GetMapping("/companies/all")
+    public List<CompanyDto> allCompanies() {
+        return companyService.getDatabaseCompanies();
+    }
 
     @PostMapping("/add/{symbol}")
     public ResponseEntity<String> addTrackingCompany(@PathVariable("symbol") String symbol) {
