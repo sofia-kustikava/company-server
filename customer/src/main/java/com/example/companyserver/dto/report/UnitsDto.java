@@ -1,5 +1,6 @@
 package com.example.companyserver.dto.report;
 
+import com.example.companyserver.dto.report.ReportDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

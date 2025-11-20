@@ -1,5 +1,6 @@
 package com.example.companyserver.entity;
 
+import com.example.companyserver.entity.UserEntity;
 import lombok.*;
 import javax.persistence.*;
 import java.util.ArrayList;

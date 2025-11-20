@@ -11,6 +11,7 @@ import com.example.companyserver.mapper.UserMapper;
 import com.example.companyserver.repo.SubscriptionRepo;
 import com.example.companyserver.repo.UserRepo;
 import com.example.companyserver.repo.UserSubscriptionRepo;
+import com.example.companyserver.service.AuthenticationService;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;

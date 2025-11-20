@@ -2,6 +2,7 @@ package com.example.companyserver.security;
 
 import com.example.companyserver.config.CustomUserDetails;
 import com.example.companyserver.config.CustomUserDetailsService;
+import com.example.companyserver.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

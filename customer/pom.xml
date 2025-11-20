@@ -2,6 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>com.companyserver</groupId>
         <artifactId>companyserver</artifactId>
@@ -9,11 +10,11 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>finnhub</artifactId>
+    <artifactId>customer-service</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>finnhub</name>
+    <name>customer-service</name>
 
     <dependencies>
         <dependency>
@@ -106,6 +107,30 @@
             <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>5.5.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>5.5.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>5.5.2</version>
+        </dependency>
+        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>4.0.1</version>
@@ -134,16 +159,59 @@
             <artifactId>rest-api-sdk</artifactId>
             <version>1.13.1</version>
         </dependency>
+        <!--OPENREWRITE-->
+        <dependency>
+            <groupId>org.openrewrite.recipe</groupId>
+            <artifactId>rewrite-testing-frameworks</artifactId>
+            <version>3.9.0</version>
+        </dependency>
+        <!--OPENREWRITE-->
+<!--        &lt;!&ndash;ERRORPRONE&ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.google.errorprone</groupId>-->
+<!--            <artifactId>error_prone_core</artifactId>-->
+<!--            <version>2.36.0</version>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash;ERRORPRONE&ndash;&gt;-->
     </dependencies>
     <build>
         <plugins>
+            <!--OPENREWRITE-->
+            <plugin>
+                <groupId>org.openrewrite.maven</groupId>
+                <artifactId>rewrite-maven-plugin</artifactId>
+                <version>6.9.0</version>
+                <configuration>
+                    <configLocation>recipes/CustomJUnit4To5Migration.yml</configLocation>
+                    <activeRecipes>
+                        <recipe>recipes.CustomJUnit4To5Migration</recipe>
+                    </activeRecipes>
+                    <recipeArtifactCoordinates>
+                        org.openrewrite.recipe:rewrite-testing-frameworks:3.9.0
+                    </recipeArtifactCoordinates>
+                </configuration>
+            </plugin>
+            <!--OPENREWRITE-->
+<!--            &lt;!&ndash;ERRORPRONE&ndash;&gt;-->
+<!--            <plugin>-->
+<!--                <groupId>com.google.errorprone</groupId>-->
+<!--                <artifactId>error-prone-maven-plugin</artifactId>-->
+<!--                <version>2.36.0</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>check</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
+<!--            &lt;!&ndash;ERRORPRONE&ndash;&gt;-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.6.1</version>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
+                    <release>11</release>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>
@@ -163,15 +231,21 @@
                     </annotationProcessorPaths>
                     <showWarnings>true</showWarnings>
                     <compilerArgs>
-                        <arg>
-                            -Amapstruct.defaultComponentModel=spring
-                        </arg>
+                        <arg>-Amapstruct.defaultComponentModel=spring</arg>
                     </compilerArgs>
+<!--                    &lt;!&ndash;ERRORPRONE&ndash;&gt;-->
+<!--                    <compilerArgs>-->
+<!--                        <arg>-Xplugin:ErrorProne</arg>-->
+<!--                    </compilerArgs>-->
+<!--                    <annotationProcessorPaths>-->
+<!--                        <path>-->
+<!--                            <groupId>com.google.errorprone</groupId>-->
+<!--                            <artifactId>error_prone_core</artifactId>-->
+<!--                            <version>2.36.0</version>-->
+<!--                        </path>-->
+<!--                    </annotationProcessorPaths>-->
+<!--                    &lt;!&ndash;ERRORPRONE&ndash;&gt;-->
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

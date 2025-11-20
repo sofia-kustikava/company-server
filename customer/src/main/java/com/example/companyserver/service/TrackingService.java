@@ -13,6 +13,7 @@ import com.example.companyserver.exceptions.NotTrackingException;
 import com.example.companyserver.mapper.CompanyMapper;
 import com.example.companyserver.repo.CompanyRepo;
 import com.example.companyserver.repo.UserRepo;
+import com.example.companyserver.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

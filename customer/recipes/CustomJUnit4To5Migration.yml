@@ -1,0 +1,117 @@
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: org.openrewrite.java.testing.junit5.JUnit4to5Migration
+displayName: JUnit Jupiter migration from JUnit 4.x
+description: |
+  Migrates JUnit 4.x tests to JUnit Jupiter.
+tags:
+  - junit
+  - testing
+recipeList:
+  - org.openrewrite.java.testing.junit5.IgnoreToDisabled
+  - org.openrewrite.java.testing.junit5.ThrowingRunnableToExecutable
+  - org.openrewrite.java.testing.junit5.RemoveObsoleteRunners:
+      obsoleteRunners:
+        - org.junit.runners.JUnit4
+        - org.junit.runners.BlockJUnit4ClassRunner
+  - org.openrewrite.maven.RemovePluginDependency:
+      pluginGroupId: org.apache.maven.plugins
+      pluginArtifactId: maven-surefire-plugin
+      groupId: org.apache.maven.surefire
+      artifactId: surefire-junit*
+  - org.openrewrite.java.testing.junit5.UpgradeSurefirePlugin
+  - org.openrewrite.java.testing.junit5.AddHamcrestJUnitDependency
+  - org.openrewrite.java.testing.junit5.UseHamcrestAssertThat
+  - org.openrewrite.java.testing.junit5.MigrateAssumptions
+  - org.openrewrite.java.testing.junit5.UseTestMethodOrder
+  - org.openrewrite.java.testing.junit5.MigrateJUnitTestCase
+  - org.openrewrite.java.ChangeMethodName:
+      methodPattern: org.junit.Assert assertEquals(.., Object[], Object[])
+      newMethodName: assertArrayEquals
+  - org.openrewrite.java.testing.junit5.AssertToAssertions
+  - org.openrewrite.java.testing.junit5.CategoryToTag
+  - org.openrewrite.java.testing.junit5.CleanupJUnitImports
+  - org.openrewrite.java.testing.junit5.TemporaryFolderToTempDir
+  - org.openrewrite.java.testing.junit5.TempDirNonFinal
+  - org.openrewrite.java.testing.junit5.TestRuleToTestInfo
+  - org.openrewrite.java.testing.junit5.UpdateBeforeAfterAnnotations
+  - org.openrewrite.java.testing.junit5.UpdateTestAnnotation
+  - org.openrewrite.java.testing.junit5.TimeoutRuleToClassAnnotation
+  - org.openrewrite.java.testing.junit5.AddMissingTestBeforeAfterAnnotations
+  - org.openrewrite.java.testing.junit5.ParameterizedRunnerToParameterized
+  - org.openrewrite.java.testing.junit5.JUnitParamsRunnerToParameterized
+  - org.openrewrite.java.testing.junit5.ExpectedExceptionToAssertThrows
+  - org.openrewrite.java.testing.junit5.EnclosedToNested
+  - org.openrewrite.java.testing.junit5.AddMissingNested
+  - org.openrewrite.java.testing.junit5.UseMockitoExtension
+  - org.openrewrite.java.testing.hamcrest.AddHamcrestIfUsed
+  - org.openrewrite.java.dependencies.RemoveDependency:
+      groupId: junit
+      artifactId: junit
+  - org.openrewrite.maven.ExcludeDependency:
+      groupId: junit
+      artifactId: junit
+  - org.openrewrite.maven.RemoveExclusion:
+      groupId: org.testcontainers
+      artifactId: "*"
+      exclusionGroupId: junit
+      exclusionArtifactId: junit
+  - org.openrewrite.maven.RemoveExclusion:
+      groupId: org.springframework.boot
+      artifactId: spring-boot-testcontainers
+      exclusionGroupId: junit
+      exclusionArtifactId: junit
+  - org.openrewrite.java.dependencies.RemoveDependency:
+      groupId: org.junit.vintage
+      artifactId: junit-vintage-engine
+  - org.openrewrite.maven.ExcludeDependency:
+      groupId: org.junit.vintage
+      artifactId: junit-vintage-engine
+  - org.openrewrite.java.testing.junit5.AddJupiterDependencies
+  - org.openrewrite.java.dependencies.AddDependency:
+      groupId: org.junit.jupiter
+      artifactId: junit-jupiter-params
+      version: 5.11.3
+      onlyIfUsing: org.junit.runners.Parameterized
+      scope: test
+      acceptTransitive: true
+  - org.openrewrite.maven.UpgradePluginVersion:
+      groupId: org.apache.maven.plugins
+      artifactId: maven-surefire-plugin
+      newVersion: 3.1.2
+  - org.openrewrite.maven.UpgradePluginVersion:
+      groupId: org.apache.maven.plugins
+      artifactId: maven-failsafe-plugin
+      newVersion: 3.1.2
+
+
+
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: recipes.CustomJUnit4To5Migration
+displayName: JUnit Jupiter migration from JUnit 4.12
+description: |
+  Migrates JUnit 4.12 tests to JUnit Jupiter.
+tags:
+  - junit
+  - testing
+recipeList:
+  - org.openrewrite.java.testing.junit5.JUnit4to5Migration
+
+  - org.openrewrite.java.dependencies.AddDependency:
+      groupId: org.junit.jupiter
+      artifactId: junit-jupiter-params
+      version: 5.11.3
+      onlyIfUsing: org.junit.runners.Parameterized
+      scope: test
+      acceptTransitive: true
+
+  - org.openrewrite.maven.UpgradePluginVersion:
+      groupId: org.apache.maven.plugins
+      artifactId: maven-surefire-plugin
+      newVersion: 3.1.2
+
+  - org.openrewrite.maven.UpgradePluginVersion:
+      groupId: org.apache.maven.plugins
+      artifactId: maven-failsafe-plugin
+      newVersion: 3.1.2

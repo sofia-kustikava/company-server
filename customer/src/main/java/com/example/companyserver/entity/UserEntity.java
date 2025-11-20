@@ -1,5 +1,8 @@
 package com.example.companyserver.entity;
 
+import com.example.companyserver.entity.CompanyEntity;
+import com.example.companyserver.entity.UserStatus;
+import com.example.companyserver.entity.UserSubscriptionEntity;
 import lombok.*;
 
 import javax.persistence.*;

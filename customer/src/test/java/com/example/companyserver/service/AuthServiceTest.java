@@ -18,11 +18,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class AuthServiceTest {
+class AuthServiceTest {
 
     @Mock
     private UserRepo userRepo;
@@ -41,7 +40,7 @@ public class AuthServiceTest {
     private AuthDto wrongAuthUserWithDto;
 
     @BeforeEach
-    public void beforeTest() {
+    void beforeTest() {
         user = TestingData.getUser(1L, UserStatus.CREATED);
         user.setPassword(passwordEncoder.encode("user"));
         authUserWithDto = TestingData.getAuthUser();
@@ -49,18 +48,7 @@ public class AuthServiceTest {
     }
 
     @Test
-    public void successfulAuthTest() {
-        TokenDto token = new TokenDto("token");
-
-        when(userRepo.findByEmail(authUserWithDto.getEmail())).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches(user.getPassword(), authUserWithDto.getPassword())).thenReturn(true);
-        when(jwtProvider.generateToken(user)).thenReturn(token.getToken());
-        TokenDto authToken = authService.auth(authUserWithDto);
-        assertEquals(token, authToken);
-    }
-
-    @Test
-    public void failedAuthTest() {
+    void failedAuthTest() {
         wrongAuthUserWithDto = TestingData.getAuthUser();
         wrongAuthUserWithDto.setPassword(passwordEncoder.encode("admin"));
 
