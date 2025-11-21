@@ -166,13 +166,6 @@
             <version>3.9.0</version>
         </dependency>
         <!--OPENREWRITE-->
-<!--        &lt;!&ndash;ERRORPRONE&ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>com.google.errorprone</groupId>-->
-<!--            <artifactId>error_prone_core</artifactId>-->
-<!--            <version>2.36.0</version>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash;ERRORPRONE&ndash;&gt;-->
     </dependencies>
     <build>
         <plugins>
@@ -192,61 +185,6 @@
                 </configuration>
             </plugin>
             <!--OPENREWRITE-->
-<!--            &lt;!&ndash;ERRORPRONE&ndash;&gt;-->
-<!--            <plugin>-->
-<!--                <groupId>com.google.errorprone</groupId>-->
-<!--                <artifactId>error-prone-maven-plugin</artifactId>-->
-<!--                <version>2.36.0</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <goals>-->
-<!--                            <goal>check</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
-<!--            &lt;!&ndash;ERRORPRONE&ndash;&gt;-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.1</version>
-                <configuration>
-                    <release>11</release>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <version>1.18.20</version>
-                        </path>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok-mapstruct-binding</artifactId>
-                            <version>0.2.0</version>
-                        </path>
-                        <path>
-                            <groupId>org.mapstruct</groupId>
-                            <artifactId>mapstruct-processor</artifactId>
-                            <version>${org.mapstruct.version}</version>
-                        </path>
-                    </annotationProcessorPaths>
-                    <showWarnings>true</showWarnings>
-                    <compilerArgs>
-                        <arg>-Amapstruct.defaultComponentModel=spring</arg>
-                    </compilerArgs>
-<!--                    &lt;!&ndash;ERRORPRONE&ndash;&gt;-->
-<!--                    <compilerArgs>-->
-<!--                        <arg>-Xplugin:ErrorProne</arg>-->
-<!--                    </compilerArgs>-->
-<!--                    <annotationProcessorPaths>-->
-<!--                        <path>-->
-<!--                            <groupId>com.google.errorprone</groupId>-->
-<!--                            <artifactId>error_prone_core</artifactId>-->
-<!--                            <version>2.36.0</version>-->
-<!--                        </path>-->
-<!--                    </annotationProcessorPaths>-->
-<!--                    &lt;!&ndash;ERRORPRONE&ndash;&gt;-->
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 </project>

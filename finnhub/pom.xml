@@ -134,9 +134,35 @@
             <artifactId>rest-api-sdk</artifactId>
             <version>1.13.1</version>
         </dependency>
+
+        <!-- OPENREWRITE -->
+        <dependency>
+            <groupId>org.openrewrite.recipe</groupId>
+            <artifactId>rewrite-spring</artifactId>
+            <version>5.18.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openrewrite.recipe</groupId>
+            <artifactId>rewrite-migrate-java</artifactId>
+            <version>2.22.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openrewrite.recipe</groupId>
+            <artifactId>rewrite-testing-frameworks</artifactId>
+            <version>3.9.0</version>
+        </dependency>
+        <!-- OPENREWRITE -->
+
     </dependencies>
     <build>
         <plugins>
+            <!-- OPENREWRITE -->
+            <plugin>
+                <groupId>org.openrewrite.maven</groupId>
+                <artifactId>rewrite-maven-plugin</artifactId>
+                <version>6.24.0</version>
+            </plugin>
+            <!-- OPENREWRITE -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
